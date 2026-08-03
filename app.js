@@ -194,11 +194,19 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>{playClick();const id=t.dataset.target;document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.view').forEach(v=>{v.id===id?v.classList.add('active'):v.classList.remove('active');});}));
 
     // ====== PROGRESS STORAGE ======
+    const levelOrder = ['A1', 'A2', 'B1', 'C1'];
     const savedUnlocked = localStorage.getItem('lp_unlocked');
     state.unlockedIndex = savedUnlocked ? JSON.parse(savedUnlocked) : { A1: 1, A2: 1, B1: 1, C1: 1 };
+    
+    const savedLevel = localStorage.getItem('lp_level');
+    if (savedLevel && curriculum[savedLevel]) {
+        state.currentLevel = savedLevel;
+        if (currentLevelBadge) currentLevelBadge.textContent = state.currentLevel;
+    }
 
     function saveProgress() {
         localStorage.setItem('lp_unlocked', JSON.stringify(state.unlockedIndex));
+        localStorage.setItem('lp_level', state.currentLevel);
     }
 
     // ====== PATH TREE ======
@@ -210,11 +218,14 @@ document.addEventListener('DOMContentLoaded', () => {
         pathTree.innerHTML = '';
 
         const unlockedCount = state.unlockedIndex[state.currentLevel] || 1;
+        const totalLessons = d.lessons.length;
+        // Clamp current active node so tooltip is always visible on the active lesson
+        const currentActiveIdx = Math.min(unlockedCount - 1, totalLessons - 1);
 
         d.lessons.forEach((l, i) => {
             const isUnlocked = i < unlockedCount;
-            const isCurrent = i === unlockedCount - 1;
-            const isCompleted = i < unlockedCount - 1;
+            const isCurrent = i === currentActiveIdx;
+            const isCompleted = i < currentActiveIdx;
 
             const w = document.createElement('div');
             w.className = `node-wrapper ${isCurrent ? 'level-active' : (isCompleted ? 'level-completed' : 'level-locked')}`;
@@ -416,19 +427,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         state.gems += 20;
         state.xp += bonus;
-        updateStats();
 
-        // Unlock next lesson
+        // Unlock next lesson or next level
         const currentLessons = curriculum[state.currentLevel].lessons;
         const activeIdx = currentLessons.findIndex(l => l.id === state.activeLesson.id);
+        
         if (activeIdx !== -1) {
+            const isLastLesson = activeIdx === currentLessons.length - 1;
             const nextUnlocked = activeIdx + 2; // 1-indexed next lesson
-            if (nextUnlocked > (state.unlockedIndex[state.currentLevel] || 1)) {
-                state.unlockedIndex[state.currentLevel] = nextUnlocked;
-                saveProgress();
+
+            if (isLastLesson) {
+                // Find next level in order (e.g. A1 -> A2)
+                const currentLvlIdx = levelOrder.indexOf(state.currentLevel);
+                if (currentLvlIdx !== -1 && currentLvlIdx + 1 < levelOrder.length) {
+                    const nextLvlKey = levelOrder[currentLvlIdx + 1];
+                    state.unlockedIndex[nextLvlKey] = Math.max(state.unlockedIndex[nextLvlKey] || 1, 1);
+                    state.nextLevelToSwitch = nextLvlKey;
+                    
+                    const modalTitle = completionModal.querySelector('h2');
+                    if (modalTitle) modalTitle.textContent = '🏆 ¡NIVEL COMPLETADO!';
+                    completionEncourage.textContent = `¡Felicidades! Has superado el Nivel ${state.currentLevel} y desbloqueado el Nivel ${nextLvlKey} 🚀`;
+                }
+            } else {
+                if (nextUnlocked > (state.unlockedIndex[state.currentLevel] || 1)) {
+                    state.unlockedIndex[state.currentLevel] = nextUnlocked;
+                }
             }
+            saveProgress();
         }
 
+        updateStats();
         completionModal.classList.add('active');
         triggerConfetti();
         playSuccess();
@@ -438,9 +466,27 @@ document.addEventListener('DOMContentLoaded', () => {
         completionModal.classList.remove('active');
         lessonView.classList.remove('active');
         $('path-view').classList.add('active');
+        
         const bottomNav = $('bottom-nav-bar');
         if (bottomNav) bottomNav.style.display = 'flex';
-        renderPath(); // Re-render path tree to show newly unlocked node!
+
+        // Reset modal title back to standard for regular lessons
+        const modalTitle = completionModal.querySelector('h2');
+        if (modalTitle) modalTitle.textContent = '¡Lección Completada!';
+
+        // Advance to next level if completed current level
+        if (state.nextLevelToSwitch) {
+            state.currentLevel = state.nextLevelToSwitch;
+            state.nextLevelToSwitch = null;
+            if (currentLevelBadge) currentLevelBadge.textContent = state.currentLevel;
+            
+            levelOpts.forEach(o => {
+                o.classList.toggle('active', o.dataset.level === state.currentLevel);
+            });
+            saveProgress();
+        }
+
+        renderPath(); // Re-render path tree to show newly unlocked node or new level!
     });
 
     // ====== SHOP ======
