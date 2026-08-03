@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- CELEBRATION CONFETTI CANVAS OVERLAY -->
+    <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
     <div class="app-viewport">
         <!-- GLOBAL TOP STATS BAR -->
         <header class="top-nav" id="top-nav">
@@ -23,9 +26,10 @@
                 <span class="stat-icon">💎</span>
                 <span class="stat-val" id="user-gems">150</span>
             </div>
-            <div class="nav-item hearts-item" title="Vidas restantes">
-                <span class="stat-icon">❤️</span>
+            <div class="nav-item hearts-item" id="hearts-stat-container" title="Vidas restantes">
+                <span class="stat-icon heart-icon-anim" id="main-heart-icon">❤️</span>
                 <span class="stat-val" id="user-hearts">5</span>
+                <span class="floating-heart-loss" id="floating-heart-loss">-1 ❤️</span>
             </div>
         </header>
 
@@ -161,7 +165,9 @@
                     </button>
                     <div class="progress-container">
                         <div class="progress-bar">
-                            <div class="progress-fill" id="lesson-progress-fill"></div>
+                            <div class="progress-fill" id="lesson-progress-fill">
+                                <div class="progress-shimmer"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="lesson-hearts-display">
@@ -176,7 +182,7 @@
                     <!-- PROMPT HEADER (MASCOT & SPEECH BUBBLE & DUAL AUDIO) -->
                     <div class="character-prompt" id="character-prompt">
                         <div class="mascot-container">
-                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaPro" alt="Mascot" class="mascot-img">
+                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaPro" alt="Mascot" class="mascot-img" id="mascot-avatar">
                         </div>
                         <div class="speech-bubble">
                             <div class="audio-controls-group">

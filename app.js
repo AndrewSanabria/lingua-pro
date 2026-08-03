@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
         correctCount: 0,
         selectedChips: [],
         audioCtx: null,
-        // Pair matching temporary selection
         firstMatchCard: null,
         matchedPairsCount: 0
     };
@@ -160,6 +159,73 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- CONFETTI PARTICLE ANIMATION ENGINE ---
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const ctx = confettiCanvas ? confettiCanvas.getContext('2d') : null;
+    let confettiParticles = [];
+
+    function resizeCanvas() {
+        if (confettiCanvas) {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function triggerConfetti() {
+        if (!ctx) return;
+        confettiParticles = [];
+        const colors = ['#58CC02', '#1CB0F6', '#FFC800', '#FF4B4B', '#FF9600', '#CE82FF'];
+
+        for (let i = 0; i < 100; i++) {
+            confettiParticles.push({
+                x: window.innerWidth / 2,
+                y: window.innerHeight / 2,
+                vx: (Math.random() - 0.5) * 14,
+                vy: (Math.random() - 0.7) * 16,
+                size: Math.random() * 8 + 6,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rotation: Math.random() * 360,
+                rSpeed: (Math.random() - 0.5) * 10,
+                opacity: 1
+            });
+        }
+
+        let animationFrame;
+        function updateConfetti() {
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            let alive = false;
+
+            confettiParticles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.4; // Gravity
+                p.rotation += p.rSpeed;
+                p.opacity -= 0.012;
+
+                if (p.opacity > 0) {
+                    alive = true;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = Math.max(0, p.opacity);
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                }
+            });
+
+            if (alive) {
+                animationFrame = requestAnimationFrame(updateConfetti);
+            } else {
+                ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            }
+        }
+
+        updateConfetti();
+    }
+
     // --- SOUND ENGINE (WEB AUDIO API) ---
     function initAudioContext() {
         if (!state.audioCtx) {
@@ -240,13 +306,21 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(e) {}
     }
 
-    // --- SPEECH SYNTHESIS ENGINE (DUAL SPEED) ---
+    // --- SPEECH SYNTHESIS ENGINE (DUAL SPEED & BOUNCE) ---
+    const mascotAvatar = document.getElementById('mascot-avatar');
+
     function speakText(text, rate = 0.95) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'en-US';
             utterance.rate = rate;
+
+            if (mascotAvatar) {
+                mascotAvatar.classList.add('mascot-speaking');
+                utterance.onend = () => mascotAvatar.classList.remove('mascot-speaking');
+            }
+
             window.speechSynthesis.speak(utterance);
         }
     }
@@ -296,6 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const userStreak = document.getElementById('user-streak');
     const userGems = document.getElementById('user-gems');
     const userHearts = document.getElementById('user-hearts');
+    const mainHeartIcon = document.getElementById('main-heart-icon');
+    const floatingHeartLoss = document.getElementById('floating-heart-loss');
+
     const profStreak = document.getElementById('prof-streak');
     const profXp = document.getElementById('prof-xp');
     const profGems = document.getElementById('prof-gems');
@@ -386,7 +463,6 @@ document.addEventListener('DOMContentLoaded', () => {
         state.hearts = 5;
         updateStats();
 
-        // Switch view to lesson view
         views.forEach(v => v.classList.remove('active'));
         lessonView.classList.add('active');
 
@@ -407,7 +483,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const q = state.activeLesson.questions[state.currentQuestionIdx];
         const totalQ = state.activeLesson.questions.length;
 
-        // Reset state
         state.selectedChips = [];
         state.firstMatchCard = null;
         state.matchedPairsCount = 0;
@@ -415,16 +490,13 @@ document.addEventListener('DOMContentLoaded', () => {
         feedbackSheet.className = 'feedback-sheet';
         checkBtn.disabled = true;
 
-        // Progress Fill
         const pct = (state.currentQuestionIdx / totalQ) * 100;
         lessonProgressFill.style.width = `${pct}%`;
 
-        // Hide all exercise modules
         modTranslate.classList.add('hidden');
         modMatching.classList.add('hidden');
         modChoice.classList.add('hidden');
 
-        // Render according to Exercise Type
         if (q.type === 'translate') {
             promptTitle.textContent = 'Traduce esta oración';
             promptText.textContent = q.prompt;
@@ -507,10 +579,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         state.firstMatchCard = { elem: card, id: cObj.id };
                         card.classList.add('selected');
                     } else {
-                        if (state.firstMatchCard.elem === card) return; // Same card tapped
+                        if (state.firstMatchCard.elem === card) return;
 
                         if (state.firstMatchCard.id === Number(card.dataset.pairId)) {
-                            // Match!
                             playMatchPopSound();
                             state.firstMatchCard.elem.className = 'match-card matched';
                             card.className = 'match-card matched';
@@ -521,7 +592,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 checkBtn.disabled = false;
                             }
                         } else {
-                            // Wrong pair!
                             playErrorSound();
                             card.classList.add('wrong');
                             state.firstMatchCard.elem.classList.add('wrong');
@@ -585,6 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackSubtitle.textContent = 'Respuesta totalmente correcta.';
         } else {
             playErrorSound();
+            triggerHeartLossAnimation();
             state.hearts = Math.max(0, state.hearts - 1);
             updateStats();
 
@@ -594,6 +665,18 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackSubtitle.textContent = q.type === 'translate' ? q.answer.join(' ') : (q.correct || 'Sigue practicando');
         }
     });
+
+    function triggerHeartLossAnimation() {
+        if (mainHeartIcon && floatingHeartLoss) {
+            mainHeartIcon.classList.add('shake-heart');
+            floatingHeartLoss.classList.add('animate-loss');
+
+            setTimeout(() => {
+                mainHeartIcon.classList.remove('shake-heart');
+                floatingHeartLoss.classList.remove('animate-loss');
+            }, 1200);
+        }
+    }
 
     continueBtn.addEventListener('click', () => {
         feedbackSheet.classList.remove('show');
@@ -616,6 +699,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStats();
 
         completionModal.classList.add('active');
+        triggerConfetti();
         playSuccessSound();
     }
 
@@ -669,7 +753,6 @@ document.addEventListener('DOMContentLoaded', () => {
         profGems.textContent = state.gems;
     }
 
-    // Initialize initial Path tree & stats
     renderPathTree();
     updateStats();
 });
