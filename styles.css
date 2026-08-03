@@ -776,6 +776,10 @@ body {
     align-items: stretch;
 }
 
+.footer-actions-row .check-action {
+    flex: 1;
+}
+
 .hint-btn {
     background: var(--surface-dark);
     border: 2px solid var(--border-color);

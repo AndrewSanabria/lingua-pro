@@ -472,17 +472,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- ENCOURAGEMENT TOAST ---
     function showEncouragement(message) {
-        encouragementToast.classList.remove('hidden');
-        encouragementText.textContent = message;
-        // Force re-animation by cloning
-        const clone = encouragementToast.cloneNode(true);
-        clone.id = 'encouragement-toast';
-        encouragementToast.parentNode.replaceChild(clone, encouragementToast);
-        // Re-assign since DOM element was replaced
-        setTimeout(() => {
-            const el = document.getElementById('encouragement-toast');
-            if (el) el.classList.add('hidden');
-        }, 2200);
+        const toast = document.getElementById('encouragement-toast');
+        const textEl = document.getElementById('encouragement-text');
+        if (!toast || !textEl) return;
+        textEl.textContent = message;
+        // Force CSS animation restart
+        toast.classList.remove('hidden');
+        toast.style.animation = 'none';
+        toast.offsetHeight; // Trigger reflow
+        toast.style.animation = '';
+        setTimeout(() => toast.classList.add('hidden'), 2200);
     }
 
     // --- COMBO COUNTER ---
