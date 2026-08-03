@@ -1,895 +1,377 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- STATE MANAGEMENT ---
     const state = {
-        currentLevel: 'A1',
-        streak: 3,
-        gems: 150,
-        hearts: 5,
-        xp: 450,
-        activeLesson: null,
-        currentQuestionIdx: 0,
-        correctCount: 0,
-        selectedChips: [],
-        audioCtx: null,
-        firstMatchCard: null,
-        matchedPairsCount: 0,
-        // Guided learning enhancements
-        comboStreak: 0,
-        maxCombo: 0,
-        hintsUsed: 0,
-        tutorialSeen: localStorage.getItem('linguapro_tutorial_seen') === 'true'
+        currentLevel: 'A1', streak: 1, gems: 50, hearts: 5, xp: 0,
+        activeLesson: null, currentQuestionIdx: 0, correctCount: 0,
+        selectedChips: [], audioCtx: null, firstMatchCard: null,
+        matchedPairsCount: 0, comboStreak: 0, maxCombo: 0, hintsUsed: 0,
+        selectedChoice: null,
+        tutorialSeen: localStorage.getItem('lp_tut') === '1'
     };
 
-    // --- TUTORIAL STEPS ---
-    const tutorialSteps = [
-        { text: '¡Hola! 👋 Soy tu asistente de Lingua Pro. Te enseñaré inglés paso a paso, desde lo más fácil hasta lo más avanzado.', mascot: '🤖' },
-        { text: '🗺️ En el Mapa de Aprendizaje verás los niveles. Toca la estrella brillante (⭐) para iniciar tu primera lección.', mascot: '🌟' },
-        { text: '🐇 Escucha la pronunciación en inglés tocando el conejo (velocidad normal) o la tortuga 🐢 (más lento).', mascot: '🎧' },
-        { text: '👆 Toca las palabras del banco de abajo para armar la traducción correcta arriba. Si te equivocas, toca la palabra arriba para regresarla.', mascot: '✏️' },
-        { text: '💡 Si necesitas ayuda, toca "Pista" para iluminar la siguiente palabra correcta. ¡Acumula combos 🔥 respondiendo bien seguido!', mascot: '🏆' }
-    ];
-    let tutorialStep = 0;
-
-    // --- ENCOURAGEMENT MESSAGES ---
-    const encourageCorrect = [
-        '¡Excelente trabajo! 🌟', '¡Eres increíble! ⚡', '¡Sigue así! 💪',
-        '¡Perfecto! 🎯', '¡Genial, crack! 🔥', '¡Lo lograste! 🏆',
-        '¡Impresionante! 🌈', '¡Vas volando! 🚀', '¡Fantástico! ✨'
-    ];
-    const encourageCombo = [
-        '🔥 ¡Racha de fuego!', '⚡ ¡Imparable!', '💎 ¡Estás brillando!',
-        '🌟 ¡Combo increíble!', '🚀 ¡En llamas!'
-    ];
-    const completionMessages = [
-        '¡Eres un estudiante excepcional! El inglés está en tus manos.',
-        '¡Cada lección te acerca más a la fluidez total!',
-        '¡Tu cerebro está creciendo con cada ejercicio!',
-        '¡Los expertos en idiomas practican cada día, como tú!'
-    ];
-
-    // --- CURRICULUM DATABASE (A1 -> C1) ---
+    // ====== FULL PROGRESSIVE CURRICULUM ======
     const curriculum = {
         A1: {
-            title: "Fundamentos del Inglés (A1)",
-            desc: "Paso a paso desde cero con saludos, comida y objetos diarios",
+            title: "Primeras Palabras",
+            desc: "Aprende jugando con colores, animales y objetos",
             lessons: [
-                {
-                    id: 'a1-1',
-                    name: 'Saludos & Presentación',
-                    icon: '⭐',
-                    questions: [
-                        {
-                            type: 'translate',
-                            prompt: 'The quick brown fox jumps over the lazy dog.',
-                            answer: ['El', 'rápido', 'zorro', 'marrón', 'salta', 'sobre', 'el', 'perro', 'perezoso'],
-                            pool: ['El', 'rápido', 'zorro', 'marrón', 'salta', 'sobre', 'el', 'perro', 'perezoso', 'gato', 'lindo']
-                        },
-                        {
-                            type: 'matching',
-                            prompt: 'Empareja las palabras correspondientes:',
-                            pairs: [
-                                { en: 'Hello', es: 'Hola' },
-                                { en: 'Water', es: 'Agua' },
-                                { en: 'Goodbye', es: 'Adiós' },
-                                { en: 'Please', es: 'Por favor' },
-                                { en: 'Thank you', es: 'Gracias' }
-                            ]
-                        },
-                        {
-                            type: 'choice',
-                            prompt: '¿Cómo se dice "Buenos días" en inglés?',
-                            options: ['Good morning', 'Good night', 'Good evening', 'See you later'],
-                            correct: 'Good morning'
-                        }
-                    ]
-                },
-                {
-                    id: 'a1-2',
-                    name: 'Familia & Objetos',
-                    icon: '💬',
-                    questions: [
-                        {
-                            type: 'translate',
-                            prompt: 'My brother lives in a big house.',
-                            answer: ['Mi', 'hermano', 'vive', 'en', 'una', 'casa', 'grande'],
-                            pool: ['Mi', 'hermano', 'vive', 'en', 'una', 'casa', 'grande', 'pequeña', 'auto']
-                        },
-                        {
-                            type: 'matching',
-                            prompt: 'Empareja los miembros de la familia:',
-                            pairs: [
-                                { en: 'Mother', es: 'Madre' },
-                                { en: 'Father', es: 'Padre' },
-                                { en: 'Sister', es: 'Hermana' },
-                                { en: 'Friend', es: 'Amigo' },
-                                { en: 'House', es: 'Casa' }
-                            ]
-                        }
-                    ]
-                }
+                { id:'a1-1', name:'Animales 🐾', icon:'🐱', questions:[
+                    { type:'image_select', emoji:'🐱', word:'Cat', prompt:'¿Qué animal es este?', options:['Cat','Dog','Bird','Fish'], correct:'Cat' },
+                    { type:'image_select', emoji:'🐶', word:'Dog', prompt:'¿Qué animal es este?', options:['Cat','Dog','Horse','Rabbit'], correct:'Dog' },
+                    { type:'image_select', emoji:'🐦', word:'Bird', prompt:'¿Qué animal es este?', options:['Bird','Fish','Cat','Bear'], correct:'Bird' },
+                    { type:'emoji_match', word:'Fish', prompt:'¿Cuál es el emoji correcto?', emojis:['🐟','🐱','🐶','🐸'], correct:'🐟' },
+                    { type:'emoji_match', word:'Bear', prompt:'¿Cuál es el emoji correcto?', emojis:['🐻','🐦','🐶','🐱'], correct:'🐻' },
+                    { type:'matching', prompt:'Empareja animales:', pairs:[
+                        {en:'Cat',es:'🐱 Gato'},{en:'Dog',es:'🐶 Perro'},{en:'Bird',es:'🐦 Pájaro'},{en:'Fish',es:'🐟 Pez'},{en:'Bear',es:'🐻 Oso'}
+                    ]}
+                ]},
+                { id:'a1-2', name:'Colores 🎨', icon:'🌈', questions:[
+                    { type:'image_select', emoji:'🔴', word:'Red', prompt:'¿Qué color es?', options:['Red','Blue','Green','Yellow'], correct:'Red' },
+                    { type:'image_select', emoji:'🔵', word:'Blue', prompt:'¿Qué color es?', options:['Red','Blue','Green','Yellow'], correct:'Blue' },
+                    { type:'image_select', emoji:'🟢', word:'Green', prompt:'¿Qué color es?', options:['Green','Orange','Purple','Red'], correct:'Green' },
+                    { type:'emoji_match', word:'Yellow', prompt:'¿Cuál es el color correcto?', emojis:['🟡','🔴','🟢','🔵'], correct:'🟡' },
+                    { type:'emoji_match', word:'Orange', prompt:'¿Cuál es el color correcto?', emojis:['🟠','🟣','🔵','🟢'], correct:'🟠' },
+                    { type:'matching', prompt:'Empareja los colores:', pairs:[
+                        {en:'Red',es:'🔴 Rojo'},{en:'Blue',es:'🔵 Azul'},{en:'Green',es:'🟢 Verde'},{en:'Yellow',es:'🟡 Amarillo'},{en:'Orange',es:'🟠 Naranja'}
+                    ]}
+                ]},
+                { id:'a1-3', name:'Comida 🍎', icon:'🍕', questions:[
+                    { type:'image_select', emoji:'🍎', word:'Apple', prompt:'¿Qué fruta es?', options:['Apple','Banana','Orange','Grape'], correct:'Apple' },
+                    { type:'image_select', emoji:'🍌', word:'Banana', prompt:'¿Qué fruta es?', options:['Apple','Banana','Strawberry','Grape'], correct:'Banana' },
+                    { type:'emoji_match', word:'Water', prompt:'¿Cuál es el emoji correcto?', emojis:['💧','🍕','🍎','🧀'], correct:'💧' },
+                    { type:'emoji_match', word:'Pizza', prompt:'¿Cuál es el emoji correcto?', emojis:['🍕','🍔','🌮','🍩'], correct:'🍕' },
+                    { type:'matching', prompt:'Empareja la comida:', pairs:[
+                        {en:'Apple',es:'🍎 Manzana'},{en:'Banana',es:'🍌 Plátano'},{en:'Water',es:'💧 Agua'},{en:'Pizza',es:'🍕 Pizza'},{en:'Bread',es:'🍞 Pan'}
+                    ]}
+                ]},
+                { id:'a1-4', name:'Objetos 🏠', icon:'📱', questions:[
+                    { type:'image_select', emoji:'📱', word:'Phone', prompt:'¿Qué objeto es?', options:['Phone','Book','Car','Key'], correct:'Phone' },
+                    { type:'image_select', emoji:'📚', word:'Book', prompt:'¿Qué objeto es?', options:['Phone','Book','Chair','Pen'], correct:'Book' },
+                    { type:'emoji_match', word:'Car', prompt:'¿Cuál es el emoji correcto?', emojis:['🚗','📱','📚','🔑'], correct:'🚗' },
+                    { type:'emoji_match', word:'Key', prompt:'¿Cuál es el emoji correcto?', emojis:['🔑','🚗','📱','✏️'], correct:'🔑' },
+                    { type:'matching', prompt:'Empareja objetos:', pairs:[
+                        {en:'Phone',es:'📱 Teléfono'},{en:'Book',es:'📚 Libro'},{en:'Car',es:'🚗 Carro'},{en:'Key',es:'🔑 Llave'},{en:'Pen',es:'✏️ Pluma'}
+                    ]}
+                ]},
+                { id:'a1-5', name:'Saludos 👋', icon:'👋', questions:[
+                    { type:'choice', prompt:'¿Cómo se dice "Hola" en inglés?', options:['Hello','Goodbye','Please','Thanks'], correct:'Hello' },
+                    { type:'choice', prompt:'¿Cómo se dice "Adiós" en inglés?', options:['Hello','Goodbye','Sorry','Yes'], correct:'Goodbye' },
+                    { type:'choice', prompt:'¿Qué significa "Thank you"?', options:['Gracias','Hola','Por favor','De nada'], correct:'Gracias' },
+                    { type:'translate', prompt:'Hello, how are you?', answer:['Hola','¿cómo','estás?'], pool:['Hola','¿cómo','estás?','bien','gracias','adiós'] },
+                    { type:'matching', prompt:'Empareja saludos:', pairs:[
+                        {en:'Hello',es:'Hola'},{en:'Goodbye',es:'Adiós'},{en:'Please',es:'Por favor'},{en:'Thank you',es:'Gracias'},{en:'Yes',es:'Sí'}
+                    ]}
+                ]},
+                { id:'a1-6', name:'Frases Cortas ✨', icon:'💬', questions:[
+                    { type:'choice', prompt:'¿Qué significa "I am happy"?', options:['Estoy feliz','Estoy triste','Tengo hambre','Tengo sueño'], correct:'Estoy feliz' },
+                    { type:'translate', prompt:'I like cats.', answer:['Me','gustan','los','gatos'], pool:['Me','gustan','los','gatos','perros','no','ellos'] },
+                    { type:'translate', prompt:'The water is cold.', answer:['El','agua','está','fría'], pool:['El','agua','está','fría','caliente','la','pan'] },
+                    { type:'choice', prompt:'¿Qué significa "Good morning"?', options:['Buenos días','Buenas noches','Buenas tardes','Hasta luego'], correct:'Buenos días' },
+                    { type:'matching', prompt:'Empareja frases:', pairs:[
+                        {en:'Good morning',es:'Buenos días'},{en:'Good night',es:'Buenas noches'},{en:'I am',es:'Yo soy'},{en:'Thank you',es:'Gracias'},{en:'See you',es:'Nos vemos'}
+                    ]}
+                ]}
             ]
         },
         A2: {
-            title: "Intermedio Elemental (A2)",
-            desc: "Viajes, conversaciones diarias, restaurantes y pasados",
+            title: "Conversaciones Básicas",
+            desc: "Frases completas, familia y vida diaria",
             lessons: [
-                {
-                    id: 'a2-1',
-                    name: 'En el Aeropuerto & Viajes',
-                    icon: '✈️',
-                    questions: [
-                        {
-                            type: 'translate',
-                            prompt: 'Where is the international departure gate?',
-                            answer: ['¿Dónde', 'está', 'la', 'puerta', 'de', 'salida', 'internacional?'],
-                            pool: ['¿Dónde', 'está', 'la', 'puerta', 'de', 'salida', 'internacional?', 'llegada', 'hotel']
-                        },
-                        {
-                            type: 'choice',
-                            prompt: '¿Qué significa "Passport check"?',
-                            options: ['Control de pasaportes', 'Equipaje perdido', 'Reserva de hotel', 'Boleto de avión'],
-                            correct: 'Control de pasaportes'
-                        }
-                    ]
-                }
+                { id:'a2-1', name:'Familia 👨‍👩‍👧', icon:'👨‍👩‍👧', questions:[
+                    { type:'image_select', emoji:'👩', word:'Mother', prompt:'¿Quién es?', options:['Mother','Father','Sister','Brother'], correct:'Mother' },
+                    { type:'image_select', emoji:'👨', word:'Father', prompt:'¿Quién es?', options:['Mother','Father','Son','Daughter'], correct:'Father' },
+                    { type:'matching', prompt:'Empareja la familia:', pairs:[
+                        {en:'Mother',es:'👩 Madre'},{en:'Father',es:'👨 Padre'},{en:'Sister',es:'👧 Hermana'},{en:'Brother',es:'👦 Hermano'},{en:'Baby',es:'👶 Bebé'}
+                    ]},
+                    { type:'translate', prompt:'My brother is tall.', answer:['Mi','hermano','es','alto'], pool:['Mi','hermano','es','alto','bajo','ella','hermana'] },
+                    { type:'choice', prompt:'¿Qué significa "grandmother"?', options:['Abuela','Tía','Prima','Mamá'], correct:'Abuela' }
+                ]},
+                { id:'a2-2', name:'En el restaurante 🍽️', icon:'🍽️', questions:[
+                    { type:'choice', prompt:'¿Cómo pides la cuenta en inglés?', options:['The check, please','Good morning','Thank you','Goodbye'], correct:'The check, please' },
+                    { type:'translate', prompt:'I would like water, please.', answer:['Me','gustaría','agua','por','favor'], pool:['Me','gustaría','agua','por','favor','comida','el','café'] },
+                    { type:'matching', prompt:'Empareja vocabulario:', pairs:[
+                        {en:'Menu',es:'Menú'},{en:'Water',es:'Agua'},{en:'Coffee',es:'Café'},{en:'Table',es:'Mesa'},{en:'Waiter',es:'Mesero'}
+                    ]}
+                ]}
             ]
         },
         B1: {
-            title: "Intermedio Avanzado (B1/B2)",
-            desc: "Entrevistas de trabajo, reuniones de negocios y gramática superior",
+            title: "Intermedio Avanzado",
+            desc: "Trabajo, negocios y gramática compleja",
             lessons: [
-                {
-                    id: 'b1-1',
-                    name: 'Negocios & Entrevistas',
-                    icon: '💼',
-                    questions: [
-                        {
-                            type: 'translate',
-                            prompt: 'We need to increase our quarterly revenue.',
-                            answer: ['Necesitamos', 'incrementar', 'nuestros', 'ingresos', 'trimestrales'],
-                            pool: ['Necesitamos', 'incrementar', 'nuestros', 'ingresos', 'trimestrales', 'gastos', 'bajar']
-                        },
-                        {
-                            type: 'matching',
-                            prompt: 'Empareja términos de negocios:',
-                            pairs: [
-                                { en: 'Deadline', es: 'Fecha límite' },
-                                { en: 'Budget', es: 'Presupuesto' },
-                                { en: 'Meeting', es: 'Reunión' },
-                                { en: 'Growth', es: 'Crecimiento' },
-                                { en: 'Profit', es: 'Ganancia' }
-                            ]
-                        }
-                    ]
-                }
+                { id:'b1-1', name:'Negocios 💼', icon:'💼', questions:[
+                    { type:'translate', prompt:'We need to increase our revenue.', answer:['Necesitamos','incrementar','nuestros','ingresos'], pool:['Necesitamos','incrementar','nuestros','ingresos','gastos','bajar','subir'] },
+                    { type:'matching', prompt:'Empareja negocios:', pairs:[
+                        {en:'Deadline',es:'Fecha límite'},{en:'Budget',es:'Presupuesto'},{en:'Meeting',es:'Reunión'},{en:'Growth',es:'Crecimiento'},{en:'Profit',es:'Ganancia'}
+                    ]},
+                    { type:'choice', prompt:'¿Qué significa "Schedule a meeting"?', options:['Programar una reunión','Cancelar un proyecto','Pedir un aumento','Enviar un correo'], correct:'Programar una reunión' }
+                ]}
             ]
         },
         C1: {
-            title: "Fluidez & Modismos (C1/C2)",
-            desc: "Inglés nativo profesional, idioms y soltura total",
+            title: "Fluidez Nativa",
+            desc: "Modismos, expresiones y soltura total",
             lessons: [
-                {
-                    id: 'c1-1',
-                    name: 'Native Idioms & Metaphors',
-                    icon: '🚀',
-                    questions: [
-                        {
-                            type: 'translate',
-                            prompt: 'It is a blessing in disguise.',
-                            answer: ['Es', 'un', 'bien', 'que', 'por', 'mal', 'viene'],
-                            pool: ['Es', 'un', 'bien', 'que', 'por', 'mal', 'viene', 'malo', 'camino']
-                        },
-                        {
-                            type: 'choice',
-                            prompt: '¿Qué significa el idiom "Break a leg"?',
-                            options: ['¡Buena suerte!', 'Rómpete una pierna', 'Cálmate', 'Llegas tarde'],
-                            correct: '¡Buena suerte!'
-                        }
-                    ]
-                }
+                { id:'c1-1', name:'Idioms 🚀', icon:'🚀', questions:[
+                    { type:'choice', prompt:'¿Qué significa "Break a leg"?', options:['¡Buena suerte!','Rómpete una pierna','Cálmate','Llegas tarde'], correct:'¡Buena suerte!' },
+                    { type:'translate', prompt:'It is a blessing in disguise.', answer:['No','hay','mal','que','por','bien','no','venga'], pool:['No','hay','mal','que','por','bien','no','venga','todo','es'] },
+                    { type:'choice', prompt:'¿Qué significa "Piece of cake"?', options:['Muy fácil','Un pastel','Muy caro','Imposible'], correct:'Muy fácil' }
+                ]}
             ]
         }
     };
 
-    // --- CONFETTI ---
-    const confettiCanvas = document.getElementById('confetti-canvas');
-    const ctx = confettiCanvas ? confettiCanvas.getContext('2d') : null;
-    let confettiParticles = [];
+    // ====== SOUNDS ======
+    function initAudio() { if (!state.audioCtx) state.audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    function playClick() { try { initAudio(); const o=state.audioCtx.createOscillator(),g=state.audioCtx.createGain(); o.type='sine'; o.frequency.setValueAtTime(450,state.audioCtx.currentTime); o.frequency.exponentialRampToValueAtTime(850,state.audioCtx.currentTime+0.04); g.gain.setValueAtTime(0.12,state.audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,state.audioCtx.currentTime+0.04); o.connect(g); g.connect(state.audioCtx.destination); o.start(); o.stop(state.audioCtx.currentTime+0.04); } catch(e){} }
+    function playPop() { try { initAudio(); const n=state.audioCtx.currentTime,o=state.audioCtx.createOscillator(),g=state.audioCtx.createGain(); o.type='triangle'; o.frequency.setValueAtTime(600,n); o.frequency.exponentialRampToValueAtTime(1200,n+0.08); g.gain.setValueAtTime(0.2,n); g.gain.exponentialRampToValueAtTime(0.001,n+0.08); o.connect(g); g.connect(state.audioCtx.destination); o.start(n); o.stop(n+0.08); } catch(e){} }
+    function playSuccess() { try { initAudio(); const n=state.audioCtx.currentTime; [523.25,659.25,783.99,1046.50].forEach((f,i)=>{ const o=state.audioCtx.createOscillator(),g=state.audioCtx.createGain(); o.type='triangle'; o.frequency.setValueAtTime(f,n+i*0.07); g.gain.setValueAtTime(0.18,n+i*0.07); g.gain.exponentialRampToValueAtTime(0.001,n+i*0.07+0.2); o.connect(g); g.connect(state.audioCtx.destination); o.start(n+i*0.07); o.stop(n+i*0.07+0.2); }); } catch(e){} }
+    function playError() { try { initAudio(); const n=state.audioCtx.currentTime,o=state.audioCtx.createOscillator(),g=state.audioCtx.createGain(); o.type='sawtooth'; o.frequency.setValueAtTime(220,n); o.frequency.linearRampToValueAtTime(140,n+0.22); g.gain.setValueAtTime(0.18,n); g.gain.exponentialRampToValueAtTime(0.001,n+0.25); o.connect(g); g.connect(state.audioCtx.destination); o.start(n); o.stop(n+0.25); } catch(e){} }
+    function playCombo() { try { initAudio(); const n=state.audioCtx.currentTime; [440,554.37,659.25].forEach((f,i)=>{ const o=state.audioCtx.createOscillator(),g=state.audioCtx.createGain(); o.type='sine'; o.frequency.setValueAtTime(f,n+i*0.05); g.gain.setValueAtTime(0.15,n+i*0.05); g.gain.exponentialRampToValueAtTime(0.001,n+i*0.05+0.12); o.connect(g); g.connect(state.audioCtx.destination); o.start(n+i*0.05); o.stop(n+i*0.05+0.12); }); } catch(e){} }
 
-    function resizeCanvas() {
-        if (confettiCanvas) {
-            confettiCanvas.width = window.innerWidth;
-            confettiCanvas.height = window.innerHeight;
-        }
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    function triggerConfetti() {
-        if (!ctx) return;
-        confettiParticles = [];
-        const colors = ['#58CC02', '#1CB0F6', '#FFC800', '#FF4B4B', '#FF9600', '#CE82FF'];
-        for (let i = 0; i < 100; i++) {
-            confettiParticles.push({
-                x: window.innerWidth / 2, y: window.innerHeight / 2,
-                vx: (Math.random() - 0.5) * 14, vy: (Math.random() - 0.7) * 16,
-                size: Math.random() * 8 + 6,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                rotation: Math.random() * 360, rSpeed: (Math.random() - 0.5) * 10,
-                opacity: 1
-            });
-        }
-        function updateConfetti() {
-            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-            let alive = false;
-            confettiParticles.forEach(p => {
-                p.x += p.vx; p.y += p.vy; p.vy += 0.4;
-                p.rotation += p.rSpeed; p.opacity -= 0.012;
-                if (p.opacity > 0) {
-                    alive = true;
-                    ctx.save();
-                    ctx.translate(p.x, p.y);
-                    ctx.rotate((p.rotation * Math.PI) / 180);
-                    ctx.fillStyle = p.color;
-                    ctx.globalAlpha = Math.max(0, p.opacity);
-                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-                    ctx.restore();
-                }
-            });
-            if (alive) requestAnimationFrame(updateConfetti);
-            else ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-        }
-        updateConfetti();
-    }
-
-    // --- SOUND ENGINE ---
-    function initAudioContext() {
-        if (!state.audioCtx) state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-
-    function playClickSound() {
-        try {
-            initAudioContext();
-            const osc = state.audioCtx.createOscillator();
-            const gain = state.audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(450, state.audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(850, state.audioCtx.currentTime + 0.04);
-            gain.gain.setValueAtTime(0.12, state.audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, state.audioCtx.currentTime + 0.04);
-            osc.connect(gain); gain.connect(state.audioCtx.destination);
-            osc.start(); osc.stop(state.audioCtx.currentTime + 0.04);
-        } catch(e) {}
-    }
-
-    function playMatchPopSound() {
-        try {
-            initAudioContext();
-            const now = state.audioCtx.currentTime;
-            const osc = state.audioCtx.createOscillator();
-            const gain = state.audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(600, now);
-            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.08);
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-            osc.connect(gain); gain.connect(state.audioCtx.destination);
-            osc.start(now); osc.stop(now + 0.08);
-        } catch(e) {}
-    }
-
-    function playSuccessSound() {
-        try {
-            initAudioContext();
-            const now = state.audioCtx.currentTime;
-            [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
-                const osc = state.audioCtx.createOscillator();
-                const gain = state.audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(freq, now + idx * 0.07);
-                gain.gain.setValueAtTime(0.18, now + idx * 0.07);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.2);
-                osc.connect(gain); gain.connect(state.audioCtx.destination);
-                osc.start(now + idx * 0.07); osc.stop(now + idx * 0.07 + 0.2);
-            });
-        } catch(e) {}
-    }
-
-    function playErrorSound() {
-        try {
-            initAudioContext();
-            const now = state.audioCtx.currentTime;
-            const osc = state.audioCtx.createOscillator();
-            const gain = state.audioCtx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(220, now);
-            osc.frequency.linearRampToValueAtTime(140, now + 0.22);
-            gain.gain.setValueAtTime(0.18, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-            osc.connect(gain); gain.connect(state.audioCtx.destination);
-            osc.start(now); osc.stop(now + 0.25);
-        } catch(e) {}
-    }
-
-    function playComboSound() {
-        try {
-            initAudioContext();
-            const now = state.audioCtx.currentTime;
-            [440, 554.37, 659.25].forEach((freq, idx) => {
-                const osc = state.audioCtx.createOscillator();
-                const gain = state.audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq, now + idx * 0.05);
-                gain.gain.setValueAtTime(0.15, now + idx * 0.05);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.12);
-                osc.connect(gain); gain.connect(state.audioCtx.destination);
-                osc.start(now + idx * 0.05); osc.stop(now + idx * 0.05 + 0.12);
-            });
-        } catch(e) {}
-    }
-
-    function playHintSound() {
-        try {
-            initAudioContext();
-            const now = state.audioCtx.currentTime;
-            const osc = state.audioCtx.createOscillator();
-            const gain = state.audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, now);
-            osc.frequency.exponentialRampToValueAtTime(1320, now + 0.15);
-            gain.gain.setValueAtTime(0.1, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-            osc.connect(gain); gain.connect(state.audioCtx.destination);
-            osc.start(now); osc.stop(now + 0.15);
-        } catch(e) {}
-    }
-
-    // --- SPEECH SYNTHESIS ---
+    // ====== TTS ======
     const mascotAvatar = document.getElementById('mascot-avatar');
-
-    function speakText(text, rate = 0.95) {
+    function speak(text, rate=0.95) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-            utterance.rate = rate;
-            if (mascotAvatar) {
-                mascotAvatar.classList.add('mascot-speaking');
-                utterance.onend = () => mascotAvatar.classList.remove('mascot-speaking');
-            }
-            window.speechSynthesis.speak(utterance);
+            const u = new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=rate;
+            if (mascotAvatar) { mascotAvatar.classList.add('mascot-speaking'); u.onend=()=>mascotAvatar.classList.remove('mascot-speaking'); }
+            window.speechSynthesis.speak(u);
         }
     }
 
-    // --- DOM ELEMENTS ---
-    const levelSelectorBtn = document.getElementById('level-selector-btn');
-    const levelDrawer = document.getElementById('level-drawer');
-    const currentLevelBadge = document.getElementById('current-level-badge');
-    const levelOpts = document.querySelectorAll('.level-opt');
-    const pathTree = document.getElementById('path-tree');
-    const bannerUnit = document.getElementById('banner-unit');
-    const bannerTitle = document.getElementById('banner-title');
-    const bannerDesc = document.getElementById('banner-desc');
-    const navTabs = document.querySelectorAll('.nav-tab');
-    const views = document.querySelectorAll('.view');
-    const lessonView = document.getElementById('lesson-view');
-    const closeLessonBtn = document.getElementById('close-lesson-btn');
-    const lessonProgressFill = document.getElementById('lesson-progress-fill');
-    const lessonHeartsCount = document.getElementById('lesson-hearts-count');
-    const promptTitle = document.getElementById('prompt-title');
-    const promptText = document.getElementById('prompt-text');
-    const ttsNormalBtn = document.getElementById('tts-normal-btn');
-    const ttsSlowBtn = document.getElementById('tts-slow-btn');
-    const modTranslate = document.getElementById('mod-translate');
-    const modMatching = document.getElementById('mod-matching');
-    const modChoice = document.getElementById('mod-choice');
-    const answerSlotLine = document.getElementById('answer-slot-line');
-    const placeholderHint = document.getElementById('placeholder-hint');
-    const wordPool = document.getElementById('word-pool');
-    const matchingGrid = document.getElementById('matching-grid');
-    const choicesGrid = document.getElementById('choices-grid');
-    const checkBtn = document.getElementById('check-btn');
-    const feedbackSheet = document.getElementById('feedback-sheet');
-    const feedbackIcon = document.getElementById('feedback-icon');
-    const feedbackTitleEl = document.getElementById('feedback-title');
-    const feedbackSubtitle = document.getElementById('feedback-subtitle');
-    const continueBtn = document.getElementById('continue-btn');
-    const userStreak = document.getElementById('user-streak');
-    const userGems = document.getElementById('user-gems');
-    const userHearts = document.getElementById('user-hearts');
-    const mainHeartIcon = document.getElementById('main-heart-icon');
-    const floatingHeartLoss = document.getElementById('floating-heart-loss');
-    const profStreak = document.getElementById('prof-streak');
-    const profXp = document.getElementById('prof-xp');
-    const profGems = document.getElementById('prof-gems');
-    const completionModal = document.getElementById('completion-modal');
-    const finishLessonBtn = document.getElementById('finish-lesson-btn');
-    const accuracyVal = document.getElementById('accuracy-val');
-    const buyHeartsBtn = document.getElementById('buy-hearts-btn');
-    const buyFreezeBtn = document.getElementById('buy-freeze-btn');
-    const revealSrsBtn = document.getElementById('reveal-srs-btn');
-    const srsTranslation = document.getElementById('srs-translation');
-    const srsTtsBtn = document.getElementById('srs-tts-btn');
-    // New guided learning elements
-    const comboCounter = document.getElementById('combo-counter');
-    const comboNumber = document.getElementById('combo-number');
-    const qCurrent = document.getElementById('q-current');
-    const qTotal = document.getElementById('q-total');
-    const encouragementToast = document.getElementById('encouragement-toast');
-    const encouragementText = document.getElementById('encouragement-text');
-    const hintBtn = document.getElementById('hint-btn');
-    const comboMaxVal = document.getElementById('combo-max-val');
-    const xpRewardVal = document.getElementById('xp-reward-val');
-    const completionEncourage = document.getElementById('completion-encourage');
-    // Tutorial elements
-    const tutorialOverlay = document.getElementById('tutorial-overlay');
-    const tutorialTextEl = document.getElementById('tutorial-text');
-    const tutorialNextBtn = document.getElementById('tutorial-next-btn');
-    const tutorialDotsContainer = document.getElementById('tutorial-dots');
-    const tutorialMascotEl = document.querySelector('.tutorial-mascot');
+    // ====== CONFETTI ======
+    const confettiCanvas=document.getElementById('confetti-canvas');
+    const ctx=confettiCanvas?confettiCanvas.getContext('2d'):null;
+    function resizeCanvas(){if(confettiCanvas){confettiCanvas.width=window.innerWidth;confettiCanvas.height=window.innerHeight;}}
+    window.addEventListener('resize',resizeCanvas); resizeCanvas();
+    function triggerConfetti(){if(!ctx)return;const ps=[];const colors=['#58CC02','#1CB0F6','#FFC800','#FF4B4B','#FF9600','#CE82FF'];for(let i=0;i<100;i++)ps.push({x:window.innerWidth/2,y:window.innerHeight/2,vx:(Math.random()-0.5)*14,vy:(Math.random()-0.7)*16,size:Math.random()*8+6,color:colors[Math.floor(Math.random()*colors.length)],rot:Math.random()*360,rs:(Math.random()-0.5)*10,op:1});(function draw(){ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);let alive=false;ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.4;p.rot+=p.rs;p.op-=0.012;if(p.op>0){alive=true;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.color;ctx.globalAlpha=Math.max(0,p.op);ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);ctx.restore();}});if(alive)requestAnimationFrame(draw);else ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);})();}
 
-    // --- TUTORIAL SYSTEM ---
-    function showTutorial() {
-        if (state.tutorialSeen) return;
-        tutorialOverlay.classList.remove('hidden');
-        tutorialStep = 0;
-        renderTutorialDots();
-        renderTutorialStep();
-    }
+    // ====== MESSAGES ======
+    const msgs={ok:['¡Excelente! 🌟','¡Genial! ⚡','¡Perfecto! 🎯','¡Correcto! ✨','¡Bravo! 🏆','¡Increíble! 🚀','¡Muy bien! 💪'],combo:['🔥 ¡Racha de fuego!','⚡ ¡Imparable!','💎 ¡Brillante!','🌟 ¡Combo increíble!'],end:['¡Tu inglés mejora cada día!','¡Eres un campeón del aprendizaje!','¡Cada lección te acerca a la fluidez!','¡Sigue así, vas increíble!']};
+    function randMsg(arr){return arr[Math.floor(Math.random()*arr.length)];}
 
-    function renderTutorialDots() {
-        tutorialDotsContainer.innerHTML = '';
-        tutorialSteps.forEach((_, i) => {
-            const dot = document.createElement('span');
-            dot.className = `tutorial-dot ${i === 0 ? 'active' : ''}`;
-            tutorialDotsContainer.appendChild(dot);
+    // ====== DOM ======
+    const $=id=>document.getElementById(id);
+    const levelSelectorBtn=$('level-selector-btn'),levelDrawer=$('level-drawer'),currentLevelBadge=$('current-level-badge');
+    const pathTree=$('path-tree'),bannerUnit=$('banner-unit'),bannerTitle=$('banner-title'),bannerDesc=$('banner-desc');
+    const lessonView=$('lesson-view'),closeLessonBtn=$('close-lesson-btn'),progressFill=$('lesson-progress-fill'),lessonHeartsCount=$('lesson-hearts-count');
+    const promptTitle=$('prompt-title'),promptText=$('prompt-text'),ttsNormal=$('tts-normal-btn'),ttsSlow=$('tts-slow-btn');
+    const modImageSelect=$('mod-image-select'),bigEmoji=$('big-emoji'),imageOptions=$('image-options');
+    const modEmojiMatch=$('mod-emoji-match'),bigWord=$('big-word'),emojiOptions=$('emoji-options');
+    const modTranslate=$('mod-translate'),answerSlot=$('answer-slot-line'),placeholder=$('placeholder-hint'),wordPool=$('word-pool');
+    const modMatching=$('mod-matching'),matchingGrid=$('matching-grid');
+    const modChoice=$('mod-choice'),choicesGrid=$('choices-grid');
+    const checkBtn=$('check-btn'),feedbackSheet=$('feedback-sheet'),feedbackIcon=$('feedback-icon'),feedbackTitleEl=$('feedback-title'),feedbackSubtitle=$('feedback-subtitle'),continueBtn=$('continue-btn');
+    const comboCounter=$('combo-counter'),comboNumber=$('combo-number'),qCurrent=$('q-current'),qTotal=$('q-total');
+    const hintBtn=$('hint-btn'),charPrompt=$('character-prompt');
+    const completionModal=$('completion-modal'),finishBtn=$('finish-lesson-btn'),accuracyVal=$('accuracy-val'),comboMaxVal=$('combo-max-val'),xpRewardVal=$('xp-reward-val'),completionEncourage=$('completion-encourage');
+    const mainHeartIcon=$('main-heart-icon'),floatingHeartLoss=$('floating-heart-loss');
+    const tutorialOverlay=$('tutorial-overlay'),tutorialText=$('tutorial-text'),tutorialNextBtn=$('tutorial-next-btn'),tutorialDots=$('tutorial-dots'),tutorialMascot=document.querySelector('.tutorial-mascot');
+
+    // ====== TUTORIAL ======
+    const tutSteps=[
+        {t:'¡Hola! 👋 Soy tu asistente. Te enseñaré inglés paso a paso, ¡jugando!',m:'🤖'},
+        {t:'🐱 Empezarás reconociendo animales, colores y objetos con emojis gigantes.',m:'🎮'},
+        {t:'👆 Toca la opción correcta. ¡Es súper fácil! Luego avanzarás a frases.',m:'✨'},
+        {t:'💡 Usa "Pista" si necesitas ayuda. ¡Acumula combos 🔥 respondiendo bien seguido!',m:'🏆'}
+    ];
+    let tutStep=0;
+
+    function showTutorial(){if(state.tutorialSeen)return;tutorialOverlay.classList.remove('hidden');tutStep=0;renderTutDots();renderTutStep();}
+    function renderTutDots(){tutorialDots.innerHTML='';tutSteps.forEach((_,i)=>{const d=document.createElement('span');d.className=`tutorial-dot ${i===0?'active':''}`;tutorialDots.appendChild(d);});}
+    function renderTutStep(){tutorialText.textContent=tutSteps[tutStep].t;tutorialMascot.textContent=tutSteps[tutStep].m;tutorialDots.querySelectorAll('.tutorial-dot').forEach((d,i)=>d.classList.toggle('active',i===tutStep));tutorialNextBtn.textContent=tutStep===tutSteps.length-1?'¡A JUGAR! 🚀':'SIGUIENTE →';}
+    tutorialNextBtn.addEventListener('click',()=>{playClick();tutStep++;if(tutStep>=tutSteps.length){tutorialOverlay.classList.add('hidden');state.tutorialSeen=true;localStorage.setItem('lp_tut','1');}else renderTutStep();});
+
+    // ====== ENCOURAGEMENT ======
+    function showToast(msg){const t=$('encouragement-toast'),tx=$('encouragement-text');if(!t||!tx)return;tx.textContent=msg;t.classList.remove('hidden');t.style.animation='none';t.offsetHeight;t.style.animation='';setTimeout(()=>t.classList.add('hidden'),2200);}
+    function updateCombo(ok){if(ok){state.comboStreak++;if(state.comboStreak>state.maxCombo)state.maxCombo=state.comboStreak;if(state.comboStreak>=2){comboCounter.classList.remove('hidden');comboNumber.textContent=state.comboStreak;playCombo();if(state.comboStreak>=3)showToast(randMsg(msgs.combo));}}else{state.comboStreak=0;comboCounter.classList.add('hidden');}}
+
+    // ====== LEVEL SELECTOR ======
+    levelSelectorBtn.addEventListener('click',()=>{playClick();levelDrawer.classList.toggle('active');});
+    document.querySelectorAll('.level-opt').forEach(o=>o.addEventListener('click',()=>{playClick();document.querySelectorAll('.level-opt').forEach(x=>x.classList.remove('active'));o.classList.add('active');state.currentLevel=o.dataset.level;currentLevelBadge.textContent=state.currentLevel;levelDrawer.classList.remove('active');renderPath();}));
+
+    // ====== NAV TABS ======
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>{playClick();const id=t.dataset.target;document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.view').forEach(v=>{v.id===id?v.classList.add('active'):v.classList.remove('active');});}));
+
+    // ====== PATH TREE ======
+    function renderPath(){
+        const d=curriculum[state.currentLevel];
+        bannerUnit.textContent=`Nivel ${state.currentLevel}`;bannerTitle.textContent=d.title;bannerDesc.textContent=d.desc;
+        pathTree.innerHTML='';
+        d.lessons.forEach((l,i)=>{
+            const w=document.createElement('div');w.className=`node-wrapper ${i===0?'level-active':'level-locked'}`;
+            const b=document.createElement('button');b.className='path-node';b.innerHTML=`<div class="node-icon">${l.icon}</div>`;
+            if(i===0){const tip=document.createElement('div');tip.className='node-tooltip';tip.textContent='¡EMPEZAR!';w.appendChild(tip);b.addEventListener('click',()=>startLesson(l));}
+            w.appendChild(b);
+            const lbl=document.createElement('div');lbl.className='node-label';lbl.textContent=l.name;w.appendChild(lbl);
+            pathTree.appendChild(w);
         });
     }
 
-    function renderTutorialStep() {
-        const step = tutorialSteps[tutorialStep];
-        tutorialTextEl.textContent = step.text;
-        tutorialMascotEl.textContent = step.mascot;
-        tutorialDotsContainer.querySelectorAll('.tutorial-dot').forEach((d, i) => {
-            d.classList.toggle('active', i === tutorialStep);
-        });
-        tutorialNextBtn.textContent = tutorialStep === tutorialSteps.length - 1 ? '¡EMPEZAR A APRENDER! 🚀' : 'SIGUIENTE →';
+    // ====== LESSON START ======
+    function startLesson(l){
+        state.activeLesson=l;state.currentQuestionIdx=0;state.correctCount=0;state.hearts=5;state.comboStreak=0;state.maxCombo=0;state.hintsUsed=0;state.selectedChoice=null;
+        comboCounter.classList.add('hidden');updateStats();
+        document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));lessonView.classList.add('active');
+        loadQ();
     }
 
-    if (tutorialNextBtn) {
-        tutorialNextBtn.addEventListener('click', () => {
-            playClickSound();
-            tutorialStep++;
-            if (tutorialStep >= tutorialSteps.length) {
-                tutorialOverlay.classList.add('hidden');
-                state.tutorialSeen = true;
-                localStorage.setItem('linguapro_tutorial_seen', 'true');
-            } else {
-                renderTutorialStep();
-            }
-        });
-    }
+    closeLessonBtn.addEventListener('click',()=>{if(confirm('¿Salir? Perderás el progreso.')){lessonView.classList.remove('active');$('path-view').classList.add('active');}});
+    ttsNormal.addEventListener('click',()=>speak(promptText.textContent,0.95));
+    ttsSlow.addEventListener('click',()=>speak(promptText.textContent,0.55));
 
-    // --- ENCOURAGEMENT TOAST ---
-    function showEncouragement(message) {
-        const toast = document.getElementById('encouragement-toast');
-        const textEl = document.getElementById('encouragement-text');
-        if (!toast || !textEl) return;
-        textEl.textContent = message;
-        // Force CSS animation restart
-        toast.classList.remove('hidden');
-        toast.style.animation = 'none';
-        toast.offsetHeight; // Trigger reflow
-        toast.style.animation = '';
-        setTimeout(() => toast.classList.add('hidden'), 2200);
-    }
+    // ====== LOAD QUESTION ======
+    function loadQ(){
+        const q=state.activeLesson.questions[state.currentQuestionIdx];
+        const total=state.activeLesson.questions.length;
+        state.selectedChips=[];state.firstMatchCard=null;state.matchedPairsCount=0;state.selectedChoice=null;
+        feedbackSheet.className='feedback-sheet';checkBtn.disabled=true;
+        qCurrent.textContent=state.currentQuestionIdx+1;qTotal.textContent=total;
+        if(hintBtn)hintBtn.classList.remove('used');
+        progressFill.style.width=`${(state.currentQuestionIdx/total)*100}%`;
 
-    // --- COMBO COUNTER ---
-    function updateCombo(correct) {
-        if (correct) {
-            state.comboStreak++;
-            if (state.comboStreak > state.maxCombo) state.maxCombo = state.comboStreak;
+        // Hide all modules
+        [modImageSelect,modEmojiMatch,modTranslate,modMatching,modChoice].forEach(m=>m.classList.add('hidden'));
 
-            if (state.comboStreak >= 2) {
-                comboCounter.classList.remove('hidden');
-                comboNumber.textContent = state.comboStreak;
-                playComboSound();
+        // Show/hide character prompt based on type
+        const showBubble = q.type==='translate'||q.type==='choice';
+        charPrompt.style.display=showBubble?'flex':'none';
 
-                if (state.comboStreak >= 3) {
-                    const msg = encourageCombo[Math.floor(Math.random() * encourageCombo.length)];
-                    showEncouragement(msg);
-                }
-            }
-        } else {
-            state.comboStreak = 0;
-            comboCounter.classList.add('hidden');
-        }
-    }
-
-    // --- HINT SYSTEM ---
-    if (hintBtn) {
-        hintBtn.addEventListener('click', () => {
-            const q = state.activeLesson?.questions[state.currentQuestionIdx];
-            if (!q || q.type !== 'translate') return;
-
-            playHintSound();
-            state.hintsUsed++;
-
-            // Find next word in answer that hasn't been placed yet
-            const placedWords = state.selectedChips.map(c => c.text);
-            const nextWord = q.answer.find((w, i) => {
-                const placedCount = placedWords.filter(p => p === w).length;
-                const neededCount = q.answer.slice(0, i + 1).filter(a => a === w).length;
-                return placedCount < neededCount;
+        if(q.type==='image_select'){
+            promptTitle.textContent=q.prompt;
+            modImageSelect.classList.remove('hidden');
+            bigEmoji.textContent=q.emoji;
+            bigEmoji.style.animation='none';bigEmoji.offsetHeight;bigEmoji.style.animation='';
+            speak(q.word,0.9);
+            imageOptions.innerHTML='';
+            q.options.sort(()=>Math.random()-0.5).forEach(opt=>{
+                const btn=document.createElement('button');btn.className='image-option';btn.textContent=opt;
+                btn.addEventListener('click',()=>{playClick();imageOptions.querySelectorAll('.image-option').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.selectedChoice=opt;checkBtn.disabled=false;});
+                imageOptions.appendChild(btn);
             });
 
-            if (nextWord) {
-                // Find matching chip in pool that is not disabled and highlight it
-                const poolChips = wordPool.querySelectorAll('.word-chip:not(.chip-disabled)');
-                for (const chip of poolChips) {
-                    if (chip.textContent === nextWord) {
-                        chip.classList.add('hint-glow');
-                        setTimeout(() => chip.classList.remove('hint-glow'), 2500);
-                        break;
-                    }
-                }
-            }
-
-            hintBtn.classList.add('used');
-        });
-    }
-
-    // --- LEVEL SELECTOR ---
-    levelSelectorBtn.addEventListener('click', () => {
-        playClickSound();
-        levelDrawer.classList.toggle('active');
-    });
-
-    levelOpts.forEach(opt => {
-        opt.addEventListener('click', () => {
-            playClickSound();
-            levelOpts.forEach(o => o.classList.remove('active'));
-            opt.classList.add('active');
-            state.currentLevel = opt.dataset.level;
-            currentLevelBadge.textContent = state.currentLevel;
-            levelDrawer.classList.remove('active');
-            renderPathTree();
-        });
-    });
-
-    // --- NAV TABS ---
-    navTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            playClickSound();
-            const targetId = tab.dataset.target;
-            navTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            views.forEach(v => {
-                if (v.id === targetId) v.classList.add('active');
-                else v.classList.remove('active');
+        } else if(q.type==='emoji_match'){
+            promptTitle.textContent=q.prompt;
+            modEmojiMatch.classList.remove('hidden');
+            bigWord.textContent=q.word;
+            bigWord.style.animation='none';bigWord.offsetHeight;bigWord.style.animation='';
+            speak(q.word,0.9);
+            emojiOptions.innerHTML='';
+            q.emojis.sort(()=>Math.random()-0.5).forEach(em=>{
+                const btn=document.createElement('button');btn.className='emoji-option';btn.textContent=em;
+                btn.addEventListener('click',()=>{playClick();emojiOptions.querySelectorAll('.emoji-option').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.selectedChoice=em;checkBtn.disabled=false;});
+                emojiOptions.appendChild(btn);
             });
-        });
-    });
 
-    // --- PATH TREE ---
-    function renderPathTree() {
-        const lvlData = curriculum[state.currentLevel];
-        bannerUnit.textContent = `Sección (${state.currentLevel})`;
-        bannerTitle.textContent = lvlData.title;
-        bannerDesc.textContent = lvlData.desc;
-        pathTree.innerHTML = '';
-
-        lvlData.lessons.forEach((l, idx) => {
-            const wrapper = document.createElement('div');
-            wrapper.className = `node-wrapper ${idx === 0 ? 'level-active' : 'level-locked'}`;
-            const btn = document.createElement('button');
-            btn.className = 'path-node';
-            btn.innerHTML = `<div class="node-icon">${l.icon}</div>`;
-            if (idx === 0) {
-                const tooltip = document.createElement('div');
-                tooltip.className = 'node-tooltip';
-                tooltip.textContent = '¡EMPEZAR!';
-                wrapper.appendChild(tooltip);
-                btn.addEventListener('click', () => startLesson(l));
-            }
-            wrapper.appendChild(btn);
-            pathTree.appendChild(wrapper);
-        });
-    }
-
-    // --- LESSON LIFECYCLE ---
-    function startLesson(lessonObj) {
-        state.activeLesson = lessonObj;
-        state.currentQuestionIdx = 0;
-        state.correctCount = 0;
-        state.hearts = 5;
-        state.comboStreak = 0;
-        state.maxCombo = 0;
-        state.hintsUsed = 0;
-        comboCounter.classList.add('hidden');
-        updateStats();
-
-        views.forEach(v => v.classList.remove('active'));
-        lessonView.classList.add('active');
-
-        loadQuestion();
-    }
-
-    closeLessonBtn.addEventListener('click', () => {
-        if (confirm('¿Quieres salir de la lección? Perderás el progreso actual.')) {
-            lessonView.classList.remove('active');
-            document.getElementById('path-view').classList.add('active');
-        }
-    });
-
-    ttsNormalBtn.addEventListener('click', () => speakText(promptText.textContent, 0.95));
-    ttsSlowBtn.addEventListener('click', () => speakText(promptText.textContent, 0.55));
-
-    function loadQuestion() {
-        const q = state.activeLesson.questions[state.currentQuestionIdx];
-        const totalQ = state.activeLesson.questions.length;
-
-        state.selectedChips = [];
-        state.firstMatchCard = null;
-        state.matchedPairsCount = 0;
-
-        feedbackSheet.className = 'feedback-sheet';
-        checkBtn.disabled = true;
-
-        // Update question counter
-        qCurrent.textContent = state.currentQuestionIdx + 1;
-        qTotal.textContent = totalQ;
-
-        // Reset hint button
-        if (hintBtn) hintBtn.classList.remove('used');
-
-        // Progress
-        const pct = (state.currentQuestionIdx / totalQ) * 100;
-        lessonProgressFill.style.width = `${pct}%`;
-
-        modTranslate.classList.add('hidden');
-        modMatching.classList.add('hidden');
-        modChoice.classList.add('hidden');
-
-        if (q.type === 'translate') {
-            promptTitle.textContent = 'Traduce esta oración';
-            promptText.textContent = q.prompt;
-            modTranslate.classList.remove('hidden');
-            speakText(q.prompt, 0.95);
-
-            wordPool.innerHTML = '';
-            answerSlotLine.innerHTML = '';
-            answerSlotLine.appendChild(placeholderHint);
-            placeholderHint.style.display = 'inline';
-
-            const shuffled = [...q.pool].sort(() => Math.random() - 0.5);
-            shuffled.forEach((wordText, i) => {
-                const chipId = `chip-${i}-${Date.now()}`;
-                const chip = document.createElement('button');
-                chip.className = 'word-chip';
-                chip.id = chipId;
-                chip.textContent = wordText;
-
-                chip.addEventListener('click', () => {
-                    if (chip.classList.contains('chip-disabled')) return;
-                    playClickSound();
-                    chip.classList.add('chip-disabled');
-                    chip.classList.remove('hint-glow');
-                    placeholderHint.style.display = 'none';
-
-                    const slotChip = document.createElement('button');
-                    slotChip.className = 'word-chip';
-                    slotChip.textContent = wordText;
-
-                    slotChip.addEventListener('click', () => {
-                        playClickSound();
-                        slotChip.remove();
-                        chip.classList.remove('chip-disabled');
-                        state.selectedChips = state.selectedChips.filter(c => c.slotElem !== slotChip);
-                        if (state.selectedChips.length === 0) {
-                            placeholderHint.style.display = 'inline';
-                            checkBtn.disabled = true;
-                        }
-                    });
-
-                    answerSlotLine.appendChild(slotChip);
-                    state.selectedChips.push({ id: chipId, text: wordText, slotElem: slotChip });
-                    checkBtn.disabled = false;
+        } else if(q.type==='translate'){
+            promptTitle.textContent='Traduce esta oración';promptText.textContent=q.prompt;
+            modTranslate.classList.remove('hidden');speak(q.prompt,0.95);
+            wordPool.innerHTML='';answerSlot.innerHTML='';answerSlot.appendChild(placeholder);placeholder.style.display='inline';
+            [...q.pool].sort(()=>Math.random()-0.5).forEach((w,i)=>{
+                const cid=`c${i}-${Date.now()}`;
+                const chip=document.createElement('button');chip.className='word-chip';chip.id=cid;chip.textContent=w;
+                chip.addEventListener('click',()=>{
+                    if(chip.classList.contains('chip-disabled'))return;playClick();chip.classList.add('chip-disabled');chip.classList.remove('hint-glow');placeholder.style.display='none';
+                    const sc=document.createElement('button');sc.className='word-chip';sc.textContent=w;
+                    sc.addEventListener('click',()=>{playClick();sc.remove();chip.classList.remove('chip-disabled');state.selectedChips=state.selectedChips.filter(c=>c.el!==sc);if(!state.selectedChips.length){placeholder.style.display='inline';checkBtn.disabled=true;}});
+                    answerSlot.appendChild(sc);state.selectedChips.push({id:cid,text:w,el:sc});checkBtn.disabled=false;
                 });
-
                 wordPool.appendChild(chip);
             });
 
-        } else if (q.type === 'matching') {
-            promptTitle.textContent = 'Toca los pares que correspondan';
-            promptText.textContent = 'Selecciona la palabra en inglés y su traducción';
-            modMatching.classList.remove('hidden');
-            matchingGrid.innerHTML = '';
-            const allCards = [];
-            q.pairs.forEach((p, idx) => {
-                allCards.push({ id: idx, text: p.en, lang: 'en' });
-                allCards.push({ id: idx, text: p.es, lang: 'es' });
-            });
-            allCards.sort(() => Math.random() - 0.5);
-
-            allCards.forEach(cObj => {
-                const card = document.createElement('button');
-                card.className = 'match-card';
-                card.textContent = cObj.text;
-                card.dataset.pairId = cObj.id;
-
-                card.addEventListener('click', () => {
-                    if (card.classList.contains('matched')) return;
-                    if (cObj.lang === 'en') speakText(cObj.text, 0.95);
-                    else playClickSound();
-
-                    if (!state.firstMatchCard) {
-                        state.firstMatchCard = { elem: card, id: cObj.id };
-                        card.classList.add('selected');
-                    } else {
-                        if (state.firstMatchCard.elem === card) return;
-                        if (state.firstMatchCard.id === Number(card.dataset.pairId)) {
-                            playMatchPopSound();
-                            state.firstMatchCard.elem.className = 'match-card matched';
-                            card.className = 'match-card matched';
-                            state.firstMatchCard = null;
-                            state.matchedPairsCount++;
-                            if (state.matchedPairsCount === q.pairs.length) checkBtn.disabled = false;
-                        } else {
-                            playErrorSound();
-                            card.classList.add('wrong');
-                            state.firstMatchCard.elem.classList.add('wrong');
-                            setTimeout(() => {
-                                card.classList.remove('wrong', 'selected');
-                                state.firstMatchCard.elem.classList.remove('wrong', 'selected');
-                                state.firstMatchCard = null;
-                            }, 400);
-                        }
+        } else if(q.type==='matching'){
+            promptTitle.textContent='Empareja los pares';promptText.textContent=q.prompt;
+            modMatching.classList.remove('hidden');matchingGrid.innerHTML='';
+            const cards=[];q.pairs.forEach((p,i)=>{cards.push({id:i,text:p.en,lang:'en'});cards.push({id:i,text:p.es,lang:'es'});});
+            cards.sort(()=>Math.random()-0.5);
+            cards.forEach(c=>{
+                const btn=document.createElement('button');btn.className='match-card';btn.textContent=c.text;btn.dataset.pairId=c.id;
+                btn.addEventListener('click',()=>{
+                    if(btn.classList.contains('matched'))return;
+                    if(c.lang==='en')speak(c.text,0.95);else playClick();
+                    if(!state.firstMatchCard){state.firstMatchCard={elem:btn,id:c.id};btn.classList.add('selected');}
+                    else{
+                        if(state.firstMatchCard.elem===btn)return;
+                        if(state.firstMatchCard.id===Number(btn.dataset.pairId)){playPop();state.firstMatchCard.elem.className='match-card matched';btn.className='match-card matched';state.firstMatchCard=null;state.matchedPairsCount++;if(state.matchedPairsCount===q.pairs.length)checkBtn.disabled=false;}
+                        else{playError();btn.classList.add('wrong');state.firstMatchCard.elem.classList.add('wrong');const fm=state.firstMatchCard;setTimeout(()=>{btn.classList.remove('wrong','selected');fm.elem.classList.remove('wrong','selected');state.firstMatchCard=null;},400);}
                     }
                 });
-                matchingGrid.appendChild(card);
+                matchingGrid.appendChild(btn);
             });
 
-        } else if (q.type === 'choice') {
-            promptTitle.textContent = 'Selecciona la opción correcta';
-            promptText.textContent = q.prompt;
-            modChoice.classList.remove('hidden');
-            choicesGrid.innerHTML = '';
-            q.options.forEach(optText => {
-                const card = document.createElement('button');
-                card.className = 'choice-card';
-                card.textContent = optText;
-                card.addEventListener('click', () => {
-                    playClickSound();
-                    choicesGrid.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
-                    card.classList.add('selected');
-                    state.selectedChoice = optText;
-                    checkBtn.disabled = false;
-                });
-                choicesGrid.appendChild(card);
+        } else if(q.type==='choice'){
+            promptTitle.textContent='Selecciona la opción correcta';promptText.textContent=q.prompt;
+            modChoice.classList.remove('hidden');choicesGrid.innerHTML='';
+            q.options.forEach(o=>{
+                const btn=document.createElement('button');btn.className='choice-card';btn.textContent=o;
+                btn.addEventListener('click',()=>{playClick();choicesGrid.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));btn.classList.add('selected');state.selectedChoice=o;checkBtn.disabled=false;});
+                choicesGrid.appendChild(btn);
             });
         }
     }
 
-    // --- CHECK ---
-    checkBtn.addEventListener('click', () => {
-        const q = state.activeLesson.questions[state.currentQuestionIdx];
-        let isCorrect = false;
+    // ====== HINT ======
+    if(hintBtn)hintBtn.addEventListener('click',()=>{
+        const q=state.activeLesson?.questions[state.currentQuestionIdx];if(!q||q.type!=='translate')return;
+        playClick();state.hintsUsed++;
+        const placed=state.selectedChips.map(c=>c.text);
+        const next=q.answer.find((w,i)=>{const pc=placed.filter(p=>p===w).length;const nc=q.answer.slice(0,i+1).filter(a=>a===w).length;return pc<nc;});
+        if(next){const chips=wordPool.querySelectorAll('.word-chip:not(.chip-disabled)');for(const c of chips)if(c.textContent===next){c.classList.add('hint-glow');setTimeout(()=>c.classList.remove('hint-glow'),2500);break;}}
+        hintBtn.classList.add('used');
+    });
 
-        if (q.type === 'translate') {
-            const userWords = state.selectedChips.map(c => c.text);
-            isCorrect = JSON.stringify(userWords) === JSON.stringify(q.answer);
-        } else if (q.type === 'matching') {
-            isCorrect = state.matchedPairsCount === q.pairs.length;
-        } else if (q.type === 'choice') {
-            isCorrect = state.selectedChoice === q.correct;
-        }
+    // ====== CHECK ======
+    checkBtn.addEventListener('click',()=>{
+        const q=state.activeLesson.questions[state.currentQuestionIdx];
+        let ok=false;
+        if(q.type==='translate'){ok=JSON.stringify(state.selectedChips.map(c=>c.text))===JSON.stringify(q.answer);}
+        else if(q.type==='matching'){ok=state.matchedPairsCount===q.pairs.length;}
+        else if(q.type==='choice'||q.type==='image_select'){ok=state.selectedChoice===q.correct;}
+        else if(q.type==='emoji_match'){ok=state.selectedChoice===q.correct;}
 
-        if (isCorrect) {
-            playSuccessSound();
-            state.correctCount++;
-            updateCombo(true);
-
-            const msg = encourageCorrect[Math.floor(Math.random() * encourageCorrect.length)];
-            feedbackSheet.className = 'feedback-sheet show success';
-            feedbackIcon.textContent = '✓';
-            feedbackTitleEl.textContent = msg;
-            feedbackSubtitle.textContent = state.comboStreak >= 2 ? `🔥 Combo x${state.comboStreak}` : 'Respuesta correcta.';
+        if(ok){
+            playSuccess();state.correctCount++;updateCombo(true);
+            feedbackSheet.className='feedback-sheet show success';feedbackIcon.textContent='✓';
+            feedbackTitleEl.textContent=randMsg(msgs.ok);
+            feedbackSubtitle.textContent=state.comboStreak>=2?`🔥 Combo x${state.comboStreak}`:'¡Sigue así!';
         } else {
-            playErrorSound();
-            updateCombo(false);
-            triggerHeartLossAnimation();
-            state.hearts = Math.max(0, state.hearts - 1);
-            updateStats();
-
-            feedbackSheet.className = 'feedback-sheet show error';
-            feedbackIcon.textContent = '✕';
-            feedbackTitleEl.textContent = 'No te preocupes, la respuesta era:';
-            feedbackSubtitle.textContent = q.type === 'translate' ? q.answer.join(' ') : (q.correct || 'Sigue practicando');
+            playError();updateCombo(false);triggerHeartLoss();state.hearts=Math.max(0,state.hearts-1);updateStats();
+            feedbackSheet.className='feedback-sheet show error';feedbackIcon.textContent='✕';
+            feedbackTitleEl.textContent='No te preocupes, la respuesta era:';
+            feedbackSubtitle.textContent=q.type==='translate'?q.answer.join(' '):(q.correct||'Sigue practicando');
         }
     });
 
-    function triggerHeartLossAnimation() {
-        if (mainHeartIcon && floatingHeartLoss) {
-            mainHeartIcon.classList.add('shake-heart');
-            floatingHeartLoss.classList.add('animate-loss');
-            setTimeout(() => {
-                mainHeartIcon.classList.remove('shake-heart');
-                floatingHeartLoss.classList.remove('animate-loss');
-            }, 1200);
-        }
+    function triggerHeartLoss(){if(mainHeartIcon&&floatingHeartLoss){mainHeartIcon.classList.add('shake-heart');floatingHeartLoss.classList.add('animate-loss');setTimeout(()=>{mainHeartIcon.classList.remove('shake-heart');floatingHeartLoss.classList.remove('animate-loss');},1200);}}
+
+    continueBtn.addEventListener('click',()=>{
+        feedbackSheet.classList.remove('show');state.currentQuestionIdx++;
+        if(state.currentQuestionIdx<state.activeLesson.questions.length&&state.hearts>0)loadQ();
+        else finishLesson();
+    });
+
+    function finishLesson(){
+        const total=state.activeLesson.questions.length;
+        const acc=Math.round((state.correctCount/total)*100);
+        const bonus=state.maxCombo>=3?25:15;
+        accuracyVal.textContent=`${acc}%`;comboMaxVal.textContent=`🔥 ${state.maxCombo}`;xpRewardVal.textContent=`+${bonus}`;
+        completionEncourage.textContent=randMsg(msgs.end);
+        state.gems+=20;state.xp+=bonus;updateStats();
+        completionModal.classList.add('active');triggerConfetti();playSuccess();
     }
 
-    continueBtn.addEventListener('click', () => {
-        feedbackSheet.classList.remove('show');
-        state.currentQuestionIdx++;
-        if (state.currentQuestionIdx < state.activeLesson.questions.length && state.hearts > 0) {
-            loadQuestion();
-        } else {
-            finishLesson();
-        }
-    });
+    finishBtn.addEventListener('click',()=>{completionModal.classList.remove('active');lessonView.classList.remove('active');$('path-view').classList.add('active');});
 
-    function finishLesson() {
-        const totalQ = state.activeLesson.questions.length;
-        const accuracy = Math.round((state.correctCount / totalQ) * 100);
-        const bonusXp = state.maxCombo >= 3 ? 25 : 15;
+    // ====== SHOP ======
+    $('buy-hearts-btn').addEventListener('click',()=>{if(state.gems>=50){state.gems-=50;state.hearts=5;updateStats();playSuccess();alert('¡5 ❤️ recargadas!');}else alert('Necesitas 50 💎');});
+    $('buy-freeze-btn').addEventListener('click',()=>{if(state.gems>=100){state.gems-=100;updateStats();playSuccess();alert('🛡️ Escudo activado');}else alert('Necesitas 100 💎');});
+    $('reveal-srs-btn').addEventListener('click',()=>{playClick();$('srs-translation').classList.remove('hidden');});
+    $('srs-tts-btn').addEventListener('click',()=>speak('Apple',0.95));
 
-        accuracyVal.textContent = `${accuracy}%`;
-        comboMaxVal.textContent = `🔥 ${state.maxCombo}`;
-        xpRewardVal.textContent = `+${bonusXp} XP`;
-        completionEncourage.textContent = completionMessages[Math.floor(Math.random() * completionMessages.length)];
-
-        state.gems += 20;
-        state.xp += bonusXp;
-        updateStats();
-
-        completionModal.classList.add('active');
-        triggerConfetti();
-        playSuccessSound();
+    function updateStats(){
+        $('user-streak').textContent=state.streak;$('user-gems').textContent=state.gems;$('user-hearts').textContent=state.hearts;
+        lessonHeartsCount.textContent=state.hearts;$('prof-streak').textContent=state.streak;$('prof-xp').textContent=`${state.xp} XP`;$('prof-gems').textContent=state.gems;
     }
 
-    finishLessonBtn.addEventListener('click', () => {
-        completionModal.classList.remove('active');
-        lessonView.classList.remove('active');
-        document.getElementById('path-view').classList.add('active');
-    });
-
-    // --- SHOP & SRS ---
-    buyHeartsBtn.addEventListener('click', () => {
-        if (state.gems >= 50) {
-            state.gems -= 50; state.hearts = 5;
-            updateStats(); playSuccessSound();
-            alert('¡Vidas completadas al 100% (5 ❤️)!');
-        } else { alert('Necesitas 50 Gemas para recargar vidas.'); }
-    });
-
-    buyFreezeBtn.addEventListener('click', () => {
-        if (state.gems >= 100) {
-            state.gems -= 100; updateStats(); playSuccessSound();
-            alert('¡Escudo de Racha activado 🛡️!');
-        } else { alert('Necesitas 100 Gemas.'); }
-    });
-
-    revealSrsBtn.addEventListener('click', () => {
-        playClickSound();
-        srsTranslation.classList.remove('hidden');
-    });
-
-    srsTtsBtn.addEventListener('click', () => speakText('Apple', 0.95));
-
-    function updateStats() {
-        userStreak.textContent = state.streak;
-        userGems.textContent = state.gems;
-        userHearts.textContent = state.hearts;
-        lessonHeartsCount.textContent = state.hearts;
-        profStreak.textContent = `${state.streak} Días`;
-        profXp.textContent = `${state.xp} XP`;
-        profGems.textContent = state.gems;
-    }
-
-    // Init
-    renderPathTree();
-    updateStats();
-    showTutorial();
+    renderPath();updateStats();showTutorial();
 });

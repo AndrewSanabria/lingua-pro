@@ -3,259 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Lingua Pro 3.0 - Dominio de Inglés de Cero a Avanzado</title>
+    <title>Lingua Pro - Aprende Inglés Jugando</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- CELEBRATION CONFETTI CANVAS OVERLAY -->
     <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
 
     <div class="app-viewport">
-        <!-- GLOBAL TOP STATS BAR -->
         <header class="top-nav" id="top-nav">
-            <div class="nav-item level-item" id="level-selector-btn" title="Cambiar Nivel">
+            <div class="nav-item level-item" id="level-selector-btn">
                 <span class="flag-icon">🇲🇽 ➔ 🇺🇸</span>
                 <span class="level-badge" id="current-level-badge">A1</span>
             </div>
-            <div class="nav-item streak-item" title="Racha de días">
-                <span class="stat-icon">🔥</span>
-                <span class="stat-val" id="user-streak">3</span>
-            </div>
-            <div class="nav-item gems-item" title="Gemas acumuladas">
-                <span class="stat-icon">💎</span>
-                <span class="stat-val" id="user-gems">150</span>
-            </div>
-            <div class="nav-item hearts-item" id="hearts-stat-container" title="Vidas restantes">
+            <div class="nav-item streak-item"><span class="stat-icon">🔥</span><span class="stat-val" id="user-streak">1</span></div>
+            <div class="nav-item gems-item"><span class="stat-icon">💎</span><span class="stat-val" id="user-gems">50</span></div>
+            <div class="nav-item hearts-item" id="hearts-stat-container">
                 <span class="stat-icon heart-icon-anim" id="main-heart-icon">❤️</span>
                 <span class="stat-val" id="user-hearts">5</span>
                 <span class="floating-heart-loss" id="floating-heart-loss">-1 ❤️</span>
             </div>
         </header>
 
-        <!-- LEVEL SELECTOR MODAL DROP-DOWN -->
         <div class="level-drawer" id="level-drawer">
-            <div class="level-drawer-header">Selecciona tu Nivel de Inglés</div>
+            <div class="level-drawer-header">Selecciona tu Nivel</div>
             <div class="level-options">
-                <button class="level-opt active" data-level="A1">
-                    <span class="opt-badge">A1</span>
-                    <div class="opt-info">
-                        <strong>Principiante (Desde Cero)</strong>
-                        <span>Saludos, objetos y frases básicas</span>
-                    </div>
-                </button>
-                <button class="level-opt" data-level="A2">
-                    <span class="opt-badge">A2</span>
-                    <div class="opt-info">
-                        <strong>Intermedio Elemental</strong>
-                        <span>Viajes, trabajo y conversaciones diarias</span>
-                    </div>
-                </button>
-                <button class="level-opt" data-level="B1">
-                    <span class="opt-badge">B1</span>
-                    <div class="opt-info">
-                        <strong>Intermedio Avanzado</strong>
-                        <span>Debates, negocios y gramática compleja</span>
-                    </div>
-                </button>
-                <button class="level-opt" data-level="C1">
-                    <span class="opt-badge">C1</span>
-                    <div class="opt-info">
-                        <strong>Avanzado & Fluidez Native</strong>
-                        <span>Modismos, negociación y soltura total</span>
-                    </div>
-                </button>
+                <button class="level-opt active" data-level="A1"><span class="opt-badge">A1</span><div class="opt-info"><strong>Principiante Total</strong><span>Colores, animales, objetos y saludos</span></div></button>
+                <button class="level-opt" data-level="A2"><span class="opt-badge">A2</span><div class="opt-info"><strong>Elemental</strong><span>Frases completas y conversaciones</span></div></button>
+                <button class="level-opt" data-level="B1"><span class="opt-badge">B1</span><div class="opt-info"><strong>Intermedio</strong><span>Trabajo, viajes y gramática</span></div></button>
+                <button class="level-opt" data-level="C1"><span class="opt-badge">C1</span><div class="opt-info"><strong>Avanzado</strong><span>Modismos y fluidez nativa</span></div></button>
             </div>
         </div>
 
-        <!-- MAIN VIEWS CONTAINER -->
         <div class="views-wrapper">
-            <!-- VIEW 1: LEARNING PATH (HOME / MAP) -->
+            <!-- PATH VIEW -->
             <main class="view path-view active" id="path-view">
                 <div class="section-banner" id="section-banner">
                     <div class="banner-content">
-                        <span class="unit-badge" id="banner-unit">Sección 1 (A1)</span>
-                        <h2 id="banner-title">Fundamentos del Inglés</h2>
-                        <p id="banner-desc">Paso a paso desde lo más básico con pronunciación real</p>
+                        <span class="unit-badge" id="banner-unit">Nivel A1</span>
+                        <h2 id="banner-title">Primeras Palabras</h2>
+                        <p id="banner-desc">Aprende jugando con colores, animales y objetos</p>
                     </div>
                 </div>
-
-                <div class="path-tree" id="path-tree">
-                    <!-- Nodes dynamically rendered via app.js according to selected Level -->
-                </div>
+                <div class="path-tree" id="path-tree"></div>
             </main>
 
-            <!-- VIEW 2: REPASO (SRS REVIEW) -->
+            <!-- REVIEW VIEW -->
             <main class="view review-view" id="review-view">
-                <div class="view-header">
-                    <h2>🔄 Práctica & Repaso SRS</h2>
-                    <p>Refuerza tu memoria con las palabras aprendidas</p>
-                </div>
+                <div class="view-header"><h2>🔄 Repaso</h2><p>Refuerza lo que aprendiste</p></div>
                 <div class="review-card-container">
                     <div class="srs-card" id="srs-card">
                         <div class="srs-word" id="srs-word">Apple</div>
                         <div class="srs-phonetic">/ˈæp.əl/</div>
-                        <button class="audio-btn srs-audio" id="srs-tts-btn">🔊 Escuchar</button>
-                        <div class="srs-translation hidden" id="srs-translation">Manzana</div>
-                        <button class="action-btn reveal-btn" id="reveal-srs-btn">MOSTRAR TRADUCCIÓN</button>
+                        <button class="audio-btn srs-audio" id="srs-tts-btn">🔊</button>
+                        <div class="srs-translation hidden" id="srs-translation">Manzana 🍎</div>
+                        <button class="action-btn reveal-btn" id="reveal-srs-btn">MOSTRAR</button>
                     </div>
                 </div>
             </main>
 
-            <!-- VIEW 3: TIENDA (SHOP) -->
+            <!-- SHOP VIEW -->
             <main class="view shop-view" id="shop-view">
-                <div class="view-header">
-                    <h2>🏪 Tienda Lingua Pro</h2>
-                    <p>Usa tus gemas para recargar energía y ventajas</p>
-                </div>
+                <div class="view-header"><h2>🏪 Tienda</h2><p>Gasta tus gemas</p></div>
                 <div class="shop-items-grid">
-                    <div class="shop-card">
-                        <div class="shop-icon">❤️</div>
-                        <div class="shop-info">
-                            <h3>Recargar Vidas</h3>
-                            <p>Llena tus vidas al máximo (5 Vidas)</p>
-                        </div>
-                        <button class="buy-btn" id="buy-hearts-btn">50 💎</button>
-                    </div>
-                    <div class="shop-card">
-                        <div class="shop-icon">🛡️</div>
-                        <div class="shop-info">
-                            <h3>Escudo de Racha</h3>
-                            <p>Protege tu racha si faltas 1 día</p>
-                        </div>
-                        <button class="buy-btn" id="buy-freeze-btn">100 💎</button>
-                    </div>
+                    <div class="shop-card"><div class="shop-icon">❤️</div><div class="shop-info"><h3>Recargar Vidas</h3><p>5 vidas completas</p></div><button class="buy-btn" id="buy-hearts-btn">50 💎</button></div>
+                    <div class="shop-card"><div class="shop-icon">🛡️</div><div class="shop-info"><h3>Escudo de Racha</h3><p>Protege tu racha 1 día</p></div><button class="buy-btn" id="buy-freeze-btn">100 💎</button></div>
                 </div>
             </main>
 
-            <!-- VIEW 4: PERFIL (USER PROFILE) -->
+            <!-- PROFILE VIEW -->
             <main class="view profile-view" id="profile-view">
                 <div class="profile-card">
-                    <div class="avatar-circle">
-                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaProMaster" alt="Avatar">
-                    </div>
+                    <div class="avatar-circle"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaProMaster" alt="Avatar"></div>
                     <h2 class="user-name">Andrew Sanabria</h2>
                     <span class="user-rank">Liga de Oro 🥇</span>
                 </div>
-
                 <div class="profile-stats-grid">
-                    <div class="prof-stat">
-                        <span class="prof-icon">🔥</span>
-                        <span class="prof-val" id="prof-streak">3 Días</span>
-                        <span class="prof-lbl">Racha Actual</span>
-                    </div>
-                    <div class="prof-stat">
-                        <span class="prof-icon">⚡</span>
-                        <span class="prof-val" id="prof-xp">450 XP</span>
-                        <span class="prof-lbl">Experiencia Total</span>
-                    </div>
-                    <div class="prof-stat">
-                        <span class="prof-icon">💎</span>
-                        <span class="prof-val" id="prof-gems">150</span>
-                        <span class="prof-lbl">Gemas</span>
-                    </div>
+                    <div class="prof-stat"><span class="prof-icon">🔥</span><span class="prof-val" id="prof-streak">1</span><span class="prof-lbl">Racha</span></div>
+                    <div class="prof-stat"><span class="prof-icon">⚡</span><span class="prof-val" id="prof-xp">0 XP</span><span class="prof-lbl">Experiencia</span></div>
+                    <div class="prof-stat"><span class="prof-icon">💎</span><span class="prof-val" id="prof-gems">50</span><span class="prof-lbl">Gemas</span></div>
                 </div>
             </main>
 
-            <!-- EXERCISE / LESSON VIEW (FULLSCREEN INTERACTIVE EXERCISE ENGINE) -->
+            <!-- LESSON VIEW -->
             <main class="view lesson-view" id="lesson-view">
                 <header class="lesson-header">
-                    <button class="close-btn" id="close-lesson-btn" aria-label="Salir">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </button>
-                    <div class="progress-container">
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="lesson-progress-fill">
-                                <div class="progress-shimmer"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="lesson-hearts-display">
-                        <span class="heart-icon">❤️</span>
-                        <span id="lesson-hearts-count">5</span>
-                    </div>
+                    <button class="close-btn" id="close-lesson-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+                    <div class="progress-container"><div class="progress-bar"><div class="progress-fill" id="lesson-progress-fill"><div class="progress-shimmer"></div></div></div></div>
+                    <div class="lesson-hearts-display"><span>❤️</span><span id="lesson-hearts-count">5</span></div>
                 </header>
 
-                <!-- COMBO STREAK COUNTER -->
-                <div class="combo-counter hidden" id="combo-counter">
-                    <span class="combo-flame">🔥</span>
-                    <span class="combo-number" id="combo-number">2</span>
-                    <span class="combo-label">COMBO</span>
-                </div>
-
-                <!-- QUESTION NUMBER BADGE -->
-                <div class="question-badge" id="question-badge">
-                    <span id="q-current">1</span> / <span id="q-total">3</span>
-                </div>
-
-                <!-- FLOATING ENCOURAGEMENT TOAST -->
-                <div class="encouragement-toast hidden" id="encouragement-toast">
-                    <span id="encouragement-text">¡Vas muy bien! 🌟</span>
-                </div>
+                <div class="combo-counter hidden" id="combo-counter"><span class="combo-flame">🔥</span><span class="combo-number" id="combo-number">2</span><span class="combo-label">COMBO</span></div>
+                <div class="question-badge" id="question-badge"><span id="q-current">1</span> / <span id="q-total">5</span></div>
+                <div class="encouragement-toast hidden" id="encouragement-toast"><span id="encouragement-text">¡Genial!</span></div>
 
                 <div class="exercise-area" id="exercise-area">
-                    <h1 class="prompt-title" id="prompt-title">Traduce esta oración</h1>
+                    <h1 class="prompt-title" id="prompt-title">¿Qué es esto?</h1>
 
-                    <!-- PROMPT HEADER (MASCOT & SPEECH BUBBLE & DUAL AUDIO) -->
                     <div class="character-prompt" id="character-prompt">
-                        <div class="mascot-container">
-                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaPro" alt="Mascot" class="mascot-img" id="mascot-avatar">
-                        </div>
+                        <div class="mascot-container"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaPro" alt="Mascot" class="mascot-img" id="mascot-avatar"></div>
                         <div class="speech-bubble">
                             <div class="audio-controls-group">
-                                <button class="audio-btn normal-speed" id="tts-normal-btn" title="Escuchar a velocidad normal">
-                                    <span>🐇</span>
-                                </button>
-                                <button class="audio-btn slow-speed" id="tts-slow-btn" title="Escuchar despacio">
-                                    <span>🐢</span>
-                                </button>
+                                <button class="audio-btn normal-speed" id="tts-normal-btn"><span>🐇</span></button>
+                                <button class="audio-btn slow-speed" id="tts-slow-btn"><span>🐢</span></button>
                             </div>
-                            <span class="prompt-text" id="prompt-text">The quick brown fox jumps over the lazy dog.</span>
+                            <span class="prompt-text" id="prompt-text">Hello!</span>
                         </div>
                     </div>
 
-                    <!-- EXERCISE TYPE 1: SENTENCE BUILDER -->
-                    <div class="exercise-module" id="mod-translate">
+                    <!-- IMAGE SELECT (New! Emoji-based visual learning) -->
+                    <div class="exercise-module hidden" id="mod-image-select">
+                        <div class="big-emoji" id="big-emoji">🐱</div>
+                        <div class="image-options" id="image-options"></div>
+                    </div>
+
+                    <!-- EMOJI MATCH (Pick the emoji for the word) -->
+                    <div class="exercise-module hidden" id="mod-emoji-match">
+                        <div class="big-word" id="big-word">Cat</div>
+                        <div class="emoji-options" id="emoji-options"></div>
+                    </div>
+
+                    <!-- TRANSLATE (Sentence builder) -->
+                    <div class="exercise-module hidden" id="mod-translate">
                         <div class="answer-construction-zone">
-                            <div class="answer-slot-line" id="answer-slot-line">
-                                <span class="placeholder-hint" id="placeholder-hint">Toca las palabras para construir la frase</span>
-                            </div>
+                            <div class="answer-slot-line" id="answer-slot-line"><span class="placeholder-hint" id="placeholder-hint">Toca las palabras</span></div>
                         </div>
-                        <div class="word-pool-zone">
-                            <div class="word-pool" id="word-pool"></div>
-                        </div>
+                        <div class="word-pool-zone"><div class="word-pool" id="word-pool"></div></div>
                     </div>
 
-                    <!-- EXERCISE TYPE 2: PAIR MATCHING (PAREJAS) -->
+                    <!-- PAIR MATCHING -->
                     <div class="exercise-module hidden" id="mod-matching">
                         <p class="sub-instruction">Toca los pares que significan lo mismo:</p>
                         <div class="matching-grid" id="matching-grid"></div>
                     </div>
 
-                    <!-- EXERCISE TYPE 3: MULTIPLE CHOICE -->
+                    <!-- MULTIPLE CHOICE -->
                     <div class="exercise-module hidden" id="mod-choice">
                         <div class="choices-grid" id="choices-grid"></div>
                     </div>
                 </div>
 
-                <!-- FOOTER ACTION BUTTON -->
                 <footer class="lesson-footer">
                     <div class="footer-actions-row">
-                        <button class="hint-btn" id="hint-btn" title="Obtener una pista">
-                            <span>💡</span>
-                            <span class="hint-label">Pista</span>
-                        </button>
+                        <button class="hint-btn" id="hint-btn"><span>💡</span><span class="hint-label">Pista</span></button>
                         <button class="action-btn check-action" id="check-btn" disabled>COMPROBAR</button>
                     </div>
                 </footer>
 
-                <!-- FEEDBACK SLIDE-UP SHEET -->
                 <div class="feedback-sheet" id="feedback-sheet">
                     <div class="feedback-content">
                         <div class="feedback-header">
                             <div class="status-icon-circle" id="feedback-icon">✓</div>
                             <div class="status-text-group">
-                                <h3 class="status-title" id="feedback-title">¡Excelente!</h3>
+                                <h3 class="status-title" id="feedback-title">¡Genial!</h3>
                                 <p class="status-subtitle" id="feedback-subtitle"></p>
                             </div>
                         </div>
@@ -265,64 +165,36 @@
             </main>
         </div>
 
-        <!-- FIXED BOTTOM MOBILE NAVIGATION BAR -->
         <nav class="bottom-nav-bar" id="bottom-nav-bar">
-            <button class="nav-tab active" data-target="path-view">
-                <span class="tab-icon">🗺️</span>
-                <span class="tab-label">Aprender</span>
-            </button>
-            <button class="nav-tab" data-target="review-view">
-                <span class="tab-icon">🔄</span>
-                <span class="tab-label">Repaso</span>
-            </button>
-            <button class="nav-tab" data-target="shop-view">
-                <span class="tab-icon">🏪</span>
-                <span class="tab-label">Tienda</span>
-            </button>
-            <button class="nav-tab" data-target="profile-view">
-                <span class="tab-icon">👤</span>
-                <span class="tab-label">Perfil</span>
-            </button>
+            <button class="nav-tab active" data-target="path-view"><span class="tab-icon">🗺️</span><span class="tab-label">Aprender</span></button>
+            <button class="nav-tab" data-target="review-view"><span class="tab-icon">🔄</span><span class="tab-label">Repaso</span></button>
+            <button class="nav-tab" data-target="shop-view"><span class="tab-icon">🏪</span><span class="tab-label">Tienda</span></button>
+            <button class="nav-tab" data-target="profile-view"><span class="tab-icon">👤</span><span class="tab-label">Perfil</span></button>
         </nav>
 
-        <!-- GUIDED TUTORIAL OVERLAY (FIRST-TIME ONBOARDING) -->
         <div class="tutorial-overlay hidden" id="tutorial-overlay">
-            <div class="tutorial-spotlight" id="tutorial-spotlight"></div>
             <div class="tutorial-card" id="tutorial-card">
                 <div class="tutorial-mascot">🤖</div>
-                <p class="tutorial-text" id="tutorial-text">¡Hola! Soy tu asistente de Lingua Pro. Te guiaré paso a paso.</p>
+                <p class="tutorial-text" id="tutorial-text">¡Hola!</p>
                 <div class="tutorial-step-dots" id="tutorial-dots"></div>
                 <button class="action-btn continue-action tutorial-next-btn" id="tutorial-next-btn">SIGUIENTE →</button>
             </div>
         </div>
 
-        <!-- LESSON COMPLETE MODAL -->
         <div class="modal-overlay" id="completion-modal">
             <div class="completion-card">
                 <div class="celebration-icon">🎉</div>
                 <h2>¡Lección Completada!</h2>
-                <p class="completion-encourage" id="completion-encourage">¡Dominio del nivel incrementado!</p>
-                
+                <p class="completion-encourage" id="completion-encourage">¡Increíble!</p>
                 <div class="rewards-grid">
-                    <div class="reward-box">
-                        <span class="reward-label">TOTAL XP</span>
-                        <span class="reward-value xp-val" id="xp-reward-val">+15 XP</span>
-                    </div>
-                    <div class="reward-box">
-                        <span class="reward-label">PRECISIÓN</span>
-                        <span class="reward-value acc-val" id="accuracy-val">100%</span>
-                    </div>
-                    <div class="reward-box">
-                        <span class="reward-label">COMBO MÁX</span>
-                        <span class="reward-value combo-max-val" id="combo-max-val">🔥 0</span>
-                    </div>
+                    <div class="reward-box"><span class="reward-label">XP</span><span class="reward-value xp-val" id="xp-reward-val">+15</span></div>
+                    <div class="reward-box"><span class="reward-label">PRECISIÓN</span><span class="reward-value acc-val" id="accuracy-val">100%</span></div>
+                    <div class="reward-box"><span class="reward-label">COMBO</span><span class="reward-value combo-max-val" id="combo-max-val">🔥 0</span></div>
                 </div>
-
-                <button class="action-btn continue-action" id="finish-lesson-btn">CONTINUAR AL MAPA</button>
+                <button class="action-btn continue-action" id="finish-lesson-btn">CONTINUAR</button>
             </div>
         </div>
     </div>
-
     <script src="app.js"></script>
 </body>
 </html>
