@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lingua Pro - Master English like a Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Lingua Pro 3.0 - Dominio de Inglés de Cero a Avanzado</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -11,9 +11,9 @@
     <div class="app-viewport">
         <!-- GLOBAL TOP STATS BAR -->
         <header class="top-nav" id="top-nav">
-            <div class="nav-item flag-item">
-                <span class="flag-icon">🇲🇽</span>
-                <span class="arrow-down">▾</span>
+            <div class="nav-item level-item" id="level-selector-btn" title="Cambiar Nivel">
+                <span class="flag-icon">🇲🇽 ➔ 🇺🇸</span>
+                <span class="level-badge" id="current-level-badge">A1</span>
             </div>
             <div class="nav-item streak-item" title="Racha de días">
                 <span class="stat-icon">🔥</span>
@@ -21,7 +21,7 @@
             </div>
             <div class="nav-item gems-item" title="Gemas acumuladas">
                 <span class="stat-icon">💎</span>
-                <span class="stat-val" id="user-gems">140</span>
+                <span class="stat-val" id="user-gems">150</span>
             </div>
             <div class="nav-item hearts-item" title="Vidas restantes">
                 <span class="stat-icon">❤️</span>
@@ -29,130 +29,239 @@
             </div>
         </header>
 
-        <!-- VIEW 1: LEARNING PATH (TREE / HOME) -->
-        <main class="view path-view active" id="path-view">
-            <div class="section-banner">
-                <div class="banner-content">
-                    <span class="unit-badge">Sección 1, Unidad 1</span>
-                    <h2>Fundamentos e Introducción</h2>
-                    <p>Saluda, preséntate y traduce oraciones cotidianas</p>
-                </div>
-                <button class="guide-btn">📖 Guía</button>
-            </div>
-
-            <div class="path-tree">
-                <!-- Level Node 1 -->
-                <div class="node-wrapper level-active" data-lesson="1">
-                    <button class="path-node" id="node-1">
-                        <div class="node-icon">⭐</div>
-                        <div class="node-pulse"></div>
-                    </button>
-                    <div class="node-tooltip">¡EMPEZAR! +10 XP</div>
-                </div>
-
-                <!-- Level Node 2 -->
-                <div class="node-wrapper level-locked" data-lesson="2">
-                    <button class="path-node" id="node-2">
-                        <div class="node-icon">💬</div>
-                    </button>
-                </div>
-
-                <!-- Level Node 3 -->
-                <div class="node-wrapper level-locked" data-lesson="3">
-                    <button class="path-node" id="node-3">
-                        <div class="node-icon">🎧</div>
-                    </button>
-                </div>
-
-                <!-- Level Node 4 (Chest) -->
-                <div class="node-wrapper level-locked chest-node" data-lesson="4">
-                    <button class="path-node" id="node-4">
-                        <div class="node-icon">🎁</div>
-                    </button>
-                </div>
-
-                <!-- Level Node 5 (Trophy / Quiz) -->
-                <div class="node-wrapper level-locked trophy-node" data-lesson="5">
-                    <button class="path-node" id="node-5">
-                        <div class="node-icon">🏆</div>
-                    </button>
-                </div>
-            </div>
-        </main>
-
-        <!-- VIEW 2: INTERACTIVE LESSON -->
-        <main class="view lesson-view" id="lesson-view">
-            <header class="lesson-header">
-                <button class="close-btn" id="close-lesson-btn" aria-label="Salir de la lección">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <!-- LEVEL SELECTOR MODAL DROP-DOWN -->
+        <div class="level-drawer" id="level-drawer">
+            <div class="level-drawer-header">Selecciona tu Nivel de Inglés</div>
+            <div class="level-options">
+                <button class="level-opt active" data-level="A1">
+                    <span class="opt-badge">A1</span>
+                    <div class="opt-info">
+                        <strong>Principiante (Desde Cero)</strong>
+                        <span>Saludos, objetos y frases básicas</span>
+                    </div>
                 </button>
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="lesson-progress-fill"></div>
+                <button class="level-opt" data-level="A2">
+                    <span class="opt-badge">A2</span>
+                    <div class="opt-info">
+                        <strong>Intermedio Elemental</strong>
+                        <span>Viajes, trabajo y conversaciones diarias</span>
                     </div>
-                </div>
-                <div class="lesson-hearts-display">
-                    <span class="heart-icon">❤️</span>
-                    <span id="lesson-hearts-count">5</span>
-                </div>
-            </header>
-
-            <div class="exercise-area" id="exercise-area">
-                <h1 class="prompt-title" id="prompt-title">Traduce esta oración</h1>
-
-                <div class="character-prompt">
-                    <div class="mascot-container">
-                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaPro" alt="Lingua Mascot" class="mascot-img">
+                </button>
+                <button class="level-opt" data-level="B1">
+                    <span class="opt-badge">B1</span>
+                    <div class="opt-info">
+                        <strong>Intermedio Avanzado</strong>
+                        <span>Debates, negocios y gramática compleja</span>
                     </div>
-                    <div class="speech-bubble">
-                        <button class="audio-btn" id="tts-btn" aria-label="Escuchar pronunciación">
-                            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-                        </button>
-                        <span class="prompt-text" id="prompt-text">The quick brown fox jumps over the lazy dog.</span>
+                </button>
+                <button class="level-opt" data-level="C1">
+                    <span class="opt-badge">C1</span>
+                    <div class="opt-info">
+                        <strong>Avanzado & Fluidez Native</strong>
+                        <span>Modismos, negociación y soltura total</span>
                     </div>
-                </div>
-
-                <!-- TARGET CONSTRUCTION SLOT -->
-                <div class="answer-construction-zone">
-                    <div class="answer-slot-line" id="answer-slot-line">
-                        <span class="placeholder-hint" id="placeholder-hint">Toca las palabras para construir la frase</span>
-                    </div>
-                </div>
-
-                <!-- WORD POOL / OPTIONS BANK -->
-                <div class="word-pool-zone">
-                    <div class="word-pool" id="word-pool">
-                        <!-- Chips will be generated dynamically -->
-                    </div>
-                </div>
+                </button>
             </div>
+        </div>
 
-            <!-- FOOTER & SLIDE-UP FEEDBACK DRAWER -->
-            <footer class="lesson-footer" id="lesson-footer">
-                <button class="action-btn check-action" id="check-btn" disabled>COMPROBAR</button>
-            </footer>
+        <!-- MAIN VIEWS CONTAINER -->
+        <div class="views-wrapper">
+            <!-- VIEW 1: LEARNING PATH (HOME / MAP) -->
+            <main class="view path-view active" id="path-view">
+                <div class="section-banner" id="section-banner">
+                    <div class="banner-content">
+                        <span class="unit-badge" id="banner-unit">Sección 1 (A1)</span>
+                        <h2 id="banner-title">Fundamentos del Inglés</h2>
+                        <p id="banner-desc">Paso a paso desde lo más básico con pronunciación real</p>
+                    </div>
+                </div>
 
-            <!-- FEEDBACK SHEET (SLIDES UP ON CHECK) -->
-            <div class="feedback-sheet" id="feedback-sheet">
-                <div class="feedback-content">
-                    <div class="feedback-header">
-                        <div class="status-icon-circle" id="feedback-icon">✓</div>
-                        <div class="status-text-group">
-                            <h3 class="status-title" id="feedback-title">¡Excelente!</h3>
-                            <p class="status-subtitle" id="feedback-subtitle"></p>
+                <div class="path-tree" id="path-tree">
+                    <!-- Nodes dynamically rendered via app.js according to selected Level -->
+                </div>
+            </main>
+
+            <!-- VIEW 2: REPASO (SRS REVIEW) -->
+            <main class="view review-view" id="review-view">
+                <div class="view-header">
+                    <h2>🔄 Práctica & Repaso SRS</h2>
+                    <p>Refuerza tu memoria con las palabras aprendidas</p>
+                </div>
+                <div class="review-card-container">
+                    <div class="srs-card" id="srs-card">
+                        <div class="srs-word" id="srs-word">Apple</div>
+                        <div class="srs-phonetic">/ˈæp.əl/</div>
+                        <button class="audio-btn srs-audio" id="srs-tts-btn">🔊 Escuchar</button>
+                        <div class="srs-translation hidden" id="srs-translation">Manzana</div>
+                        <button class="action-btn reveal-btn" id="reveal-srs-btn">MOSTRAR TRADUCCIÓN</button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- VIEW 3: TIENDA (SHOP) -->
+            <main class="view shop-view" id="shop-view">
+                <div class="view-header">
+                    <h2>🏪 Tienda Lingua Pro</h2>
+                    <p>Usa tus gemas para recargar energía y ventajas</p>
+                </div>
+                <div class="shop-items-grid">
+                    <div class="shop-card">
+                        <div class="shop-icon">❤️</div>
+                        <div class="shop-info">
+                            <h3>Recargar Vidas</h3>
+                            <p>Llena tus vidas al máximo (5 Vidas)</p>
+                        </div>
+                        <button class="buy-btn" id="buy-hearts-btn">50 💎</button>
+                    </div>
+                    <div class="shop-card">
+                        <div class="shop-icon">🛡️</div>
+                        <div class="shop-info">
+                            <h3>Escudo de Racha</h3>
+                            <p>Protege tu racha si faltas 1 día</p>
+                        </div>
+                        <button class="buy-btn" id="buy-freeze-btn">100 💎</button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- VIEW 4: PERFIL (USER PROFILE) -->
+            <main class="view profile-view" id="profile-view">
+                <div class="profile-card">
+                    <div class="avatar-circle">
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaProMaster" alt="Avatar">
+                    </div>
+                    <h2 class="user-name">Andrew Sanabria</h2>
+                    <span class="user-rank">Liga de Oro 🥇</span>
+                </div>
+
+                <div class="profile-stats-grid">
+                    <div class="prof-stat">
+                        <span class="prof-icon">🔥</span>
+                        <span class="prof-val" id="prof-streak">3 Días</span>
+                        <span class="prof-lbl">Racha Actual</span>
+                    </div>
+                    <div class="prof-stat">
+                        <span class="prof-icon">⚡</span>
+                        <span class="prof-val" id="prof-xp">450 XP</span>
+                        <span class="prof-lbl">Experiencia Total</span>
+                    </div>
+                    <div class="prof-stat">
+                        <span class="prof-icon">💎</span>
+                        <span class="prof-val" id="prof-gems">150</span>
+                        <span class="prof-lbl">Gemas</span>
+                    </div>
+                </div>
+            </main>
+
+            <!-- EXERCISE / LESSON VIEW (FULLSCREEN INTERACTIVE EXERCISE ENGINE) -->
+            <main class="view lesson-view" id="lesson-view">
+                <header class="lesson-header">
+                    <button class="close-btn" id="close-lesson-btn" aria-label="Salir">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="lesson-progress-fill"></div>
                         </div>
                     </div>
-                    <button class="action-btn continue-action" id="continue-btn">CONTINUAR</button>
-                </div>
-            </div>
-        </main>
+                    <div class="lesson-hearts-display">
+                        <span class="heart-icon">❤️</span>
+                        <span id="lesson-hearts-count">5</span>
+                    </div>
+                </header>
 
-        <!-- MODAL: LESSON COMPLETE CELEBRATION -->
+                <div class="exercise-area" id="exercise-area">
+                    <h1 class="prompt-title" id="prompt-title">Traduce esta oración</h1>
+
+                    <!-- PROMPT HEADER (MASCOT & SPEECH BUBBLE & DUAL AUDIO) -->
+                    <div class="character-prompt" id="character-prompt">
+                        <div class="mascot-container">
+                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaPro" alt="Mascot" class="mascot-img">
+                        </div>
+                        <div class="speech-bubble">
+                            <div class="audio-controls-group">
+                                <button class="audio-btn normal-speed" id="tts-normal-btn" title="Escuchar a velocidad normal">
+                                    <span>🐇</span>
+                                </button>
+                                <button class="audio-btn slow-speed" id="tts-slow-btn" title="Escuchar despacio">
+                                    <span>🐢</span>
+                                </button>
+                            </div>
+                            <span class="prompt-text" id="prompt-text">The quick brown fox jumps over the lazy dog.</span>
+                        </div>
+                    </div>
+
+                    <!-- EXERCISE TYPE 1: SENTENCE BUILDER -->
+                    <div class="exercise-module" id="mod-translate">
+                        <div class="answer-construction-zone">
+                            <div class="answer-slot-line" id="answer-slot-line">
+                                <span class="placeholder-hint" id="placeholder-hint">Toca las palabras para construir la frase</span>
+                            </div>
+                        </div>
+                        <div class="word-pool-zone">
+                            <div class="word-pool" id="word-pool"></div>
+                        </div>
+                    </div>
+
+                    <!-- EXERCISE TYPE 2: PAIR MATCHING (PAREJAS) -->
+                    <div class="exercise-module hidden" id="mod-matching">
+                        <p class="sub-instruction">Toca los pares que significan lo mismo:</p>
+                        <div class="matching-grid" id="matching-grid"></div>
+                    </div>
+
+                    <!-- EXERCISE TYPE 3: MULTIPLE CHOICE -->
+                    <div class="exercise-module hidden" id="mod-choice">
+                        <div class="choices-grid" id="choices-grid"></div>
+                    </div>
+                </div>
+
+                <!-- FOOTER ACTION BUTTON -->
+                <footer class="lesson-footer">
+                    <button class="action-btn check-action" id="check-btn" disabled>COMPROBAR</button>
+                </footer>
+
+                <!-- FEEDBACK SLIDE-UP SHEET -->
+                <div class="feedback-sheet" id="feedback-sheet">
+                    <div class="feedback-content">
+                        <div class="feedback-header">
+                            <div class="status-icon-circle" id="feedback-icon">✓</div>
+                            <div class="status-text-group">
+                                <h3 class="status-title" id="feedback-title">¡Excelente!</h3>
+                                <p class="status-subtitle" id="feedback-subtitle"></p>
+                            </div>
+                        </div>
+                        <button class="action-btn continue-action" id="continue-btn">CONTINUAR</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- FIXED BOTTOM MOBILE NAVIGATION BAR -->
+        <nav class="bottom-nav-bar" id="bottom-nav-bar">
+            <button class="nav-tab active" data-target="path-view">
+                <span class="tab-icon">🗺️</span>
+                <span class="tab-label">Aprender</span>
+            </button>
+            <button class="nav-tab" data-target="review-view">
+                <span class="tab-icon">🔄</span>
+                <span class="tab-label">Repaso</span>
+            </button>
+            <button class="nav-tab" data-target="shop-view">
+                <span class="tab-icon">🏪</span>
+                <span class="tab-label">Tienda</span>
+            </button>
+            <button class="nav-tab" data-target="profile-view">
+                <span class="tab-icon">👤</span>
+                <span class="tab-label">Perfil</span>
+            </button>
+        </nav>
+
+        <!-- LESSON COMPLETE MODAL -->
         <div class="modal-overlay" id="completion-modal">
             <div class="completion-card">
                 <div class="celebration-icon">🎉</div>
                 <h2>¡Lección Completada!</h2>
-                <p>¡Has demostrado un excelente dominio del inglés!</p>
+                <p>¡Dominio del nivel incrementado!</p>
                 
                 <div class="rewards-grid">
                     <div class="reward-box">
