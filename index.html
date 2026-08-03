@@ -45,19 +45,39 @@
                         <p id="banner-desc">Aprende jugando con colores, animales y objetos</p>
                     </div>
                 </div>
+                <section class="daily-plan" aria-labelledby="daily-plan-title">
+                    <div class="daily-plan-copy">
+                        <span class="eyebrow">TU PLAN DE HOY</span>
+                        <h3 id="daily-plan-title">Una lección para mantener tu racha</h3>
+                        <p id="daily-plan-text">Completa 1 lección y gana 15 XP.</p>
+                    </div>
+                    <div class="daily-ring" aria-label="Progreso diario"><strong id="daily-progress">0</strong><span>/ 1</span></div>
+                </section>
+                <section class="next-lesson-card" id="next-lesson-card" aria-live="polite">
+                    <div class="next-lesson-icon" id="next-lesson-icon">🐱</div>
+                    <div class="next-lesson-copy"><span class="eyebrow">SIGUE POR AQUÍ</span><h3 id="next-lesson-name">Animales</h3><p id="next-lesson-meta">6 retos · 3 min</p></div>
+                    <button class="start-next-btn" id="start-next-btn">EMPEZAR</button>
+                </section>
                 <div class="path-tree" id="path-tree"></div>
             </main>
 
             <!-- REVIEW VIEW -->
             <main class="view review-view" id="review-view">
-                <div class="view-header"><h2>🔄 Repaso</h2><p>Refuerza lo que aprendiste</p></div>
+                <div class="view-header"><h2>🔄 Repaso inteligente</h2><p id="review-subtitle">Tus palabras aparecen justo cuando necesitas recordarlas.</p></div>
+                <div class="review-queue"><span class="queue-dot"></span><span id="review-queue-label">3 tarjetas para hoy</span><span class="queue-xp">+5 XP por acierto</span></div>
                 <div class="review-card-container">
                     <div class="srs-card" id="srs-card">
+                        <span class="card-label">RECUERDA</span>
                         <div class="srs-word" id="srs-word">Apple</div>
-                        <div class="srs-phonetic">/ˈæp.əl/</div>
+                        <div class="srs-phonetic" id="srs-phonetic">/ˈæp.əl/</div>
                         <button class="audio-btn srs-audio" id="srs-tts-btn">🔊</button>
                         <div class="srs-translation hidden" id="srs-translation">Manzana 🍎</div>
                         <button class="action-btn reveal-btn" id="reveal-srs-btn">MOSTRAR</button>
+                        <div class="review-rating hidden" id="review-rating">
+                            <button class="rating-btn again" data-rating="again">AÚN NO</button>
+                            <button class="rating-btn good" data-rating="good">BIEN</button>
+                            <button class="rating-btn easy" data-rating="easy">FÁCIL</button>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -140,6 +160,15 @@
                     <!-- MULTIPLE CHOICE -->
                     <div class="exercise-module hidden" id="mod-choice">
                         <div class="choices-grid" id="choices-grid"></div>
+                    </div>
+
+                    <!-- LISTENING / DICTATION -->
+                    <div class="exercise-module hidden" id="mod-listening">
+                        <div class="listening-orb" aria-hidden="true">🎧</div>
+                        <p class="listening-instruction">Escucha y escribe lo que oyes.</p>
+                        <label class="sr-only" for="listening-answer">Tu respuesta</label>
+                        <input class="listening-input" id="listening-answer" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Escribe en inglés...">
+                        <button class="replay-audio-btn" id="replay-listening-btn"><span>🔊</span> ESCUCHAR DE NUEVO</button>
                     </div>
                 </div>
 

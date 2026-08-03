@@ -5,7 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedChips: [], audioCtx: null, firstMatchCard: null,
         matchedPairsCount: 0, comboStreak: 0, maxCombo: 0, hintsUsed: 0,
         selectedChoice: null,
-        tutorialSeen: localStorage.getItem('lp_tut') === '1'
+        tutorialSeen: localStorage.getItem('lp_tut') === '1',
+        completedToday: Number(localStorage.getItem('lp_daily_completed') || 0),
+        reviewIndex: Number(localStorage.getItem('lp_review_index') || 0)
     };
 
     // ====== FULL PROGRESSIVE CURRICULUM ======
@@ -57,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     { type:'choice', prompt:'¿Cómo se dice "Adiós" en inglés?', options:['Hello','Goodbye','Sorry','Yes'], correct:'Goodbye' },
                     { type:'choice', prompt:'¿Qué significa "Thank you"?', options:['Gracias','Hola','Por favor','De nada'], correct:'Gracias' },
                     { type:'translate', prompt:'Hello, how are you?', answer:['Hola','¿cómo','estás?'], pool:['Hola','¿cómo','estás?','bien','gracias','adiós'] },
+                    { type:'listening', prompt:'Escucha y escribe la frase', audio:'Good morning', answer:'good morning', correct:'Good morning' },
                     { type:'matching', prompt:'Empareja saludos:', pairs:[
                         {en:'Hello',es:'Hola'},{en:'Goodbye',es:'Adiós'},{en:'Please',es:'Por favor'},{en:'Thank you',es:'Gracias'},{en:'Yes',es:'Sí'}
                     ]}
@@ -153,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ====== DOM ======
     const $=id=>document.getElementById(id);
     const levelSelectorBtn=$('level-selector-btn'),levelDrawer=$('level-drawer'),currentLevelBadge=$('current-level-badge');
+    const levelOpts=document.querySelectorAll('.level-opt');
     const pathTree=$('path-tree'),bannerUnit=$('banner-unit'),bannerTitle=$('banner-title'),bannerDesc=$('banner-desc');
     const lessonView=$('lesson-view'),closeLessonBtn=$('close-lesson-btn'),progressFill=$('lesson-progress-fill'),lessonHeartsCount=$('lesson-hearts-count');
     const promptTitle=$('prompt-title'),promptText=$('prompt-text'),ttsNormal=$('tts-normal-btn'),ttsSlow=$('tts-slow-btn');
@@ -161,12 +165,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const modTranslate=$('mod-translate'),answerSlot=$('answer-slot-line'),placeholder=$('placeholder-hint'),wordPool=$('word-pool');
     const modMatching=$('mod-matching'),matchingGrid=$('matching-grid');
     const modChoice=$('mod-choice'),choicesGrid=$('choices-grid');
+    const modListening=$('mod-listening'),listeningAnswer=$('listening-answer'),replayListeningBtn=$('replay-listening-btn');
     const checkBtn=$('check-btn'),feedbackSheet=$('feedback-sheet'),feedbackIcon=$('feedback-icon'),feedbackTitleEl=$('feedback-title'),feedbackSubtitle=$('feedback-subtitle'),continueBtn=$('continue-btn');
     const comboCounter=$('combo-counter'),comboNumber=$('combo-number'),qCurrent=$('q-current'),qTotal=$('q-total');
     const hintBtn=$('hint-btn'),charPrompt=$('character-prompt');
     const completionModal=$('completion-modal'),finishBtn=$('finish-lesson-btn'),accuracyVal=$('accuracy-val'),comboMaxVal=$('combo-max-val'),xpRewardVal=$('xp-reward-val'),completionEncourage=$('completion-encourage');
     const mainHeartIcon=$('main-heart-icon'),floatingHeartLoss=$('floating-heart-loss');
     const tutorialOverlay=$('tutorial-overlay'),tutorialText=$('tutorial-text'),tutorialNextBtn=$('tutorial-next-btn'),tutorialDots=$('tutorial-dots'),tutorialMascot=document.querySelector('.tutorial-mascot');
+    const startNextBtn=$('start-next-btn'),nextLessonIcon=$('next-lesson-icon'),nextLessonName=$('next-lesson-name'),nextLessonMeta=$('next-lesson-meta'),dailyProgress=$('daily-progress'),dailyPlanText=$('daily-plan-text'),dailyRing=document.querySelector('.daily-ring');
+    const reviewDeck=[
+        {word:'Apple', phonetic:'/ˈæp.əl/', translation:'Manzana 🍎'},
+        {word:'Good morning', phonetic:'/ɡʊd ˈmɔːr.nɪŋ/', translation:'Buenos días ☀️'},
+        {word:'Thank you', phonetic:'/θæŋk juː/', translation:'Gracias 🙌'},
+        {word:'Water', phonetic:'/ˈwɔː.t̬ɚ/', translation:'Agua 💧'}
+    ];
 
     // ====== TUTORIAL ======
     const tutSteps=[
@@ -188,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ====== LEVEL SELECTOR ======
     levelSelectorBtn.addEventListener('click',()=>{playClick();levelDrawer.classList.toggle('active');});
-    document.querySelectorAll('.level-opt').forEach(o=>o.addEventListener('click',()=>{playClick();document.querySelectorAll('.level-opt').forEach(x=>x.classList.remove('active'));o.classList.add('active');state.currentLevel=o.dataset.level;currentLevelBadge.textContent=state.currentLevel;levelDrawer.classList.remove('active');renderPath();}));
+    document.querySelectorAll('.level-opt').forEach(o=>o.addEventListener('click',()=>{playClick();document.querySelectorAll('.level-opt').forEach(x=>x.classList.remove('active'));o.classList.add('active');state.currentLevel=o.dataset.level;currentLevelBadge.textContent=state.currentLevel;levelDrawer.classList.remove('active');saveProgress();renderPath();}));
 
     // ====== NAV TABS ======
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>{playClick();const id=t.dataset.target;document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.view').forEach(v=>{v.id===id?v.classList.add('active'):v.classList.remove('active');});}));
@@ -207,6 +219,39 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveProgress() {
         localStorage.setItem('lp_unlocked', JSON.stringify(state.unlockedIndex));
         localStorage.setItem('lp_level', state.currentLevel);
+    }
+
+    function getTodayKey(){ return new Date().toISOString().slice(0,10); }
+    function refreshDailyProgress(){
+        const today=getTodayKey();
+        if(localStorage.getItem('lp_daily_date')!==today){
+            state.completedToday=0;
+            localStorage.setItem('lp_daily_date',today);
+            localStorage.setItem('lp_daily_completed','0');
+        }
+    }
+    function markDailyLesson(){
+        refreshDailyProgress();
+        state.completedToday=Math.min(1,state.completedToday+1);
+        localStorage.setItem('lp_daily_completed',String(state.completedToday));
+    }
+    function getNextLesson(){
+        const lessons=curriculum[state.currentLevel].lessons;
+        const index=Math.min((state.unlockedIndex[state.currentLevel]||1)-1,lessons.length-1);
+        return lessons[index];
+    }
+    function renderLearningPlan(){
+        refreshDailyProgress();
+        const next=getNextLesson();
+        if(!next)return;
+        nextLessonIcon.textContent=next.icon;
+        nextLessonName.textContent=next.name;
+        nextLessonMeta.textContent=`${next.questions.length} retos · ${Math.max(2,Math.ceil(next.questions.length/2))} min`;
+        dailyProgress.textContent=state.completedToday;
+        if(dailyRing)dailyRing.style.background=`conic-gradient(var(--brand-green) 0 ${state.completedToday*100}%, var(--border-color) ${state.completedToday*100}% 100%)`;
+        dailyPlanText.textContent=state.completedToday ? '¡Objetivo cumplido! Vuelve mañana para seguir creciendo.' : 'Completa 1 lección y gana 15 XP.';
+        startNextBtn.textContent=state.completedToday ? 'PRACTICAR' : 'EMPEZAR';
+        startNextBtn.onclick=()=>{playClick();startLesson(next);};
     }
 
     // ====== PATH TREE ======
@@ -229,9 +274,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const w = document.createElement('div');
             w.className = `node-wrapper ${isCurrent ? 'level-active' : (isCompleted ? 'level-completed' : 'level-locked')}`;
+            w.dataset.lessonId = l.id;
             
             const b = document.createElement('button');
             b.className = 'path-node';
+            b.setAttribute('aria-label', `${l.name}${isCurrent ? ', lección actual' : ''}`);
+            if (isCurrent) b.setAttribute('aria-current', 'step');
             b.innerHTML = `<div class="node-icon">${isUnlocked ? l.icon : '🔒'}</div>`;
             
             if (isUnlocked) {
@@ -250,6 +298,20 @@ document.addEventListener('DOMContentLoaded', () => {
             lbl.textContent = l.name;
             w.appendChild(lbl);
             pathTree.appendChild(w);
+        });
+        renderLearningPlan();
+        centerCurrentLesson();
+    }
+
+    function centerCurrentLesson(){
+        const pathView=$('path-view');
+        const activeNode=pathTree.querySelector('.level-active');
+        if(!pathView||!activeNode)return;
+        requestAnimationFrame(()=>{
+            const container=pathView.getBoundingClientRect();
+            const node=activeNode.getBoundingClientRect();
+            const target=pathView.scrollTop+(node.top-container.top)-(container.height-node.height)/2;
+            pathView.scrollTo({top:Math.max(0,target),behavior:'smooth'});
         });
     }
 
@@ -297,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
         progressFill.style.width=`${(state.currentQuestionIdx/total)*100}%`;
 
         // Hide all modules
-        [modImageSelect,modEmojiMatch,modTranslate,modMatching,modChoice].forEach(m=>m.classList.add('hidden'));
+        [modImageSelect,modEmojiMatch,modTranslate,modMatching,modChoice,modListening].forEach(m=>m.classList.add('hidden'));
 
         // Show/hide character prompt based on type
         const showBubble = q.type==='translate'||q.type==='choice';
@@ -373,12 +435,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.addEventListener('click',()=>{playClick();choicesGrid.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));btn.classList.add('selected');state.selectedChoice=o;checkBtn.disabled=false;});
                 choicesGrid.appendChild(btn);
             });
+        } else if(q.type==='listening'){
+            promptTitle.textContent=q.prompt;
+            modListening.classList.remove('hidden');
+            listeningAnswer.value='';
+            listeningAnswer.focus();
+            setTimeout(()=>speak(q.audio,0.82),250);
+            listeningAnswer.oninput=()=>{state.selectedChoice=listeningAnswer.value.trim();checkBtn.disabled=!state.selectedChoice;};
         }
     }
 
+    replayListeningBtn.addEventListener('click',()=>{
+        const q=state.activeLesson?.questions[state.currentQuestionIdx];
+        if(q?.type==='listening'){playClick();speak(q.audio,0.72);}
+    });
+
     // ====== HINT ======
     if(hintBtn)hintBtn.addEventListener('click',()=>{
-        const q=state.activeLesson?.questions[state.currentQuestionIdx];if(!q||q.type!=='translate')return;
+        const q=state.activeLesson?.questions[state.currentQuestionIdx];if(!q)return;
+        if(q.type==='listening'){
+            playClick();state.hintsUsed++;listeningAnswer.placeholder=`Empieza con: ${q.answer.charAt(0).toUpperCase()}…`;hintBtn.classList.add('used');return;
+        }
+        if(q.type!=='translate')return;
         playClick();state.hintsUsed++;
         const placed=state.selectedChips.map(c=>c.text);
         const next=q.answer.find((w,i)=>{const pc=placed.filter(p=>p===w).length;const nc=q.answer.slice(0,i+1).filter(a=>a===w).length;return pc<nc;});
@@ -394,6 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else if(q.type==='matching'){ok=state.matchedPairsCount===q.pairs.length;}
         else if(q.type==='choice'||q.type==='image_select'){ok=state.selectedChoice===q.correct;}
         else if(q.type==='emoji_match'){ok=state.selectedChoice===q.correct;}
+        else if(q.type==='listening'){ok=state.selectedChoice.trim().toLowerCase().replace(/[.?!]/g,'')===q.answer.toLowerCase();}
 
         if(ok){
             playSuccess();state.correctCount++;updateCombo(true);
@@ -427,6 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         state.gems += 20;
         state.xp += bonus;
+        markDailyLesson();
 
         // Unlock next lesson or next level
         const currentLessons = curriculum[state.currentLevel].lessons;
@@ -492,13 +572,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // ====== SHOP ======
     $('buy-hearts-btn').addEventListener('click',()=>{if(state.gems>=50){state.gems-=50;state.hearts=5;updateStats();playSuccess();alert('¡5 ❤️ recargadas!');}else alert('Necesitas 50 💎');});
     $('buy-freeze-btn').addEventListener('click',()=>{if(state.gems>=100){state.gems-=100;updateStats();playSuccess();alert('🛡️ Escudo activado');}else alert('Necesitas 100 💎');});
-    $('reveal-srs-btn').addEventListener('click',()=>{playClick();$('srs-translation').classList.remove('hidden');});
-    $('srs-tts-btn').addEventListener('click',()=>speak('Apple',0.95));
+    function renderReviewCard(){
+        const card=reviewDeck[state.reviewIndex%reviewDeck.length];
+        $('srs-word').textContent=card.word;$('srs-phonetic').textContent=card.phonetic;$('srs-translation').textContent=card.translation;
+        $('srs-translation').classList.add('hidden');$('reveal-srs-btn').classList.remove('hidden');$('review-rating').classList.add('hidden');
+        const remaining=Math.max(0,3-(state.reviewIndex%3));
+        $('review-queue-label').textContent=remaining?`${remaining} tarjeta${remaining===1?'':'s'} para hoy`:'¡Repaso diario completado!';
+    }
+    $('reveal-srs-btn').addEventListener('click',()=>{playClick();$('srs-translation').classList.remove('hidden');$('reveal-srs-btn').classList.add('hidden');$('review-rating').classList.remove('hidden');});
+    $('srs-tts-btn').addEventListener('click',()=>speak(reviewDeck[state.reviewIndex%reviewDeck.length].word,0.95));
+    document.querySelectorAll('.rating-btn').forEach(btn=>btn.addEventListener('click',()=>{
+        const rating=btn.dataset.rating;
+        if(rating!=='again'){state.xp+=5;state.gems+=2;playSuccess();showToast(rating==='easy'?'¡Dominada! +5 XP':'¡Buen recuerdo! +5 XP');}
+        else {playClick();showToast('La veremos otra vez pronto.');}
+        state.reviewIndex++;
+        localStorage.setItem('lp_review_index',String(state.reviewIndex));
+        updateStats();renderReviewCard();
+    }));
 
     function updateStats(){
         $('user-streak').textContent=state.streak;$('user-gems').textContent=state.gems;$('user-hearts').textContent=state.hearts;
         lessonHeartsCount.textContent=state.hearts;$('prof-streak').textContent=state.streak;$('prof-xp').textContent=`${state.xp} XP`;$('prof-gems').textContent=state.gems;
     }
 
-    renderPath();updateStats();showTutorial();
+    refreshDailyProgress();renderPath();renderReviewCard();updateStats();showTutorial();
 });
