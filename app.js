@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hintBtn=$('hint-btn'),charPrompt=$('character-prompt');
     const completionModal=$('completion-modal'),finishBtn=$('finish-lesson-btn'),accuracyVal=$('accuracy-val'),comboMaxVal=$('combo-max-val'),xpRewardVal=$('xp-reward-val'),completionEncourage=$('completion-encourage');
     const mainHeartIcon=$('main-heart-icon'),floatingHeartLoss=$('floating-heart-loss');
-    const tutorialOverlay=$('tutorial-overlay'),tutorialText=$('tutorial-text'),tutorialNextBtn=$('tutorial-next-btn'),tutorialDots=$('tutorial-dots'),tutorialMascot=document.querySelector('.tutorial-mascot');
+    const tutorialOverlay=$('tutorial-overlay'),tutorialText=$('tutorial-text'),tutorialNextBtn=$('tutorial-next-btn'),tutorialDots=$('tutorial-dots'),tutorialMood=$('tutorial-mood');
     const startNextBtn=$('start-next-btn'),nextLessonIcon=$('next-lesson-icon'),nextLessonName=$('next-lesson-name'),nextLessonMeta=$('next-lesson-meta'),dailyProgress=$('daily-progress'),dailyPlanText=$('daily-plan-text'),dailyRing=document.querySelector('.daily-ring');
     const reviewDeck=[
         {word:'Apple', phonetic:'/ˈæp.əl/', translation:'Manzana 🍎'},
@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showTutorial(){if(state.tutorialSeen)return;tutorialOverlay.classList.remove('hidden');tutStep=0;renderTutDots();renderTutStep();}
     function renderTutDots(){tutorialDots.innerHTML='';tutSteps.forEach((_,i)=>{const d=document.createElement('span');d.className=`tutorial-dot ${i===0?'active':''}`;tutorialDots.appendChild(d);});}
-    function renderTutStep(){tutorialText.textContent=tutSteps[tutStep].t;tutorialMascot.textContent=tutSteps[tutStep].m;tutorialDots.querySelectorAll('.tutorial-dot').forEach((d,i)=>d.classList.toggle('active',i===tutStep));tutorialNextBtn.textContent=tutStep===tutSteps.length-1?'¡A JUGAR! 🚀':'SIGUIENTE →';}
+    function renderTutStep(){tutorialText.textContent=tutSteps[tutStep].t;tutorialMood.textContent=tutSteps[tutStep].m;tutorialDots.querySelectorAll('.tutorial-dot').forEach((d,i)=>d.classList.toggle('active',i===tutStep));tutorialNextBtn.textContent=tutStep===tutSteps.length-1?'¡A JUGAR! 🚀':'SIGUIENTE →';}
     tutorialNextBtn.addEventListener('click',()=>{playClick();tutStep++;if(tutStep>=tutSteps.length){tutorialOverlay.classList.add('hidden');state.tutorialSeen=true;localStorage.setItem('lp_tut','1');}else renderTutStep();});
 
     // ====== ENCOURAGEMENT ======
@@ -427,9 +427,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const activeNode=pathTree.querySelector('.level-active');
         if(!pathView||!activeNode)return;
         requestAnimationFrame(()=>{
-            const container=pathView.getBoundingClientRect();
+            const appViewport=document.querySelector('.app-viewport').getBoundingClientRect();
             const node=activeNode.getBoundingClientRect();
-            const target=pathView.scrollTop+(node.top-container.top)-(container.height-node.height)/2;
+            const target=pathView.scrollTop+(node.top+node.height/2)-(appViewport.top+appViewport.height/2);
             pathView.scrollTo({top:Math.max(0,target),behavior:'smooth'});
         });
     }

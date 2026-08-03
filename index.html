@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Lingua Pro - Aprende Inglés Jugando</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260803-professional-2">
 </head>
 <body>
     <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
@@ -39,11 +41,15 @@
             <!-- PATH VIEW -->
             <main class="view path-view active" id="path-view">
                 <div class="section-banner" id="section-banner">
+                    <div class="banner-glow banner-glow-one" aria-hidden="true"></div>
+                    <div class="banner-glow banner-glow-two" aria-hidden="true"></div>
                     <div class="banner-content">
+                        <span class="brand-kicker"><span class="brand-spark">✦</span> LINGUA PRO</span>
                         <span class="unit-badge" id="banner-unit">Nivel A1</span>
                         <h2 id="banner-title">Primeras Palabras</h2>
                         <p id="banner-desc">Aprende jugando con colores, animales y objetos</p>
                     </div>
+                    <div class="banner-mascot-wrap" aria-hidden="true"><img src="assets/lingua-mascot.png?v=20260803-professional" alt=""></div>
                 </div>
                 <section class="daily-plan" aria-labelledby="daily-plan-title">
                     <div class="daily-plan-copy">
@@ -95,7 +101,7 @@
             <!-- PROFILE VIEW -->
             <main class="view profile-view" id="profile-view">
                 <div class="profile-card">
-                    <div class="avatar-circle"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaProMaster" alt="Avatar"></div>
+                    <div class="avatar-circle"><img src="assets/lingua-mascot.png?v=20260803-professional" alt="Mascota de Lingua Pro"></div>
                     <h2 class="user-name">Andrew Sanabria</h2>
                     <span class="user-rank">Liga de Oro 🥇</span>
                 </div>
@@ -131,7 +137,7 @@
                     <h1 class="prompt-title" id="prompt-title">¿Qué es esto?</h1>
 
                     <div class="character-prompt" id="character-prompt">
-                        <div class="mascot-container"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaPro" alt="Mascot" class="mascot-img" id="mascot-avatar"></div>
+                        <div class="mascot-container"><img src="assets/lingua-mascot.png?v=20260803-professional" alt="Guía de Lingua Pro" class="mascot-img" id="mascot-avatar"></div>
                         <div class="speech-bubble">
                             <div class="audio-controls-group">
                                 <button class="audio-btn normal-speed" id="tts-normal-btn" aria-label="Escuchar a velocidad normal"><span>🐇</span></button>
@@ -214,7 +220,7 @@
 
         <div class="tutorial-overlay hidden" id="tutorial-overlay">
             <div class="tutorial-card" id="tutorial-card">
-                <div class="tutorial-mascot">🤖</div>
+                <div class="tutorial-mascot"><img src="assets/lingua-mascot.png?v=20260803-professional" alt="Guía de Lingua Pro"><span class="tutorial-mood" id="tutorial-mood">👋</span></div>
                 <p class="tutorial-text" id="tutorial-text">¡Hola!</p>
                 <div class="tutorial-step-dots" id="tutorial-dots"></div>
                 <button class="action-btn continue-action tutorial-next-btn" id="tutorial-next-btn">SIGUIENTE →</button>
@@ -235,6 +241,6 @@
             </div>
         </div>
     </div>
-    <script src="app.js"></script>
+    <script src="app.js?v=20260803-professional-2"></script>
 </body>
 </html>
