@@ -8,14 +8,14 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+    <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
 
     <div class="app-viewport">
         <header class="top-nav" id="top-nav">
-            <div class="nav-item level-item" id="level-selector-btn">
+            <button class="nav-item level-item" id="level-selector-btn" type="button" aria-expanded="false" aria-controls="level-drawer" aria-label="Seleccionar nivel">
                 <span class="flag-icon">🇲🇽 ➔ 🇺🇸</span>
                 <span class="level-badge" id="current-level-badge">A1</span>
-            </div>
+            </button>
             <div class="nav-item streak-item"><span class="stat-icon">🔥</span><span class="stat-val" id="user-streak">1</span></div>
             <div class="nav-item gems-item"><span class="stat-icon">💎</span><span class="stat-val" id="user-gems">50</span></div>
             <div class="nav-item hearts-item" id="hearts-stat-container">
@@ -70,7 +70,7 @@
                         <span class="card-label">RECUERDA</span>
                         <div class="srs-word" id="srs-word">Apple</div>
                         <div class="srs-phonetic" id="srs-phonetic">/ˈæp.əl/</div>
-                        <button class="audio-btn srs-audio" id="srs-tts-btn">🔊</button>
+                        <button class="audio-btn srs-audio" id="srs-tts-btn" aria-label="Escuchar palabra">🔊</button>
                         <div class="srs-translation hidden" id="srs-translation">Manzana 🍎</div>
                         <button class="action-btn reveal-btn" id="reveal-srs-btn">MOSTRAR</button>
                         <div class="review-rating hidden" id="review-rating">
@@ -84,10 +84,11 @@
 
             <!-- SHOP VIEW -->
             <main class="view shop-view" id="shop-view">
-                <div class="view-header"><h2>🏪 Tienda</h2><p>Gasta tus gemas</p></div>
+                <div class="view-header"><h2>🏪 Tienda</h2><p>Usa tus gemas para mantener el ritmo</p></div>
+                <div class="shop-message hidden" id="shop-message" role="status" aria-live="polite"></div>
                 <div class="shop-items-grid">
-                    <div class="shop-card"><div class="shop-icon">❤️</div><div class="shop-info"><h3>Recargar Vidas</h3><p>5 vidas completas</p></div><button class="buy-btn" id="buy-hearts-btn">50 💎</button></div>
-                    <div class="shop-card"><div class="shop-icon">🛡️</div><div class="shop-info"><h3>Escudo de Racha</h3><p>Protege tu racha 1 día</p></div><button class="buy-btn" id="buy-freeze-btn">100 💎</button></div>
+                    <div class="shop-card"><div class="shop-icon">❤️</div><div class="shop-info"><h3>Recargar Vidas</h3><p>Vuelve a tener 5 vidas</p></div><button class="buy-btn" id="buy-hearts-btn">50 💎</button></div>
+                    <div class="shop-card"><div class="shop-icon">🛡️</div><div class="shop-info"><h3>Escudo de Racha</h3><p id="freeze-description">Protege tu racha durante 1 día</p></div><button class="buy-btn" id="buy-freeze-btn">100 💎</button></div>
                 </div>
             </main>
 
@@ -103,12 +104,21 @@
                     <div class="prof-stat"><span class="prof-icon">⚡</span><span class="prof-val" id="prof-xp">0 XP</span><span class="prof-lbl">Experiencia</span></div>
                     <div class="prof-stat"><span class="prof-icon">💎</span><span class="prof-val" id="prof-gems">50</span><span class="prof-lbl">Gemas</span></div>
                 </div>
+                <section class="progress-insights" aria-labelledby="progress-insights-title">
+                    <div class="insights-heading"><div><span class="eyebrow">TU PROGRESO</span><h3 id="progress-insights-title">Dominio del inglés</h3></div><span class="mastery-percent" id="mastery-percent">0%</span></div>
+                    <div class="mastery-track"><div class="mastery-fill" id="mastery-fill"></div></div>
+                    <div class="insight-grid">
+                        <div><strong id="lessons-completed">0</strong><span>Lecciones</span></div>
+                        <div><strong id="words-mastered">0</strong><span>Palabras</span></div>
+                        <div><strong id="freeze-count">0</strong><span>Escudos</span></div>
+                    </div>
+                </section>
             </main>
 
             <!-- LESSON VIEW -->
             <main class="view lesson-view" id="lesson-view">
                 <header class="lesson-header">
-                    <button class="close-btn" id="close-lesson-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+                    <button class="close-btn" id="close-lesson-btn" aria-label="Salir de la lección"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
                     <div class="progress-container"><div class="progress-bar"><div class="progress-fill" id="lesson-progress-fill"><div class="progress-shimmer"></div></div></div></div>
                     <div class="lesson-hearts-display"><span>❤️</span><span id="lesson-hearts-count">5</span></div>
                 </header>
@@ -124,8 +134,8 @@
                         <div class="mascot-container"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaPro" alt="Mascot" class="mascot-img" id="mascot-avatar"></div>
                         <div class="speech-bubble">
                             <div class="audio-controls-group">
-                                <button class="audio-btn normal-speed" id="tts-normal-btn"><span>🐇</span></button>
-                                <button class="audio-btn slow-speed" id="tts-slow-btn"><span>🐢</span></button>
+                                <button class="audio-btn normal-speed" id="tts-normal-btn" aria-label="Escuchar a velocidad normal"><span>🐇</span></button>
+                                <button class="audio-btn slow-speed" id="tts-slow-btn" aria-label="Escuchar lentamente"><span>🐢</span></button>
                             </div>
                             <span class="prompt-text" id="prompt-text">Hello!</span>
                         </div>
@@ -186,6 +196,7 @@
                             <div class="status-text-group">
                                 <h3 class="status-title" id="feedback-title">¡Genial!</h3>
                                 <p class="status-subtitle" id="feedback-subtitle"></p>
+                                <p class="feedback-tip" id="feedback-tip"></p>
                             </div>
                         </div>
                         <button class="action-btn continue-action" id="continue-btn">CONTINUAR</button>
