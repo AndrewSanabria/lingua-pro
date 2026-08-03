@@ -193,17 +193,51 @@ document.addEventListener('DOMContentLoaded', () => {
     // ====== NAV TABS ======
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>{playClick();const id=t.dataset.target;document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.view').forEach(v=>{v.id===id?v.classList.add('active'):v.classList.remove('active');});}));
 
+    // ====== PROGRESS STORAGE ======
+    const savedUnlocked = localStorage.getItem('lp_unlocked');
+    state.unlockedIndex = savedUnlocked ? JSON.parse(savedUnlocked) : { A1: 1, A2: 1, B1: 1, C1: 1 };
+
+    function saveProgress() {
+        localStorage.setItem('lp_unlocked', JSON.stringify(state.unlockedIndex));
+    }
+
     // ====== PATH TREE ======
     function renderPath(){
-        const d=curriculum[state.currentLevel];
-        bannerUnit.textContent=`Nivel ${state.currentLevel}`;bannerTitle.textContent=d.title;bannerDesc.textContent=d.desc;
-        pathTree.innerHTML='';
-        d.lessons.forEach((l,i)=>{
-            const w=document.createElement('div');w.className=`node-wrapper ${i===0?'level-active':'level-locked'}`;
-            const b=document.createElement('button');b.className='path-node';b.innerHTML=`<div class="node-icon">${l.icon}</div>`;
-            if(i===0){const tip=document.createElement('div');tip.className='node-tooltip';tip.textContent='¡EMPEZAR!';w.appendChild(tip);b.addEventListener('click',()=>startLesson(l));}
+        const d = curriculum[state.currentLevel];
+        bannerUnit.textContent = `Nivel ${state.currentLevel}`;
+        bannerTitle.textContent = d.title;
+        bannerDesc.textContent = d.desc;
+        pathTree.innerHTML = '';
+
+        const unlockedCount = state.unlockedIndex[state.currentLevel] || 1;
+
+        d.lessons.forEach((l, i) => {
+            const isUnlocked = i < unlockedCount;
+            const isCurrent = i === unlockedCount - 1;
+            const isCompleted = i < unlockedCount - 1;
+
+            const w = document.createElement('div');
+            w.className = `node-wrapper ${isCurrent ? 'level-active' : (isCompleted ? 'level-completed' : 'level-locked')}`;
+            
+            const b = document.createElement('button');
+            b.className = 'path-node';
+            b.innerHTML = `<div class="node-icon">${isUnlocked ? l.icon : '🔒'}</div>`;
+            
+            if (isUnlocked) {
+                if (isCurrent) {
+                    const tip = document.createElement('div');
+                    tip.className = 'node-tooltip';
+                    tip.textContent = '¡EMPEZAR!';
+                    w.appendChild(tip);
+                }
+                b.addEventListener('click', () => startLesson(l));
+            }
+
             w.appendChild(b);
-            const lbl=document.createElement('div');lbl.className='node-label';lbl.textContent=l.name;w.appendChild(lbl);
+            const lbl = document.createElement('div');
+            lbl.className = 'node-label';
+            lbl.textContent = l.name;
+            w.appendChild(lbl);
             pathTree.appendChild(w);
         });
     }
@@ -351,16 +385,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function finishLesson(){
-        const total=state.activeLesson.questions.length;
-        const acc=Math.round((state.correctCount/total)*100);
-        const bonus=state.maxCombo>=3?25:15;
-        accuracyVal.textContent=`${acc}%`;comboMaxVal.textContent=`🔥 ${state.maxCombo}`;xpRewardVal.textContent=`+${bonus}`;
-        completionEncourage.textContent=randMsg(msgs.end);
-        state.gems+=20;state.xp+=bonus;updateStats();
-        completionModal.classList.add('active');triggerConfetti();playSuccess();
+        const total = state.activeLesson.questions.length;
+        const acc = Math.round((state.correctCount / total) * 100);
+        const bonus = state.maxCombo >= 3 ? 25 : 15;
+        accuracyVal.textContent = `${acc}%`;
+        comboMaxVal.textContent = `🔥 ${state.maxCombo}`;
+        xpRewardVal.textContent = `+${bonus}`;
+        completionEncourage.textContent = randMsg(msgs.end);
+
+        state.gems += 20;
+        state.xp += bonus;
+        updateStats();
+
+        // Unlock next lesson
+        const currentLessons = curriculum[state.currentLevel].lessons;
+        const activeIdx = currentLessons.findIndex(l => l.id === state.activeLesson.id);
+        if (activeIdx !== -1) {
+            const nextUnlocked = activeIdx + 2; // 1-indexed next lesson
+            if (nextUnlocked > (state.unlockedIndex[state.currentLevel] || 1)) {
+                state.unlockedIndex[state.currentLevel] = nextUnlocked;
+                saveProgress();
+            }
+        }
+
+        completionModal.classList.add('active');
+        triggerConfetti();
+        playSuccess();
     }
 
-    finishBtn.addEventListener('click',()=>{completionModal.classList.remove('active');lessonView.classList.remove('active');$('path-view').classList.add('active');});
+    finishBtn.addEventListener('click', () => {
+        completionModal.classList.remove('active');
+        lessonView.classList.remove('active');
+        $('path-view').classList.add('active');
+        renderPath(); // Re-render path tree to show newly unlocked node!
+    });
 
     // ====== SHOP ======
     $('buy-hearts-btn').addEventListener('click',()=>{if(state.gems>=50){state.gems-=50;state.hearts=5;updateStats();playSuccess();alert('¡5 ❤️ recargadas!');}else alert('Necesitas 50 💎');});
