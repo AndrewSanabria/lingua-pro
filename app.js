@@ -244,13 +244,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ====== LESSON START ======
     function startLesson(l){
-        state.activeLesson=l;state.currentQuestionIdx=0;state.correctCount=0;state.hearts=5;state.comboStreak=0;state.maxCombo=0;state.hintsUsed=0;state.selectedChoice=null;
-        comboCounter.classList.add('hidden');updateStats();
-        document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));lessonView.classList.add('active');
+        state.activeLesson = l;
+        state.currentQuestionIdx = 0;
+        state.correctCount = 0;
+        state.hearts = 5;
+        state.comboStreak = 0;
+        state.maxCombo = 0;
+        state.hintsUsed = 0;
+        state.selectedChoice = null;
+        comboCounter.classList.add('hidden');
+        updateStats();
+
+        // Hide bottom nav bar so lesson has full viewport
+        const bottomNav = $('bottom-nav-bar');
+        if (bottomNav) bottomNav.style.display = 'none';
+
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        lessonView.classList.add('active');
         loadQ();
     }
 
-    closeLessonBtn.addEventListener('click',()=>{if(confirm('¿Salir? Perderás el progreso.')){lessonView.classList.remove('active');$('path-view').classList.add('active');}});
+    closeLessonBtn.addEventListener('click', () => {
+        if (confirm('¿Salir? Perderás el progreso.')) {
+            lessonView.classList.remove('active');
+            $('path-view').classList.add('active');
+            const bottomNav = $('bottom-nav-bar');
+            if (bottomNav) bottomNav.style.display = 'flex';
+        }
+    });
     ttsNormal.addEventListener('click',()=>speak(promptText.textContent,0.95));
     ttsSlow.addEventListener('click',()=>speak(promptText.textContent,0.55));
 
@@ -417,6 +438,8 @@ document.addEventListener('DOMContentLoaded', () => {
         completionModal.classList.remove('active');
         lessonView.classList.remove('active');
         $('path-view').classList.add('active');
+        const bottomNav = $('bottom-nav-bar');
+        if (bottomNav) bottomNav.style.display = 'flex';
         renderPath(); // Re-render path tree to show newly unlocked node!
     });
 
