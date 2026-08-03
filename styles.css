@@ -711,3 +711,168 @@ body {
 .acc-val { color: var(--brand-green); }
 .gem-val { color: var(--brand-blue); }
 .hidden { display: none !important; }
+
+/* COMBO STREAK COUNTER */
+.combo-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 16px;
+    margin: 0 16px 8px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #FF9600 0%, #FF4B4B 100%);
+    box-shadow: 0 3px 0 #C67000;
+    animation: comboAppear 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes comboAppear {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.combo-flame { font-size: 1.2rem; }
+.combo-number { font-size: 1.3rem; font-weight: 900; color: white; }
+.combo-label { font-size: 0.75rem; font-weight: 800; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* QUESTION NUMBER BADGE */
+.question-badge {
+    text-align: center;
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+}
+
+/* FLOATING ENCOURAGEMENT TOAST */
+.encouragement-toast {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #58CC02, #46A302);
+    color: white;
+    font-weight: 800;
+    font-size: 1.1rem;
+    padding: 10px 24px;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(88, 204, 2, 0.4);
+    z-index: 50;
+    animation: toastFloat 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    pointer-events: none;
+}
+
+@keyframes toastFloat {
+    0% { transform: translateX(-50%) translateY(20px) scale(0.8); opacity: 0; }
+    15% { transform: translateX(-50%) translateY(0) scale(1.05); opacity: 1; }
+    80% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateX(-50%) translateY(-30px) scale(0.9); opacity: 0; }
+}
+
+/* HINT BUTTON */
+.footer-actions-row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.hint-btn {
+    background: var(--surface-dark);
+    border: 2px solid var(--border-color);
+    border-radius: 14px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--border-color);
+    transition: transform 0.1s;
+    color: var(--brand-yellow);
+    min-width: 60px;
+}
+
+.hint-btn:active { transform: translateY(3px); box-shadow: none; }
+.hint-btn span:first-child { font-size: 1.3rem; }
+.hint-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
+
+.hint-btn.used {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.word-chip.hint-glow {
+    border-color: var(--brand-yellow);
+    box-shadow: 0 4px 0 var(--brand-yellow-shadow), 0 0 12px rgba(255, 200, 0, 0.5);
+    animation: hintPulse 0.8s ease-in-out 3;
+}
+
+@keyframes hintPulse {
+    0%, 100% { box-shadow: 0 4px 0 var(--brand-yellow-shadow), 0 0 8px rgba(255, 200, 0, 0.3); }
+    50% { box-shadow: 0 4px 0 var(--brand-yellow-shadow), 0 0 20px rgba(255, 200, 0, 0.7); }
+}
+
+/* TUTORIAL OVERLAY */
+.tutorial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 250;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 20px;
+    padding-bottom: 80px;
+    animation: fadeIn 0.3s ease;
+}
+
+.tutorial-card {
+    background: var(--surface-dark);
+    border: 2px solid var(--brand-blue);
+    border-radius: 20px;
+    padding: 24px 20px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    animation: modalBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tutorial-mascot { font-size: 3rem; animation: mascotFloat 2s ease-in-out infinite; }
+.tutorial-text { font-size: 1.1rem; font-weight: 600; line-height: 1.5; color: var(--text-primary); }
+
+.tutorial-step-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.tutorial-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border-color);
+    transition: all 0.2s;
+}
+
+.tutorial-dot.active {
+    background: var(--brand-blue);
+    transform: scale(1.2);
+}
+
+.tutorial-next-btn {
+    max-width: 280px;
+}
+
+/* COMPLETION ENCOURAGE TEXT */
+.completion-encourage {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.combo-max-val { color: #FF9600; }

@@ -176,6 +176,23 @@
                     </div>
                 </header>
 
+                <!-- COMBO STREAK COUNTER -->
+                <div class="combo-counter hidden" id="combo-counter">
+                    <span class="combo-flame">🔥</span>
+                    <span class="combo-number" id="combo-number">2</span>
+                    <span class="combo-label">COMBO</span>
+                </div>
+
+                <!-- QUESTION NUMBER BADGE -->
+                <div class="question-badge" id="question-badge">
+                    <span id="q-current">1</span> / <span id="q-total">3</span>
+                </div>
+
+                <!-- FLOATING ENCOURAGEMENT TOAST -->
+                <div class="encouragement-toast hidden" id="encouragement-toast">
+                    <span id="encouragement-text">¡Vas muy bien! 🌟</span>
+                </div>
+
                 <div class="exercise-area" id="exercise-area">
                     <h1 class="prompt-title" id="prompt-title">Traduce esta oración</h1>
 
@@ -223,7 +240,13 @@
 
                 <!-- FOOTER ACTION BUTTON -->
                 <footer class="lesson-footer">
-                    <button class="action-btn check-action" id="check-btn" disabled>COMPROBAR</button>
+                    <div class="footer-actions-row">
+                        <button class="hint-btn" id="hint-btn" title="Obtener una pista">
+                            <span>💡</span>
+                            <span class="hint-label">Pista</span>
+                        </button>
+                        <button class="action-btn check-action" id="check-btn" disabled>COMPROBAR</button>
+                    </div>
                 </footer>
 
                 <!-- FEEDBACK SLIDE-UP SHEET -->
@@ -262,25 +285,36 @@
             </button>
         </nav>
 
+        <!-- GUIDED TUTORIAL OVERLAY (FIRST-TIME ONBOARDING) -->
+        <div class="tutorial-overlay hidden" id="tutorial-overlay">
+            <div class="tutorial-spotlight" id="tutorial-spotlight"></div>
+            <div class="tutorial-card" id="tutorial-card">
+                <div class="tutorial-mascot">🤖</div>
+                <p class="tutorial-text" id="tutorial-text">¡Hola! Soy tu asistente de Lingua Pro. Te guiaré paso a paso.</p>
+                <div class="tutorial-step-dots" id="tutorial-dots"></div>
+                <button class="action-btn continue-action tutorial-next-btn" id="tutorial-next-btn">SIGUIENTE →</button>
+            </div>
+        </div>
+
         <!-- LESSON COMPLETE MODAL -->
         <div class="modal-overlay" id="completion-modal">
             <div class="completion-card">
                 <div class="celebration-icon">🎉</div>
                 <h2>¡Lección Completada!</h2>
-                <p>¡Dominio del nivel incrementado!</p>
+                <p class="completion-encourage" id="completion-encourage">¡Dominio del nivel incrementado!</p>
                 
                 <div class="rewards-grid">
                     <div class="reward-box">
                         <span class="reward-label">TOTAL XP</span>
-                        <span class="reward-value xp-val">+15 XP</span>
+                        <span class="reward-value xp-val" id="xp-reward-val">+15 XP</span>
                     </div>
                     <div class="reward-box">
                         <span class="reward-label">PRECISIÓN</span>
                         <span class="reward-value acc-val" id="accuracy-val">100%</span>
                     </div>
                     <div class="reward-box">
-                        <span class="reward-label">GEMAS</span>
-                        <span class="reward-value gem-val">+20 💎</span>
+                        <span class="reward-label">COMBO MÁX</span>
+                        <span class="reward-value combo-max-val" id="combo-max-val">🔥 0</span>
                     </div>
                 </div>
 

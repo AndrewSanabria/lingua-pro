@@ -12,8 +12,40 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedChips: [],
         audioCtx: null,
         firstMatchCard: null,
-        matchedPairsCount: 0
+        matchedPairsCount: 0,
+        // Guided learning enhancements
+        comboStreak: 0,
+        maxCombo: 0,
+        hintsUsed: 0,
+        tutorialSeen: localStorage.getItem('linguapro_tutorial_seen') === 'true'
     };
+
+    // --- TUTORIAL STEPS ---
+    const tutorialSteps = [
+        { text: '¡Hola! 👋 Soy tu asistente de Lingua Pro. Te enseñaré inglés paso a paso, desde lo más fácil hasta lo más avanzado.', mascot: '🤖' },
+        { text: '🗺️ En el Mapa de Aprendizaje verás los niveles. Toca la estrella brillante (⭐) para iniciar tu primera lección.', mascot: '🌟' },
+        { text: '🐇 Escucha la pronunciación en inglés tocando el conejo (velocidad normal) o la tortuga 🐢 (más lento).', mascot: '🎧' },
+        { text: '👆 Toca las palabras del banco de abajo para armar la traducción correcta arriba. Si te equivocas, toca la palabra arriba para regresarla.', mascot: '✏️' },
+        { text: '💡 Si necesitas ayuda, toca "Pista" para iluminar la siguiente palabra correcta. ¡Acumula combos 🔥 respondiendo bien seguido!', mascot: '🏆' }
+    ];
+    let tutorialStep = 0;
+
+    // --- ENCOURAGEMENT MESSAGES ---
+    const encourageCorrect = [
+        '¡Excelente trabajo! 🌟', '¡Eres increíble! ⚡', '¡Sigue así! 💪',
+        '¡Perfecto! 🎯', '¡Genial, crack! 🔥', '¡Lo lograste! 🏆',
+        '¡Impresionante! 🌈', '¡Vas volando! 🚀', '¡Fantástico! ✨'
+    ];
+    const encourageCombo = [
+        '🔥 ¡Racha de fuego!', '⚡ ¡Imparable!', '💎 ¡Estás brillando!',
+        '🌟 ¡Combo increíble!', '🚀 ¡En llamas!'
+    ];
+    const completionMessages = [
+        '¡Eres un estudiante excepcional! El inglés está en tus manos.',
+        '¡Cada lección te acerca más a la fluidez total!',
+        '¡Tu cerebro está creciendo con cada ejercicio!',
+        '¡Los expertos en idiomas practican cada día, como tú!'
+    ];
 
     // --- CURRICULUM DATABASE (A1 -> C1) ---
     const curriculum = {
@@ -159,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- CONFETTI PARTICLE ANIMATION ENGINE ---
+    // --- CONFETTI ---
     const confettiCanvas = document.getElementById('confetti-canvas');
     const ctx = confettiCanvas ? confettiCanvas.getContext('2d') : null;
     let confettiParticles = [];
@@ -177,33 +209,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!ctx) return;
         confettiParticles = [];
         const colors = ['#58CC02', '#1CB0F6', '#FFC800', '#FF4B4B', '#FF9600', '#CE82FF'];
-
         for (let i = 0; i < 100; i++) {
             confettiParticles.push({
-                x: window.innerWidth / 2,
-                y: window.innerHeight / 2,
-                vx: (Math.random() - 0.5) * 14,
-                vy: (Math.random() - 0.7) * 16,
+                x: window.innerWidth / 2, y: window.innerHeight / 2,
+                vx: (Math.random() - 0.5) * 14, vy: (Math.random() - 0.7) * 16,
                 size: Math.random() * 8 + 6,
                 color: colors[Math.floor(Math.random() * colors.length)],
-                rotation: Math.random() * 360,
-                rSpeed: (Math.random() - 0.5) * 10,
+                rotation: Math.random() * 360, rSpeed: (Math.random() - 0.5) * 10,
                 opacity: 1
             });
         }
-
-        let animationFrame;
         function updateConfetti() {
             ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
             let alive = false;
-
             confettiParticles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.4; // Gravity
-                p.rotation += p.rSpeed;
-                p.opacity -= 0.012;
-
+                p.x += p.vx; p.y += p.vy; p.vy += 0.4;
+                p.rotation += p.rSpeed; p.opacity -= 0.012;
                 if (p.opacity > 0) {
                     alive = true;
                     ctx.save();
@@ -215,22 +236,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     ctx.restore();
                 }
             });
-
-            if (alive) {
-                animationFrame = requestAnimationFrame(updateConfetti);
-            } else {
-                ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-            }
+            if (alive) requestAnimationFrame(updateConfetti);
+            else ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
         }
-
         updateConfetti();
     }
 
-    // --- SOUND ENGINE (WEB AUDIO API) ---
+    // --- SOUND ENGINE ---
     function initAudioContext() {
-        if (!state.audioCtx) {
-            state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
+        if (!state.audioCtx) state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
 
     function playClickSound() {
@@ -243,10 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
             osc.frequency.exponentialRampToValueAtTime(850, state.audioCtx.currentTime + 0.04);
             gain.gain.setValueAtTime(0.12, state.audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, state.audioCtx.currentTime + 0.04);
-            osc.connect(gain);
-            gain.connect(state.audioCtx.destination);
-            osc.start();
-            osc.stop(state.audioCtx.currentTime + 0.04);
+            osc.connect(gain); gain.connect(state.audioCtx.destination);
+            osc.start(); osc.stop(state.audioCtx.currentTime + 0.04);
         } catch(e) {}
     }
 
@@ -261,10 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
             osc.frequency.exponentialRampToValueAtTime(1200, now + 0.08);
             gain.gain.setValueAtTime(0.2, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-            osc.connect(gain);
-            gain.connect(state.audioCtx.destination);
-            osc.start(now);
-            osc.stop(now + 0.08);
+            osc.connect(gain); gain.connect(state.audioCtx.destination);
+            osc.start(now); osc.stop(now + 0.08);
         } catch(e) {}
     }
 
@@ -272,18 +282,15 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             initAudioContext();
             const now = state.audioCtx.currentTime;
-            const notes = [523.25, 659.25, 783.99, 1046.50];
-            notes.forEach((freq, idx) => {
+            [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
                 const osc = state.audioCtx.createOscillator();
                 const gain = state.audioCtx.createGain();
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(freq, now + idx * 0.07);
                 gain.gain.setValueAtTime(0.18, now + idx * 0.07);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.2);
-                osc.connect(gain);
-                gain.connect(state.audioCtx.destination);
-                osc.start(now + idx * 0.07);
-                osc.stop(now + idx * 0.07 + 0.2);
+                osc.connect(gain); gain.connect(state.audioCtx.destination);
+                osc.start(now + idx * 0.07); osc.stop(now + idx * 0.07 + 0.2);
             });
         } catch(e) {}
     }
@@ -299,14 +306,45 @@ document.addEventListener('DOMContentLoaded', () => {
             osc.frequency.linearRampToValueAtTime(140, now + 0.22);
             gain.gain.setValueAtTime(0.18, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-            osc.connect(gain);
-            gain.connect(state.audioCtx.destination);
-            osc.start(now);
-            osc.stop(now + 0.25);
+            osc.connect(gain); gain.connect(state.audioCtx.destination);
+            osc.start(now); osc.stop(now + 0.25);
         } catch(e) {}
     }
 
-    // --- SPEECH SYNTHESIS ENGINE (DUAL SPEED & BOUNCE) ---
+    function playComboSound() {
+        try {
+            initAudioContext();
+            const now = state.audioCtx.currentTime;
+            [440, 554.37, 659.25].forEach((freq, idx) => {
+                const osc = state.audioCtx.createOscillator();
+                const gain = state.audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now + idx * 0.05);
+                gain.gain.setValueAtTime(0.15, now + idx * 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.12);
+                osc.connect(gain); gain.connect(state.audioCtx.destination);
+                osc.start(now + idx * 0.05); osc.stop(now + idx * 0.05 + 0.12);
+            });
+        } catch(e) {}
+    }
+
+    function playHintSound() {
+        try {
+            initAudioContext();
+            const now = state.audioCtx.currentTime;
+            const osc = state.audioCtx.createOscillator();
+            const gain = state.audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, now);
+            osc.frequency.exponentialRampToValueAtTime(1320, now + 0.15);
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+            osc.connect(gain); gain.connect(state.audioCtx.destination);
+            osc.start(now); osc.stop(now + 0.15);
+        } catch(e) {}
+    }
+
+    // --- SPEECH SYNTHESIS ---
     const mascotAvatar = document.getElementById('mascot-avatar');
 
     function speakText(text, rate = 0.95) {
@@ -315,12 +353,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'en-US';
             utterance.rate = rate;
-
             if (mascotAvatar) {
                 mascotAvatar.classList.add('mascot-speaking');
                 utterance.onend = () => mascotAvatar.classList.remove('mascot-speaking');
             }
-
             window.speechSynthesis.speak(utterance);
         }
     }
@@ -330,65 +366,181 @@ document.addEventListener('DOMContentLoaded', () => {
     const levelDrawer = document.getElementById('level-drawer');
     const currentLevelBadge = document.getElementById('current-level-badge');
     const levelOpts = document.querySelectorAll('.level-opt');
-
     const pathTree = document.getElementById('path-tree');
     const bannerUnit = document.getElementById('banner-unit');
     const bannerTitle = document.getElementById('banner-title');
     const bannerDesc = document.getElementById('banner-desc');
-
     const navTabs = document.querySelectorAll('.nav-tab');
     const views = document.querySelectorAll('.view');
-
     const lessonView = document.getElementById('lesson-view');
     const closeLessonBtn = document.getElementById('close-lesson-btn');
     const lessonProgressFill = document.getElementById('lesson-progress-fill');
     const lessonHeartsCount = document.getElementById('lesson-hearts-count');
-    
     const promptTitle = document.getElementById('prompt-title');
     const promptText = document.getElementById('prompt-text');
     const ttsNormalBtn = document.getElementById('tts-normal-btn');
     const ttsSlowBtn = document.getElementById('tts-slow-btn');
-
     const modTranslate = document.getElementById('mod-translate');
     const modMatching = document.getElementById('mod-matching');
     const modChoice = document.getElementById('mod-choice');
-
     const answerSlotLine = document.getElementById('answer-slot-line');
     const placeholderHint = document.getElementById('placeholder-hint');
     const wordPool = document.getElementById('word-pool');
-
     const matchingGrid = document.getElementById('matching-grid');
     const choicesGrid = document.getElementById('choices-grid');
-
     const checkBtn = document.getElementById('check-btn');
     const feedbackSheet = document.getElementById('feedback-sheet');
     const feedbackIcon = document.getElementById('feedback-icon');
-    const feedbackTitle = document.getElementById('feedback-title');
+    const feedbackTitleEl = document.getElementById('feedback-title');
     const feedbackSubtitle = document.getElementById('feedback-subtitle');
     const continueBtn = document.getElementById('continue-btn');
-
     const userStreak = document.getElementById('user-streak');
     const userGems = document.getElementById('user-gems');
     const userHearts = document.getElementById('user-hearts');
     const mainHeartIcon = document.getElementById('main-heart-icon');
     const floatingHeartLoss = document.getElementById('floating-heart-loss');
-
     const profStreak = document.getElementById('prof-streak');
     const profXp = document.getElementById('prof-xp');
     const profGems = document.getElementById('prof-gems');
-
     const completionModal = document.getElementById('completion-modal');
     const finishLessonBtn = document.getElementById('finish-lesson-btn');
     const accuracyVal = document.getElementById('accuracy-val');
-
     const buyHeartsBtn = document.getElementById('buy-hearts-btn');
     const buyFreezeBtn = document.getElementById('buy-freeze-btn');
-
     const revealSrsBtn = document.getElementById('reveal-srs-btn');
     const srsTranslation = document.getElementById('srs-translation');
     const srsTtsBtn = document.getElementById('srs-tts-btn');
+    // New guided learning elements
+    const comboCounter = document.getElementById('combo-counter');
+    const comboNumber = document.getElementById('combo-number');
+    const qCurrent = document.getElementById('q-current');
+    const qTotal = document.getElementById('q-total');
+    const encouragementToast = document.getElementById('encouragement-toast');
+    const encouragementText = document.getElementById('encouragement-text');
+    const hintBtn = document.getElementById('hint-btn');
+    const comboMaxVal = document.getElementById('combo-max-val');
+    const xpRewardVal = document.getElementById('xp-reward-val');
+    const completionEncourage = document.getElementById('completion-encourage');
+    // Tutorial elements
+    const tutorialOverlay = document.getElementById('tutorial-overlay');
+    const tutorialTextEl = document.getElementById('tutorial-text');
+    const tutorialNextBtn = document.getElementById('tutorial-next-btn');
+    const tutorialDotsContainer = document.getElementById('tutorial-dots');
+    const tutorialMascotEl = document.querySelector('.tutorial-mascot');
 
-    // --- LEVEL SELECTOR HANDLERS ---
+    // --- TUTORIAL SYSTEM ---
+    function showTutorial() {
+        if (state.tutorialSeen) return;
+        tutorialOverlay.classList.remove('hidden');
+        tutorialStep = 0;
+        renderTutorialDots();
+        renderTutorialStep();
+    }
+
+    function renderTutorialDots() {
+        tutorialDotsContainer.innerHTML = '';
+        tutorialSteps.forEach((_, i) => {
+            const dot = document.createElement('span');
+            dot.className = `tutorial-dot ${i === 0 ? 'active' : ''}`;
+            tutorialDotsContainer.appendChild(dot);
+        });
+    }
+
+    function renderTutorialStep() {
+        const step = tutorialSteps[tutorialStep];
+        tutorialTextEl.textContent = step.text;
+        tutorialMascotEl.textContent = step.mascot;
+        tutorialDotsContainer.querySelectorAll('.tutorial-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === tutorialStep);
+        });
+        tutorialNextBtn.textContent = tutorialStep === tutorialSteps.length - 1 ? '¡EMPEZAR A APRENDER! 🚀' : 'SIGUIENTE →';
+    }
+
+    if (tutorialNextBtn) {
+        tutorialNextBtn.addEventListener('click', () => {
+            playClickSound();
+            tutorialStep++;
+            if (tutorialStep >= tutorialSteps.length) {
+                tutorialOverlay.classList.add('hidden');
+                state.tutorialSeen = true;
+                localStorage.setItem('linguapro_tutorial_seen', 'true');
+            } else {
+                renderTutorialStep();
+            }
+        });
+    }
+
+    // --- ENCOURAGEMENT TOAST ---
+    function showEncouragement(message) {
+        encouragementToast.classList.remove('hidden');
+        encouragementText.textContent = message;
+        // Force re-animation by cloning
+        const clone = encouragementToast.cloneNode(true);
+        clone.id = 'encouragement-toast';
+        encouragementToast.parentNode.replaceChild(clone, encouragementToast);
+        // Re-assign since DOM element was replaced
+        setTimeout(() => {
+            const el = document.getElementById('encouragement-toast');
+            if (el) el.classList.add('hidden');
+        }, 2200);
+    }
+
+    // --- COMBO COUNTER ---
+    function updateCombo(correct) {
+        if (correct) {
+            state.comboStreak++;
+            if (state.comboStreak > state.maxCombo) state.maxCombo = state.comboStreak;
+
+            if (state.comboStreak >= 2) {
+                comboCounter.classList.remove('hidden');
+                comboNumber.textContent = state.comboStreak;
+                playComboSound();
+
+                if (state.comboStreak >= 3) {
+                    const msg = encourageCombo[Math.floor(Math.random() * encourageCombo.length)];
+                    showEncouragement(msg);
+                }
+            }
+        } else {
+            state.comboStreak = 0;
+            comboCounter.classList.add('hidden');
+        }
+    }
+
+    // --- HINT SYSTEM ---
+    if (hintBtn) {
+        hintBtn.addEventListener('click', () => {
+            const q = state.activeLesson?.questions[state.currentQuestionIdx];
+            if (!q || q.type !== 'translate') return;
+
+            playHintSound();
+            state.hintsUsed++;
+
+            // Find next word in answer that hasn't been placed yet
+            const placedWords = state.selectedChips.map(c => c.text);
+            const nextWord = q.answer.find((w, i) => {
+                const placedCount = placedWords.filter(p => p === w).length;
+                const neededCount = q.answer.slice(0, i + 1).filter(a => a === w).length;
+                return placedCount < neededCount;
+            });
+
+            if (nextWord) {
+                // Find matching chip in pool that is not disabled and highlight it
+                const poolChips = wordPool.querySelectorAll('.word-chip:not(.chip-disabled)');
+                for (const chip of poolChips) {
+                    if (chip.textContent === nextWord) {
+                        chip.classList.add('hint-glow');
+                        setTimeout(() => chip.classList.remove('hint-glow'), 2500);
+                        break;
+                    }
+                }
+            }
+
+            hintBtn.classList.add('used');
+        });
+    }
+
+    // --- LEVEL SELECTOR ---
     levelSelectorBtn.addEventListener('click', () => {
         playClickSound();
         levelDrawer.classList.toggle('active');
@@ -399,24 +551,20 @@ document.addEventListener('DOMContentLoaded', () => {
             playClickSound();
             levelOpts.forEach(o => o.classList.remove('active'));
             opt.classList.add('active');
-            
             state.currentLevel = opt.dataset.level;
             currentLevelBadge.textContent = state.currentLevel;
             levelDrawer.classList.remove('active');
-            
             renderPathTree();
         });
     });
 
-    // --- NAVIGATION TABS ---
+    // --- NAV TABS ---
     navTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             playClickSound();
             const targetId = tab.dataset.target;
-            
             navTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            
             views.forEach(v => {
                 if (v.id === targetId) v.classList.add('active');
                 else v.classList.remove('active');
@@ -424,43 +572,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- PATH TREE RENDERER ---
+    // --- PATH TREE ---
     function renderPathTree() {
         const lvlData = curriculum[state.currentLevel];
         bannerUnit.textContent = `Sección (${state.currentLevel})`;
         bannerTitle.textContent = lvlData.title;
         bannerDesc.textContent = lvlData.desc;
-
         pathTree.innerHTML = '';
 
         lvlData.lessons.forEach((l, idx) => {
             const wrapper = document.createElement('div');
             wrapper.className = `node-wrapper ${idx === 0 ? 'level-active' : 'level-locked'}`;
-            
             const btn = document.createElement('button');
             btn.className = 'path-node';
             btn.innerHTML = `<div class="node-icon">${l.icon}</div>`;
-            
             if (idx === 0) {
                 const tooltip = document.createElement('div');
                 tooltip.className = 'node-tooltip';
                 tooltip.textContent = '¡EMPEZAR!';
                 wrapper.appendChild(tooltip);
-                
                 btn.addEventListener('click', () => startLesson(l));
             }
-
             wrapper.appendChild(btn);
             pathTree.appendChild(wrapper);
         });
     }
 
-    // --- EXERCISE ENGINE ---
+    // --- LESSON LIFECYCLE ---
     function startLesson(lessonObj) {
         state.activeLesson = lessonObj;
         state.currentQuestionIdx = 0;
         state.correctCount = 0;
         state.hearts = 5;
+        state.comboStreak = 0;
+        state.maxCombo = 0;
+        state.hintsUsed = 0;
+        comboCounter.classList.add('hidden');
         updateStats();
 
         views.forEach(v => v.classList.remove('active'));
@@ -490,6 +637,14 @@ document.addEventListener('DOMContentLoaded', () => {
         feedbackSheet.className = 'feedback-sheet';
         checkBtn.disabled = true;
 
+        // Update question counter
+        qCurrent.textContent = state.currentQuestionIdx + 1;
+        qTotal.textContent = totalQ;
+
+        // Reset hint button
+        if (hintBtn) hintBtn.classList.remove('used');
+
+        // Progress
         const pct = (state.currentQuestionIdx / totalQ) * 100;
         lessonProgressFill.style.width = `${pct}%`;
 
@@ -501,7 +656,6 @@ document.addEventListener('DOMContentLoaded', () => {
             promptTitle.textContent = 'Traduce esta oración';
             promptText.textContent = q.prompt;
             modTranslate.classList.remove('hidden');
-
             speakText(q.prompt, 0.95);
 
             wordPool.innerHTML = '';
@@ -520,8 +674,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 chip.addEventListener('click', () => {
                     if (chip.classList.contains('chip-disabled')) return;
                     playClickSound();
-
                     chip.classList.add('chip-disabled');
+                    chip.classList.remove('hint-glow');
                     placeholderHint.style.display = 'none';
 
                     const slotChip = document.createElement('button');
@@ -533,7 +687,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         slotChip.remove();
                         chip.classList.remove('chip-disabled');
                         state.selectedChips = state.selectedChips.filter(c => c.slotElem !== slotChip);
-
                         if (state.selectedChips.length === 0) {
                             placeholderHint.style.display = 'inline';
                             checkBtn.disabled = true;
@@ -552,15 +705,12 @@ document.addEventListener('DOMContentLoaded', () => {
             promptTitle.textContent = 'Toca los pares que correspondan';
             promptText.textContent = 'Selecciona la palabra en inglés y su traducción';
             modMatching.classList.remove('hidden');
-
             matchingGrid.innerHTML = '';
             const allCards = [];
-
             q.pairs.forEach((p, idx) => {
                 allCards.push({ id: idx, text: p.en, lang: 'en' });
                 allCards.push({ id: idx, text: p.es, lang: 'es' });
             });
-
             allCards.sort(() => Math.random() - 0.5);
 
             allCards.forEach(cObj => {
@@ -571,7 +721,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 card.addEventListener('click', () => {
                     if (card.classList.contains('matched')) return;
-
                     if (cObj.lang === 'en') speakText(cObj.text, 0.95);
                     else playClickSound();
 
@@ -580,22 +729,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         card.classList.add('selected');
                     } else {
                         if (state.firstMatchCard.elem === card) return;
-
                         if (state.firstMatchCard.id === Number(card.dataset.pairId)) {
                             playMatchPopSound();
                             state.firstMatchCard.elem.className = 'match-card matched';
                             card.className = 'match-card matched';
                             state.firstMatchCard = null;
                             state.matchedPairsCount++;
-
-                            if (state.matchedPairsCount === q.pairs.length) {
-                                checkBtn.disabled = false;
-                            }
+                            if (state.matchedPairsCount === q.pairs.length) checkBtn.disabled = false;
                         } else {
                             playErrorSound();
                             card.classList.add('wrong');
                             state.firstMatchCard.elem.classList.add('wrong');
-
                             setTimeout(() => {
                                 card.classList.remove('wrong', 'selected');
                                 state.firstMatchCard.elem.classList.remove('wrong', 'selected');
@@ -604,7 +748,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
                 });
-
                 matchingGrid.appendChild(card);
             });
 
@@ -612,13 +755,11 @@ document.addEventListener('DOMContentLoaded', () => {
             promptTitle.textContent = 'Selecciona la opción correcta';
             promptText.textContent = q.prompt;
             modChoice.classList.remove('hidden');
-
             choicesGrid.innerHTML = '';
             q.options.forEach(optText => {
                 const card = document.createElement('button');
                 card.className = 'choice-card';
                 card.textContent = optText;
-
                 card.addEventListener('click', () => {
                     playClickSound();
                     choicesGrid.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
@@ -626,13 +767,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     state.selectedChoice = optText;
                     checkBtn.disabled = false;
                 });
-
                 choicesGrid.appendChild(card);
             });
         }
     }
 
-    // --- CHECK BUTTON HANDLER ---
+    // --- CHECK ---
     checkBtn.addEventListener('click', () => {
         const q = state.activeLesson.questions[state.currentQuestionIdx];
         let isCorrect = false;
@@ -649,19 +789,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isCorrect) {
             playSuccessSound();
             state.correctCount++;
+            updateCombo(true);
+
+            const msg = encourageCorrect[Math.floor(Math.random() * encourageCorrect.length)];
             feedbackSheet.className = 'feedback-sheet show success';
             feedbackIcon.textContent = '✓';
-            feedbackTitle.textContent = '¡Excelente trabajo!';
-            feedbackSubtitle.textContent = 'Respuesta totalmente correcta.';
+            feedbackTitleEl.textContent = msg;
+            feedbackSubtitle.textContent = state.comboStreak >= 2 ? `🔥 Combo x${state.comboStreak}` : 'Respuesta correcta.';
         } else {
             playErrorSound();
+            updateCombo(false);
             triggerHeartLossAnimation();
             state.hearts = Math.max(0, state.hearts - 1);
             updateStats();
 
             feedbackSheet.className = 'feedback-sheet show error';
             feedbackIcon.textContent = '✕';
-            feedbackTitle.textContent = 'Solución correcta:';
+            feedbackTitleEl.textContent = 'No te preocupes, la respuesta era:';
             feedbackSubtitle.textContent = q.type === 'translate' ? q.answer.join(' ') : (q.correct || 'Sigue practicando');
         }
     });
@@ -670,7 +814,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mainHeartIcon && floatingHeartLoss) {
             mainHeartIcon.classList.add('shake-heart');
             floatingHeartLoss.classList.add('animate-loss');
-
             setTimeout(() => {
                 mainHeartIcon.classList.remove('shake-heart');
                 floatingHeartLoss.classList.remove('animate-loss');
@@ -680,7 +823,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     continueBtn.addEventListener('click', () => {
         feedbackSheet.classList.remove('show');
-
         state.currentQuestionIdx++;
         if (state.currentQuestionIdx < state.activeLesson.questions.length && state.hearts > 0) {
             loadQuestion();
@@ -692,10 +834,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function finishLesson() {
         const totalQ = state.activeLesson.questions.length;
         const accuracy = Math.round((state.correctCount / totalQ) * 100);
+        const bonusXp = state.maxCombo >= 3 ? 25 : 15;
+
         accuracyVal.textContent = `${accuracy}%`;
+        comboMaxVal.textContent = `🔥 ${state.maxCombo}`;
+        xpRewardVal.textContent = `+${bonusXp} XP`;
+        completionEncourage.textContent = completionMessages[Math.floor(Math.random() * completionMessages.length)];
 
         state.gems += 20;
-        state.xp += 15;
+        state.xp += bonusXp;
         updateStats();
 
         completionModal.classList.add('active');
@@ -709,28 +856,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('path-view').classList.add('active');
     });
 
-    // --- SHOP & SRS HANDLERS ---
+    // --- SHOP & SRS ---
     buyHeartsBtn.addEventListener('click', () => {
         if (state.gems >= 50) {
-            state.gems -= 50;
-            state.hearts = 5;
-            updateStats();
-            playSuccessSound();
+            state.gems -= 50; state.hearts = 5;
+            updateStats(); playSuccessSound();
             alert('¡Vidas completadas al 100% (5 ❤️)!');
-        } else {
-            alert('Necesitas 50 Gemas para recargar vidas.');
-        }
+        } else { alert('Necesitas 50 Gemas para recargar vidas.'); }
     });
 
     buyFreezeBtn.addEventListener('click', () => {
         if (state.gems >= 100) {
-            state.gems -= 100;
-            updateStats();
-            playSuccessSound();
+            state.gems -= 100; updateStats(); playSuccessSound();
             alert('¡Escudo de Racha activado 🛡️!');
-        } else {
-            alert('Necesitas 100 Gemas.');
-        }
+        } else { alert('Necesitas 100 Gemas.'); }
     });
 
     revealSrsBtn.addEventListener('click', () => {
@@ -738,21 +877,20 @@ document.addEventListener('DOMContentLoaded', () => {
         srsTranslation.classList.remove('hidden');
     });
 
-    srsTtsBtn.addEventListener('click', () => {
-        speakText('Apple', 0.95);
-    });
+    srsTtsBtn.addEventListener('click', () => speakText('Apple', 0.95));
 
     function updateStats() {
         userStreak.textContent = state.streak;
         userGems.textContent = state.gems;
         userHearts.textContent = state.hearts;
         lessonHeartsCount.textContent = state.hearts;
-
         profStreak.textContent = `${state.streak} Días`;
         profXp.textContent = `${state.xp} XP`;
         profGems.textContent = state.gems;
     }
 
+    // Init
     renderPathTree();
     updateStats();
+    showTutorial();
 });
