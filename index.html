@@ -3,58 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lingua Pro - Advanced English Learning</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Lingua Pro - Master English like a Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="app-container">
-        <header class="header">
-            <button class="icon-button close-btn" aria-label="Close lesson">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
-            <div class="progress-bar-container">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill"></div>
-                </div>
+    <div class="app-viewport">
+        <!-- GLOBAL TOP STATS BAR -->
+        <header class="top-nav" id="top-nav">
+            <div class="nav-item flag-item">
+                <span class="flag-icon">🇲🇽</span>
+                <span class="arrow-down">▾</span>
             </div>
-            <div class="hearts-container">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="#FF4B4B" stroke="#FF4B4B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                <span class="hearts-count">5</span>
+            <div class="nav-item streak-item" title="Racha de días">
+                <span class="stat-icon">🔥</span>
+                <span class="stat-val" id="user-streak">3</span>
+            </div>
+            <div class="nav-item gems-item" title="Gemas acumuladas">
+                <span class="stat-icon">💎</span>
+                <span class="stat-val" id="user-gems">140</span>
+            </div>
+            <div class="nav-item hearts-item" title="Vidas restantes">
+                <span class="stat-icon">❤️</span>
+                <span class="stat-val" id="user-hearts">5</span>
             </div>
         </header>
 
-        <main class="lesson-area">
-            <h1 class="question-title">Translate this sentence</h1>
-            
-            <div class="character-dialogue">
-                <div class="character-avatar">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Lingua" alt="Mascot">
+        <!-- VIEW 1: LEARNING PATH (TREE / HOME) -->
+        <main class="view path-view active" id="path-view">
+            <div class="section-banner">
+                <div class="banner-content">
+                    <span class="unit-badge">Sección 1, Unidad 1</span>
+                    <h2>Fundamentos e Introducción</h2>
+                    <p>Saluda, preséntate y traduce oraciones cotidianas</p>
                 </div>
-                <div class="dialogue-bubble">
-                    <p>The quick brown fox jumps over the lazy dog.</p>
-                </div>
+                <button class="guide-btn">📖 Guía</button>
             </div>
 
-            <div class="answer-area">
-                <div class="options-grid" id="options-grid">
-                    <button class="option-btn" data-value="El">El</button>
-                    <button class="option-btn" data-value="rápido">rápido</button>
-                    <button class="option-btn" data-value="zorro">zorro</button>
-                    <button class="option-btn" data-value="marrón">marrón</button>
-                    <button class="option-btn" data-value="salta">salta</button>
-                    <button class="option-btn" data-value="sobre">sobre</button>
-                    <button class="option-btn" data-value="el">el</button>
-                    <button class="option-btn" data-value="perro">perro</button>
-                    <button class="option-btn" data-value="perezoso">perezoso</button>
+            <div class="path-tree">
+                <!-- Level Node 1 -->
+                <div class="node-wrapper level-active" data-lesson="1">
+                    <button class="path-node" id="node-1">
+                        <div class="node-icon">⭐</div>
+                        <div class="node-pulse"></div>
+                    </button>
+                    <div class="node-tooltip">¡EMPEZAR! +10 XP</div>
+                </div>
+
+                <!-- Level Node 2 -->
+                <div class="node-wrapper level-locked" data-lesson="2">
+                    <button class="path-node" id="node-2">
+                        <div class="node-icon">💬</div>
+                    </button>
+                </div>
+
+                <!-- Level Node 3 -->
+                <div class="node-wrapper level-locked" data-lesson="3">
+                    <button class="path-node" id="node-3">
+                        <div class="node-icon">🎧</div>
+                    </button>
+                </div>
+
+                <!-- Level Node 4 (Chest) -->
+                <div class="node-wrapper level-locked chest-node" data-lesson="4">
+                    <button class="path-node" id="node-4">
+                        <div class="node-icon">🎁</div>
+                    </button>
+                </div>
+
+                <!-- Level Node 5 (Trophy / Quiz) -->
+                <div class="node-wrapper level-locked trophy-node" data-lesson="5">
+                    <button class="path-node" id="node-5">
+                        <div class="node-icon">🏆</div>
+                    </button>
                 </div>
             </div>
         </main>
 
-        <footer class="bottom-bar">
-            <button class="check-btn" id="check-btn" disabled>Check</button>
-        </footer>
+        <!-- VIEW 2: INTERACTIVE LESSON -->
+        <main class="view lesson-view" id="lesson-view">
+            <header class="lesson-header">
+                <button class="close-btn" id="close-lesson-btn" aria-label="Salir de la lección">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="lesson-progress-fill"></div>
+                    </div>
+                </div>
+                <div class="lesson-hearts-display">
+                    <span class="heart-icon">❤️</span>
+                    <span id="lesson-hearts-count">5</span>
+                </div>
+            </header>
+
+            <div class="exercise-area" id="exercise-area">
+                <h1 class="prompt-title" id="prompt-title">Traduce esta oración</h1>
+
+                <div class="character-prompt">
+                    <div class="mascot-container">
+                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaPro" alt="Lingua Mascot" class="mascot-img">
+                    </div>
+                    <div class="speech-bubble">
+                        <button class="audio-btn" id="tts-btn" aria-label="Escuchar pronunciación">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                        </button>
+                        <span class="prompt-text" id="prompt-text">The quick brown fox jumps over the lazy dog.</span>
+                    </div>
+                </div>
+
+                <!-- TARGET CONSTRUCTION SLOT -->
+                <div class="answer-construction-zone">
+                    <div class="answer-slot-line" id="answer-slot-line">
+                        <span class="placeholder-hint" id="placeholder-hint">Toca las palabras para construir la frase</span>
+                    </div>
+                </div>
+
+                <!-- WORD POOL / OPTIONS BANK -->
+                <div class="word-pool-zone">
+                    <div class="word-pool" id="word-pool">
+                        <!-- Chips will be generated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER & SLIDE-UP FEEDBACK DRAWER -->
+            <footer class="lesson-footer" id="lesson-footer">
+                <button class="action-btn check-action" id="check-btn" disabled>COMPROBAR</button>
+            </footer>
+
+            <!-- FEEDBACK SHEET (SLIDES UP ON CHECK) -->
+            <div class="feedback-sheet" id="feedback-sheet">
+                <div class="feedback-content">
+                    <div class="feedback-header">
+                        <div class="status-icon-circle" id="feedback-icon">✓</div>
+                        <div class="status-text-group">
+                            <h3 class="status-title" id="feedback-title">¡Excelente!</h3>
+                            <p class="status-subtitle" id="feedback-subtitle"></p>
+                        </div>
+                    </div>
+                    <button class="action-btn continue-action" id="continue-btn">CONTINUAR</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- MODAL: LESSON COMPLETE CELEBRATION -->
+        <div class="modal-overlay" id="completion-modal">
+            <div class="completion-card">
+                <div class="celebration-icon">🎉</div>
+                <h2>¡Lección Completada!</h2>
+                <p>¡Has demostrado un excelente dominio del inglés!</p>
+                
+                <div class="rewards-grid">
+                    <div class="reward-box">
+                        <span class="reward-label">TOTAL XP</span>
+                        <span class="reward-value xp-val">+15 XP</span>
+                    </div>
+                    <div class="reward-box">
+                        <span class="reward-label">PRECISIÓN</span>
+                        <span class="reward-value acc-val" id="accuracy-val">100%</span>
+                    </div>
+                    <div class="reward-box">
+                        <span class="reward-label">GEMAS</span>
+                        <span class="reward-value gem-val">+20 💎</span>
+                    </div>
+                </div>
+
+                <button class="action-btn continue-action" id="finish-lesson-btn">CONTINUAR AL MAPA</button>
+            </div>
+        </div>
     </div>
+
     <script src="app.js"></script>
 </body>
 </html>
