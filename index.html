@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lingua Pro - Advanced English Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <button class="icon-button close-btn" aria-label="Close lesson">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+            <div class="hearts-container">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#FF4B4B" stroke="#FF4B4B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                <span class="hearts-count">5</span>
+            </div>
+        </header>
+
+        <main class="lesson-area">
+            <h1 class="question-title">Translate this sentence</h1>
+            
+            <div class="character-dialogue">
+                <div class="character-avatar">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Lingua" alt="Mascot">
+                </div>
+                <div class="dialogue-bubble">
+                    <p>The quick brown fox jumps over the lazy dog.</p>
+                </div>
+            </div>
+
+            <div class="answer-area">
+                <div class="options-grid" id="options-grid">
+                    <button class="option-btn" data-value="El">El</button>
+                    <button class="option-btn" data-value="rápido">rápido</button>
+                    <button class="option-btn" data-value="zorro">zorro</button>
+                    <button class="option-btn" data-value="marrón">marrón</button>
+                    <button class="option-btn" data-value="salta">salta</button>
+                    <button class="option-btn" data-value="sobre">sobre</button>
+                    <button class="option-btn" data-value="el">el</button>
+                    <button class="option-btn" data-value="perro">perro</button>
+                    <button class="option-btn" data-value="perezoso">perezoso</button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bottom-bar">
+            <button class="check-btn" id="check-btn" disabled>Check</button>
+        </footer>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
