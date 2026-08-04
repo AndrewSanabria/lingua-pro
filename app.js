@@ -8,113 +8,156 @@ document.addEventListener('DOMContentLoaded', () => {
         tutorialSeen: localStorage.getItem('lp_tut') === '1'
     };
 
-    // ====== FULL PROGRESSIVE CURRICULUM ======
+    // ====== EXTENSIVE WORD-FIRST CURRICULUM (TEXT + VISUAL + LISTENING) ======
     const curriculum = {
         A1: {
-            title: "Primeras Palabras",
-            desc: "Aprende jugando con colores, animales y objetos",
+            title: "Vocabulario Esencial (A1)",
+            desc: "Aprende palabras sencillas con texto, imágenes y audios de pronunciación",
             lessons: [
                 { id:'a1-1', name:'Animales 🐾', icon:'🐱', questions:[
-                    { type:'image_select', emoji:'🐱', word:'Cat', prompt:'¿Qué animal es este?', options:['Cat','Dog','Bird','Fish'], correct:'Cat' },
-                    { type:'image_select', emoji:'🐶', word:'Dog', prompt:'¿Qué animal es este?', options:['Cat','Dog','Horse','Rabbit'], correct:'Dog' },
-                    { type:'image_select', emoji:'🐦', word:'Bird', prompt:'¿Qué animal es este?', options:['Bird','Fish','Cat','Bear'], correct:'Bird' },
-                    { type:'emoji_match', word:'Fish', prompt:'¿Cuál es el emoji correcto?', emojis:['🐟','🐱','🐶','🐸'], correct:'🐟' },
-                    { type:'emoji_match', word:'Bear', prompt:'¿Cuál es el emoji correcto?', emojis:['🐻','🐦','🐶','🐱'], correct:'🐻' },
-                    { type:'matching', prompt:'Empareja animales:', pairs:[
+                    { type:'image_select', emoji:'🐱', word:'Cat', phonetic:'/kæt/', prompt:'¿Qué animal es este?', options:['Cat','Dog','Bird','Fish'], correct:'Cat' },
+                    { type:'emoji_match', word:'Dog', phonetic:'/dɔːɡ/', prompt:'¿Cuál es el emoji de Dog?', emojis:['🐶','🐱','🐴','🐰'], correct:'🐶' },
+                    { type:'listen_select', word:'Bird', phonetic:'/bɜːrd/', prompt:'Escucha y selecciona la imagen correcta:', options:[{text:'Bird',emoji:'🐦'},{text:'Fish',emoji:'🐟'},{text:'Cat',emoji:'🐱'},{text:'Bear',emoji:'🐻'}], correct:'Bird' },
+                    { type:'image_select', emoji:'🐟', word:'Fish', phonetic:'/fɪʃ/', prompt:'¿Qué animal es este?', options:['Fish','Bird','Cat','Rabbit'], correct:'Fish' },
+                    { type:'listen_select', word:'Bear', phonetic:'/beər/', prompt:'Escucha y selecciona el emoji correcto:', options:[{text:'Bear',emoji:'🐻'},{text:'Lion',emoji:'🦁'},{text:'Dog',emoji:'🐶'},{text:'Cat',emoji:'🐱'}], correct:'Bear' },
+                    { type:'matching', prompt:'Empareja los animales:', pairs:[
                         {en:'Cat',es:'🐱 Gato'},{en:'Dog',es:'🐶 Perro'},{en:'Bird',es:'🐦 Pájaro'},{en:'Fish',es:'🐟 Pez'},{en:'Bear',es:'🐻 Oso'}
                     ]}
                 ]},
                 { id:'a1-2', name:'Colores 🎨', icon:'🌈', questions:[
-                    { type:'image_select', emoji:'🔴', word:'Red', prompt:'¿Qué color es?', options:['Red','Blue','Green','Yellow'], correct:'Red' },
-                    { type:'image_select', emoji:'🔵', word:'Blue', prompt:'¿Qué color es?', options:['Red','Blue','Green','Yellow'], correct:'Blue' },
-                    { type:'image_select', emoji:'🟢', word:'Green', prompt:'¿Qué color es?', options:['Green','Orange','Purple','Red'], correct:'Green' },
-                    { type:'emoji_match', word:'Yellow', prompt:'¿Cuál es el color correcto?', emojis:['🟡','🔴','🟢','🔵'], correct:'🟡' },
-                    { type:'emoji_match', word:'Orange', prompt:'¿Cuál es el color correcto?', emojis:['🟠','🟣','🔵','🟢'], correct:'🟠' },
+                    { type:'image_select', emoji:'🔴', word:'Red', phonetic:'/red/', prompt:'¿Qué color es este?', options:['Red','Blue','Green','Yellow'], correct:'Red' },
+                    { type:'emoji_match', word:'Blue', phonetic:'/bluː/', prompt:'¿Cuál es el color Blue?', emojis:['🔵','🔴','🟢','🟡'], correct:'🔵' },
+                    { type:'listen_select', word:'Green', phonetic:'/ɡriːn/', prompt:'Escucha y selecciona el color:', options:[{text:'Green',emoji:'🟢'},{text:'Orange',emoji:'🟠'},{text:'Purple',emoji:'🟣'},{text:'Red',emoji:'🔴'}], correct:'Green' },
+                    { type:'emoji_match', word:'Yellow', phonetic:'/ˈjel.oʊ/', prompt:'¿Cuál es el color Yellow?', emojis:['🟡','🔴','🟢','🔵'], correct:'🟡' },
+                    { type:'listen_select', word:'White', phonetic:'/waɪt/', prompt:'Escucha y elige el color:', options:[{text:'White',emoji:'⚪'},{text:'Black',emoji:'⚫'},{text:'Red',emoji:'🔴'},{text:'Blue',emoji:'🔵'}], correct:'White' },
                     { type:'matching', prompt:'Empareja los colores:', pairs:[
-                        {en:'Red',es:'🔴 Rojo'},{en:'Blue',es:'🔵 Azul'},{en:'Green',es:'🟢 Verde'},{en:'Yellow',es:'🟡 Amarillo'},{en:'Orange',es:'🟠 Naranja'}
+                        {en:'Red',es:'🔴 Rojo'},{en:'Blue',es:'🔵 Azul'},{en:'Green',es:'🟢 Verde'},{en:'Yellow',es:'🟡 Amarillo'},{en:'White',es:'⚪ Blanco'}
                     ]}
                 ]},
-                { id:'a1-3', name:'Comida 🍎', icon:'🍕', questions:[
-                    { type:'image_select', emoji:'🍎', word:'Apple', prompt:'¿Qué fruta es?', options:['Apple','Banana','Orange','Grape'], correct:'Apple' },
-                    { type:'image_select', emoji:'🍌', word:'Banana', prompt:'¿Qué fruta es?', options:['Apple','Banana','Strawberry','Grape'], correct:'Banana' },
-                    { type:'emoji_match', word:'Water', prompt:'¿Cuál es el emoji correcto?', emojis:['💧','🍕','🍎','🧀'], correct:'💧' },
-                    { type:'emoji_match', word:'Pizza', prompt:'¿Cuál es el emoji correcto?', emojis:['🍕','🍔','🌮','🍩'], correct:'🍕' },
-                    { type:'matching', prompt:'Empareja la comida:', pairs:[
-                        {en:'Apple',es:'🍎 Manzana'},{en:'Banana',es:'🍌 Plátano'},{en:'Water',es:'💧 Agua'},{en:'Pizza',es:'🍕 Pizza'},{en:'Bread',es:'🍞 Pan'}
+                { id:'a1-3', name:'Frutas & Verduras 🍎', icon:'🍎', questions:[
+                    { type:'image_select', emoji:'🍎', word:'Apple', phonetic:'/ˈæp.əl/', prompt:'¿Qué fruta es esta?', options:['Apple','Banana','Orange','Grape'], correct:'Apple' },
+                    { type:'emoji_match', word:'Banana', phonetic:'/bəˈnæn.ə/', prompt:'Selecciona el emoji de Banana:', emojis:['🍌','🍎','🍓','🍇'], correct:'🍌' },
+                    { type:'listen_select', word:'Orange', phonetic:'/ˈɔːr.ɪndʒ/', prompt:'Escucha la palabra y elige la fruta:', options:[{text:'Orange',emoji:'🍊'},{text:'Lemon',emoji:'🍋'},{text:'Apple',emoji:'🍎'},{text:'Grape',emoji:'🍇'}], correct:'Orange' },
+                    { type:'image_select', emoji:'🍅', word:'Tomato', phonetic:'/təˈmeɪ.toʊ/', prompt:'¿Qué vegetal es este?', options:['Tomato','Potato','Corn','Carrot'], correct:'Tomato' },
+                    { type:'matching', prompt:'Empareja las frutas y verduras:', pairs:[
+                        {en:'Apple',es:'🍎 Manzana'},{en:'Banana',es:'🍌 Plátano'},{en:'Orange',es:'🍊 Naranja'},{en:'Grape',es:'🍇 Uva'},{en:'Tomato',es:'🍅 Tomate'}
                     ]}
                 ]},
-                { id:'a1-4', name:'Objetos 🏠', icon:'📱', questions:[
-                    { type:'image_select', emoji:'📱', word:'Phone', prompt:'¿Qué objeto es?', options:['Phone','Book','Car','Key'], correct:'Phone' },
-                    { type:'image_select', emoji:'📚', word:'Book', prompt:'¿Qué objeto es?', options:['Phone','Book','Chair','Pen'], correct:'Book' },
-                    { type:'emoji_match', word:'Car', prompt:'¿Cuál es el emoji correcto?', emojis:['🚗','📱','📚','🔑'], correct:'🚗' },
-                    { type:'emoji_match', word:'Key', prompt:'¿Cuál es el emoji correcto?', emojis:['🔑','🚗','📱','✏️'], correct:'🔑' },
-                    { type:'matching', prompt:'Empareja objetos:', pairs:[
-                        {en:'Phone',es:'📱 Teléfono'},{en:'Book',es:'📚 Libro'},{en:'Car',es:'🚗 Carro'},{en:'Key',es:'🔑 Llave'},{en:'Pen',es:'✏️ Pluma'}
+                { id:'a1-4', name:'Comida & Bebidas 🍕', icon:'🍕', questions:[
+                    { type:'image_select', emoji:'🍕', word:'Pizza', phonetic:'/ˈpiːt.sə/', prompt:'¿Qué comida es esta?', options:['Pizza','Bread','Cheese','Burger'], correct:'Pizza' },
+                    { type:'emoji_match', word:'Water', phonetic:'/ˈwɔː.tər/', prompt:'¿Cuál es el emoji de Water?', emojis:['💧','🥛','☕','🧃'], correct:'💧' },
+                    { type:'listen_select', word:'Milk', phonetic:'/mɪlk/', prompt:'Escucha la palabra y elige el emoji:', options:[{text:'Milk',emoji:'🥛'},{text:'Water',emoji:'💧'},{text:'Coffee',emoji:'☕'},{text:'Juice',emoji:'🧃'}], correct:'Milk' },
+                    { type:'image_select', emoji:'🍞', word:'Bread', phonetic:'/bred/', prompt:'¿Qué comida es esta?', options:['Bread','Pizza','Cheese','Cake'], correct:'Bread' },
+                    { type:'matching', prompt:'Empareja alimentos y bebidas:', pairs:[
+                        {en:'Pizza',es:'🍕 Pizza'},{en:'Bread',es:'🍞 Pan'},{en:'Cheese',es:'🧀 Queso'},{en:'Water',es:'💧 Agua'},{en:'Milk',es:'🥛 Leche'}
                     ]}
                 ]},
-                { id:'a1-5', name:'Saludos 👋', icon:'👋', questions:[
-                    { type:'choice', prompt:'¿Cómo se dice "Hola" en inglés?', options:['Hello','Goodbye','Please','Thanks'], correct:'Hello' },
-                    { type:'choice', prompt:'¿Cómo se dice "Adiós" en inglés?', options:['Hello','Goodbye','Sorry','Yes'], correct:'Goodbye' },
-                    { type:'choice', prompt:'¿Qué significa "Thank you"?', options:['Gracias','Hola','Por favor','De nada'], correct:'Gracias' },
-                    { type:'translate', prompt:'Hello, how are you?', answer:['Hola','¿cómo','estás?'], pool:['Hola','¿cómo','estás?','bien','gracias','adiós'] },
-                    { type:'matching', prompt:'Empareja saludos:', pairs:[
-                        {en:'Hello',es:'Hola'},{en:'Goodbye',es:'Adiós'},{en:'Please',es:'Por favor'},{en:'Thank you',es:'Gracias'},{en:'Yes',es:'Sí'}
+                { id:'a1-5', name:'Cuerpo Humano 👁️', icon:'👁️', questions:[
+                    { type:'image_select', emoji:'👁️', word:'Eye', phonetic:'/aɪ/', prompt:'¿Qué parte del cuerpo es?', options:['Eye','Ear','Nose','Hand'], correct:'Eye' },
+                    { type:'emoji_match', word:'Hand', phonetic:'/hænd/', prompt:'Selecciona el emoji de Hand:', emojis:['🖐️','🦶','👁️','👂'], correct:'🖐️' },
+                    { type:'listen_select', word:'Ear', phonetic:'/ɪər/', prompt:'Escucha y selecciona la imagen:', options:[{text:'Ear',emoji:'👂'},{text:'Nose',emoji:'👃'},{text:'Eye',emoji:'👁️'},{text:'Foot',emoji:'🦶'}], correct:'Ear' },
+                    { type:'image_select', emoji:'👃', word:'Nose', phonetic:'/noʊz/', prompt:'¿Qué parte del cuerpo es?', options:['Nose','Mouth','Eye','Head'], correct:'Nose' },
+                    { type:'matching', prompt:'Empareja las partes del cuerpo:', pairs:[
+                        {en:'Eye',es:'👁️ Ojo'},{en:'Ear',es:'👂 Oreja'},{en:'Nose',es:'👃 Nariz'},{en:'Hand',es:'🖐️ Mano'},{en:'Foot',es:'🦶 Pie'}
                     ]}
                 ]},
-                { id:'a1-6', name:'Frases Cortas ✨', icon:'💬', questions:[
-                    { type:'choice', prompt:'¿Qué significa "I am happy"?', options:['Estoy feliz','Estoy triste','Tengo hambre','Tengo sueño'], correct:'Estoy feliz' },
-                    { type:'translate', prompt:'I like cats.', answer:['Me','gustan','los','gatos'], pool:['Me','gustan','los','gatos','perros','no','ellos'] },
-                    { type:'translate', prompt:'The water is cold.', answer:['El','agua','está','fría'], pool:['El','agua','está','fría','caliente','la','pan'] },
-                    { type:'choice', prompt:'¿Qué significa "Good morning"?', options:['Buenos días','Buenas noches','Buenas tardes','Hasta luego'], correct:'Buenos días' },
-                    { type:'matching', prompt:'Empareja frases:', pairs:[
-                        {en:'Good morning',es:'Buenos días'},{en:'Good night',es:'Buenas noches'},{en:'I am',es:'Yo soy'},{en:'Thank you',es:'Gracias'},{en:'See you',es:'Nos vemos'}
+                { id:'a1-6', name:'La Familia 👨‍👩‍👧', icon:'👨‍👩‍👧', questions:[
+                    { type:'image_select', emoji:'👩', word:'Mother', phonetic:'/ˈmʌð.ər/', prompt:'¿Quién es?', options:['Mother','Father','Sister','Brother'], correct:'Mother' },
+                    { type:'image_select', emoji:'👨', word:'Father', phonetic:'/ˈfɑː.ðər/', prompt:'¿Quién es?', options:['Father','Mother','Grandpa','Baby'], correct:'Father' },
+                    { type:'listen_select', word:'Baby', phonetic:'/ˈbeɪ.bi/', prompt:'Escucha la palabra de la familia:', options:[{text:'Baby',emoji:'👶'},{text:'Sister',emoji:'👧'},{text:'Brother',emoji:'👦'},{text:'Mother',emoji:'👩'}], correct:'Baby' },
+                    { type:'emoji_match', word:'Sister', phonetic:'/ˈsɪs.tər/', prompt:'¿Cuál es el emoji de Sister?', emojis:['👧','👦','👩','👨'], correct:'👧' },
+                    { type:'matching', prompt:'Empareja los miembros de la familia:', pairs:[
+                        {en:'Mother',es:'👩 Madre'},{en:'Father',es:'👨 Padre'},{en:'Sister',es:'👧 Hermana'},{en:'Brother',es:'👦 Hermano'},{en:'Baby',es:'👶 Bebé'}
+                    ]}
+                ]},
+                { id:'a1-7', name:'Ropa & Vestimenta 👕', icon:'👕', questions:[
+                    { type:'image_select', emoji:'👕', word:'Shirt', phonetic:'/ʃɜːrt/', prompt:'¿Qué prenda es?', options:['Shirt','Pants','Shoes','Hat'], correct:'Shirt' },
+                    { type:'emoji_match', word:'Shoes', phonetic:'/ʃuːz/', prompt:'Selecciona el emoji de Shoes:', emojis:['👟','👕','🧢','👗'], correct:'👟' },
+                    { type:'listen_select', word:'Hat', phonetic:'/hæt/', prompt:'Escucha y elige la prenda:', options:[{text:'Hat',emoji:'🧢'},{text:'Shirt',emoji:'👕'},{text:'Shoes',emoji:'👟'},{text:'Jacket',emoji:'🧥'}], correct:'Hat' },
+                    { type:'image_select', emoji:'👗', word:'Dress', phonetic:'/dres/', prompt:'¿Qué prenda es?', options:['Dress','Shirt','Socks','Hat'], correct:'Dress' },
+                    { type:'matching', prompt:'Empareja la ropa:', pairs:[
+                        {en:'Shirt',es:'👕 Camisa'},{en:'Shoes',es:'👟 Zapatos'},{en:'Hat',es:'🧢 Sombrero'},{en:'Dress',es:'👗 Vestido'},{en:'Socks',es:'🧦 Calcetines'}
+                    ]}
+                ]},
+                { id:'a1-8', name:'Casa & Objetos 🏠', icon:'📱', questions:[
+                    { type:'image_select', emoji:'📱', word:'Phone', phonetic:'/foʊn/', prompt:'¿Qué objeto es este?', options:['Phone','Book','Car','Key'], correct:'Phone' },
+                    { type:'image_select', emoji:'📚', word:'Book', phonetic:'/bʊk/', prompt:'¿Qué objeto es este?', options:['Book','Phone','Chair','Table'], correct:'Book' },
+                    { type:'listen_select', word:'Key', phonetic:'/kiː/', prompt:'Escucha la palabra del objeto:', options:[{text:'Key',emoji:'🔑'},{text:'Door',emoji:'🚪'},{text:'Phone',emoji:'📱'},{text:'Bed',emoji:'🛏️'}], correct:'Key' },
+                    { type:'emoji_match', word:'House', phonetic:'/haʊs/', prompt:'¿Cuál es el emoji de House?', emojis:['🏠','🚪','🪑','📚'], correct:'🏠' },
+                    { type:'matching', prompt:'Empareja los objetos de casa:', pairs:[
+                        {en:'Phone',es:'📱 Teléfono'},{en:'Book',es:'📚 Libro'},{en:'Key',es:'🔑 Llave'},{en:'House',es:'🏠 Casa'},{en:'Door',es:'🚪 Puerta'}
+                    ]}
+                ]},
+                { id:'a1-9', name:'Naturaleza & Clima 🌿', icon:'☀️', questions:[
+                    { type:'image_select', emoji:'☀️', word:'Sun', phonetic:'/sʌn/', prompt:'¿Qué elemento de la naturaleza es?', options:['Sun','Moon','Star','Rain'], correct:'Sun' },
+                    { type:'emoji_match', word:'Moon', phonetic:'/muːn/', prompt:'¿Cuál es el emoji de Moon?', emojis:['🌙','☀️','⭐','🌧️'], correct:'🌙' },
+                    { type:'listen_select', word:'Star', phonetic:'/stɑːr/', prompt:'Escucha la palabra:', options:[{text:'Star',emoji:'⭐'},{text:'Sun',emoji:'☀️'},{text:'Moon',emoji:'🌙'},{text:'Tree',emoji:'🌳'}], correct:'Star' },
+                    { type:'image_select', emoji:'🌳', word:'Tree', phonetic:'/triː/', prompt:'¿Qué es esto?', options:['Tree','Flower','Fire','Rain'], correct:'Tree' },
+                    { type:'matching', prompt:'Empareja la naturaleza:', pairs:[
+                        {en:'Sun',es:'☀️ Sol'},{en:'Moon',es:'🌙 Luna'},{en:'Star',es:'⭐ Estrella'},{en:'Tree',es:'🌳 Árbol'},{en:'Rain',es:'🌧️ Lluvia'}
+                    ]}
+                ]},
+                { id:'a1-10', name:'Vehículos & Transporte 🚗', icon:'🚗', questions:[
+                    { type:'image_select', emoji:'🚗', word:'Car', phonetic:'/kɑːr/', prompt:'¿Qué vehículo es este?', options:['Car','Bus','Train','Airplane'], correct:'Car' },
+                    { type:'emoji_match', word:'Bus', phonetic:'/bʌs/', prompt:'Selecciona el emoji de Bus:', emojis:['🚌','🚗','🚂','✈️'], correct:'🚌' },
+                    { type:'listen_select', word:'Airplane', phonetic:'/ˈer.pleɪn/', prompt:'Escucha y elige el transporte:', options:[{text:'Airplane',emoji:'✈️'},{text:'Boat',emoji:'🛥️'},{text:'Car',emoji:'🚗'},{text:'Bus',emoji:'🚌'}], correct:'Airplane' },
+                    { type:'image_select', emoji:'🚲', word:'Bicycle', phonetic:'/ˈbaɪ.sə.kəl/', prompt:'¿Qué vehículo es?', options:['Bicycle','Car','Bus','Train'], correct:'Bicycle' },
+                    { type:'matching', prompt:'Empareja los medios de transporte:', pairs:[
+                        {en:'Car',es:'🚗 Carro'},{en:'Bus',es:'🚌 Autobús'},{en:'Train',es:'🚂 Tren'},{en:'Airplane',es:'✈️ Avión'},{en:'Bicycle',es:'🚲 Bicicleta'}
                     ]}
                 ]}
             ]
         },
         A2: {
-            title: "Conversaciones Básicas",
-            desc: "Frases completas, familia y vida diaria",
+            title: "Verbos & Conceptos Clave (A2)",
+            desc: "Acciones principales, sentimientos, lugares y adjetivos básicos",
             lessons: [
-                { id:'a2-1', name:'Familia 👨‍👩‍👧', icon:'👨‍👩‍👧', questions:[
-                    { type:'image_select', emoji:'👩', word:'Mother', prompt:'¿Quién es?', options:['Mother','Father','Sister','Brother'], correct:'Mother' },
-                    { type:'image_select', emoji:'👨', word:'Father', prompt:'¿Quién es?', options:['Mother','Father','Son','Daughter'], correct:'Father' },
-                    { type:'matching', prompt:'Empareja la familia:', pairs:[
-                        {en:'Mother',es:'👩 Madre'},{en:'Father',es:'👨 Padre'},{en:'Sister',es:'👧 Hermana'},{en:'Brother',es:'👦 Hermano'},{en:'Baby',es:'👶 Bebé'}
-                    ]},
-                    { type:'translate', prompt:'My brother is tall.', answer:['Mi','hermano','es','alto'], pool:['Mi','hermano','es','alto','bajo','ella','hermana'] },
-                    { type:'choice', prompt:'¿Qué significa "grandmother"?', options:['Abuela','Tía','Prima','Mamá'], correct:'Abuela' }
+                { id:'a2-1', name:'Verbos de Acción 🏃', icon:'🏃', questions:[
+                    { type:'image_select', emoji:'🏃', word:'Run', phonetic:'/rʌn/', prompt:'¿Qué acción es esta?', options:['Run','Walk','Sleep','Eat'], correct:'Run' },
+                    { type:'emoji_match', word:'Eat', phonetic:'/iːt/', prompt:'Selecciona el emoji de Eat:', emojis:['🍕','🏃','😴','📖'], correct:'🍕' },
+                    { type:'listen_select', word:'Sleep', phonetic:'/sliːp/', prompt:'Escucha y selecciona la acción:', options:[{text:'Sleep',emoji:'😴'},{text:'Run',emoji:'🏃'},{text:'Read',emoji:'📖'},{text:'Jump',emoji:'🤸'}], correct:'Sleep' },
+                    { type:'matching', prompt:'Empareja los verbos de acción:', pairs:[
+                        {en:'Run',es:'🏃 Correr'},{en:'Eat',es:'🍕 Comer'},{en:'Drink',es:'💧 Beber'},{en:'Sleep',es:'😴 Dormir'},{en:'Read',es:'📖 Leer'}
+                    ]}
                 ]},
-                { id:'a2-2', name:'En el restaurante 🍽️', icon:'🍽️', questions:[
-                    { type:'choice', prompt:'¿Cómo pides la cuenta en inglés?', options:['The check, please','Good morning','Thank you','Goodbye'], correct:'The check, please' },
-                    { type:'translate', prompt:'I would like water, please.', answer:['Me','gustaría','agua','por','favor'], pool:['Me','gustaría','agua','por','favor','comida','el','café'] },
-                    { type:'matching', prompt:'Empareja vocabulario:', pairs:[
-                        {en:'Menu',es:'Menú'},{en:'Water',es:'Agua'},{en:'Coffee',es:'Café'},{en:'Table',es:'Mesa'},{en:'Waiter',es:'Mesero'}
+                { id:'a2-2', name:'Emociones 😊', icon:'😊', questions:[
+                    { type:'image_select', emoji:'😊', word:'Happy', phonetic:'/ˈhæp.i/', prompt:'¿Qué emoción es esta?', options:['Happy','Sad','Angry','Tired'], correct:'Happy' },
+                    { type:'emoji_match', word:'Sad', phonetic:'/sæd/', prompt:'¿Cuál es el emoji de Sad?', emojis:['😢','😊','😡','😴'], correct:'😢' },
+                    { type:'listen_select', word:'Angry', phonetic:'/ˈæŋ.ɡri/', prompt:'Escucha y selecciona la emoción:', options:[{text:'Angry',emoji:'😡'},{text:'Happy',emoji:'😊'},{text:'Tired',emoji:'😴'},{text:'Scared',emoji:'😱'}], correct:'Angry' },
+                    { type:'matching', prompt:'Empareja las emociones:', pairs:[
+                        {en:'Happy',es:'😊 Feliz'},{en:'Sad',es:'😢 Triste'},{en:'Angry',es:'😡 Enojado'},{en:'Tired',es:'😴 Cansado'},{en:'Scared',es:'😱 Asustado'}
+                    ]}
+                ]},
+                { id:'a2-3', name:'Lugares 🏖️', icon:'🏖️', questions:[
+                    { type:'image_select', emoji:'🏫', word:'School', phonetic:'/skuːl/', prompt:'¿Qué lugar es este?', options:['School','Hospital','Park','Beach'], correct:'School' },
+                    { type:'listen_select', word:'Beach', phonetic:'/biːtʃ/', prompt:'Escucha y elige el lugar:', options:[{text:'Beach',emoji:'🏖️'},{text:'Park',emoji:'🏞️'},{text:'School',emoji:'🏫'},{text:'Hotel',emoji:'🏨'}], correct:'Beach' },
+                    { type:'matching', prompt:'Empareja los lugares:', pairs:[
+                        {en:'School',es:'🏫 Escuela'},{en:'Hospital',es:'🏥 Hospital'},{en:'Park',es:'🏞️ Parque'},{en:'Beach',es:'🏖️ Playa'},{en:'Store',es:'🏪 Tienda'}
                     ]}
                 ]}
             ]
         },
         B1: {
-            title: "Intermedio Avanzado",
-            desc: "Trabajo, negocios y gramática compleja",
+            title: "Vocabulario de Trabajo & Viajes (B1)",
+            desc: "Términos útiles de negocios, aeropuerto y frases frecuentes",
             lessons: [
-                { id:'b1-1', name:'Negocios 💼', icon:'💼', questions:[
-                    { type:'translate', prompt:'We need to increase our revenue.', answer:['Necesitamos','incrementar','nuestros','ingresos'], pool:['Necesitamos','incrementar','nuestros','ingresos','gastos','bajar','subir'] },
-                    { type:'matching', prompt:'Empareja negocios:', pairs:[
-                        {en:'Deadline',es:'Fecha límite'},{en:'Budget',es:'Presupuesto'},{en:'Meeting',es:'Reunión'},{en:'Growth',es:'Crecimiento'},{en:'Profit',es:'Ganancia'}
-                    ]},
-                    { type:'choice', prompt:'¿Qué significa "Schedule a meeting"?', options:['Programar una reunión','Cancelar un proyecto','Pedir un aumento','Enviar un correo'], correct:'Programar una reunión' }
+                { id:'b1-1', name:'Viajes & Aeropuerto ✈️', icon:'✈️', questions:[
+                    { type:'image_select', emoji:'🛂', word:'Passport', phonetic:'/ˈpæs.pɔːrt/', prompt:'¿Qué documento es?', options:['Passport','Ticket','Money','Hotel'], correct:'Passport' },
+                    { type:'matching', prompt:'Empareja términos de viaje:', pairs:[
+                        {en:'Passport',es:'🛂 Pasaporte'},{en:'Ticket',es:'🎫 Boleto'},{en:'Luggage',es:'🧳 Equipaje'},{en:'Airport',es:'✈️ Aeropuerto'},{en:'Hotel',es:'🏨 Hotel'}
+                    ]}
                 ]}
             ]
         },
         C1: {
-            title: "Fluidez Nativa",
-            desc: "Modismos, expresiones y soltura total",
+            title: "Modismos & Fluidez Nativa (C1)",
+            desc: "Idioms profesionales y modismos frecuentes",
             lessons: [
-                { id:'c1-1', name:'Idioms 🚀', icon:'🚀', questions:[
+                { id:'c1-1', name:'Native Idioms 🚀', icon:'🚀', questions:[
                     { type:'choice', prompt:'¿Qué significa "Break a leg"?', options:['¡Buena suerte!','Rómpete una pierna','Cálmate','Llegas tarde'], correct:'¡Buena suerte!' },
-                    { type:'translate', prompt:'It is a blessing in disguise.', answer:['No','hay','mal','que','por','bien','no','venga'], pool:['No','hay','mal','que','por','bien','no','venga','todo','es'] },
-                    { type:'choice', prompt:'¿Qué significa "Piece of cake"?', options:['Muy fácil','Un pastel','Muy caro','Imposible'], correct:'Muy fácil' }
+                    { type:'matching', prompt:'Empareja modismos:', pairs:[
+                        {en:'Break a leg',es:'¡Buena suerte!'},{en:'Piece of cake',es:'Muy fácil'},{en:'Under the weather',es:'Enfermo'},{en:'Time flies',es:'El tiempo vuela'},{en:'Hit the books',es:'Estudiar'}
+                    ]}
                 ]}
             ]
         }
@@ -128,9 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function playError() { try { initAudio(); const n=state.audioCtx.currentTime,o=state.audioCtx.createOscillator(),g=state.audioCtx.createGain(); o.type='sawtooth'; o.frequency.setValueAtTime(220,n); o.frequency.linearRampToValueAtTime(140,n+0.22); g.gain.setValueAtTime(0.18,n); g.gain.exponentialRampToValueAtTime(0.001,n+0.25); o.connect(g); g.connect(state.audioCtx.destination); o.start(n); o.stop(n+0.25); } catch(e){} }
     function playCombo() { try { initAudio(); const n=state.audioCtx.currentTime; [440,554.37,659.25].forEach((f,i)=>{ const o=state.audioCtx.createOscillator(),g=state.audioCtx.createGain(); o.type='sine'; o.frequency.setValueAtTime(f,n+i*0.05); g.gain.setValueAtTime(0.15,n+i*0.05); g.gain.exponentialRampToValueAtTime(0.001,n+i*0.05+0.12); o.connect(g); g.connect(state.audioCtx.destination); o.start(n+i*0.05); o.stop(n+i*0.05+0.12); }); } catch(e){} }
 
-    // ====== TTS ======
+    // ====== SPEECH SYNTHESIS ======
     const mascotAvatar = document.getElementById('mascot-avatar');
-    function speak(text, rate=0.95) {
+    function speak(text, rate=0.9) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             const u = new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=rate;
@@ -147,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function triggerConfetti(){if(!ctx)return;const ps=[];const colors=['#58CC02','#1CB0F6','#FFC800','#FF4B4B','#FF9600','#CE82FF'];for(let i=0;i<100;i++)ps.push({x:window.innerWidth/2,y:window.innerHeight/2,vx:(Math.random()-0.5)*14,vy:(Math.random()-0.7)*16,size:Math.random()*8+6,color:colors[Math.floor(Math.random()*colors.length)],rot:Math.random()*360,rs:(Math.random()-0.5)*10,op:1});(function draw(){ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);let alive=false;ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.4;p.rot+=p.rs;p.op-=0.012;if(p.op>0){alive=true;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.color;ctx.globalAlpha=Math.max(0,p.op);ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);ctx.restore();}});if(alive)requestAnimationFrame(draw);else ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);})();}
 
     // ====== MESSAGES ======
-    const msgs={ok:['¡Excelente! 🌟','¡Genial! ⚡','¡Perfecto! 🎯','¡Correcto! ✨','¡Bravo! 🏆','¡Increíble! 🚀','¡Muy bien! 💪'],combo:['🔥 ¡Racha de fuego!','⚡ ¡Imparable!','💎 ¡Brillante!','🌟 ¡Combo increíble!'],end:['¡Tu inglés mejora cada día!','¡Eres un campeón del aprendizaje!','¡Cada lección te acerca a la fluidez!','¡Sigue así, vas increíble!']};
+    const msgs={ok:['¡Excelente! 🌟','¡Genial! ⚡','¡Perfecto! 🎯','¡Correcto! ✨','¡Bravo! 🏆','¡Increíble! 🚀','¡Muy bien! 💪'],combo:['🔥 ¡Racha de fuego!','⚡ ¡Imparable!','💎 ¡Brillante!','🌟 ¡Combo increíble!'],end:['¡Tu inglés mejora cada día!','¡Eres un campeón del aprendizaje!','¡Cada palabra te acerca a la fluidez!','¡Sigue así, vas increíble!']};
     function randMsg(arr){return arr[Math.floor(Math.random()*arr.length)];}
 
     // ====== DOM ======
@@ -156,8 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const pathTree=$('path-tree'),bannerUnit=$('banner-unit'),bannerTitle=$('banner-title'),bannerDesc=$('banner-desc');
     const lessonView=$('lesson-view'),closeLessonBtn=$('close-lesson-btn'),progressFill=$('lesson-progress-fill'),lessonHeartsCount=$('lesson-hearts-count');
     const promptTitle=$('prompt-title'),promptText=$('prompt-text'),ttsNormal=$('tts-normal-btn'),ttsSlow=$('tts-slow-btn');
-    const modImageSelect=$('mod-image-select'),bigEmoji=$('big-emoji'),imageOptions=$('image-options');
-    const modEmojiMatch=$('mod-emoji-match'),bigWord=$('big-word'),emojiOptions=$('emoji-options');
+    const modImageSelect=$('mod-image-select'),bigEmoji=$('big-emoji'),imageOptions=$('image-options'),phoneticBadge=$('phonetic-badge');
+    const modEmojiMatch=$('mod-emoji-match'),bigWord=$('big-word'),emojiOptions=$('emoji-options'),bigWordPhonetic=$('big-word-phonetic');
+    const modListenSelect=$('mod-listen-select'),listenBigBtn=$('listen-big-btn'),listenNormalBtn=$('listen-normal-btn'),listenSlowBtn=$('listen-slow-btn'),listenOptions=$('listen-options');
     const modTranslate=$('mod-translate'),answerSlot=$('answer-slot-line'),placeholder=$('placeholder-hint'),wordPool=$('word-pool');
     const modMatching=$('mod-matching'),matchingGrid=$('matching-grid');
     const modChoice=$('mod-choice'),choicesGrid=$('choices-grid');
@@ -170,9 +214,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ====== TUTORIAL ======
     const tutSteps=[
-        {t:'¡Hola! 👋 Soy tu asistente. Te enseñaré inglés paso a paso, ¡jugando!',m:'🤖'},
-        {t:'🐱 Empezarás reconociendo animales, colores y objetos con emojis gigantes.',m:'🎮'},
-        {t:'👆 Toca la opción correcta. ¡Es súper fácil! Luego avanzarás a frases.',m:'✨'},
+        {t:'¡Hola! 👋 Soy tu asistente. Te enseñaré palabras sencillas con imágenes, texto y audios.',m:'🤖'},
+        {t:'🐱 Cada palabra incluye su pronunciación fonética y su audio de voz nativa.',m:'🎧'},
+        {t:'🔊 En las preguntas de escucha, toca el altavoz azul para escuchar la palabra y elegir la imagen.',m:'👂'},
         {t:'💡 Usa "Pista" si necesitas ayuda. ¡Acumula combos 🔥 respondiendo bien seguido!',m:'🏆'}
     ];
     let tutStep=0;
@@ -219,7 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const unlockedCount = state.unlockedIndex[state.currentLevel] || 1;
         const totalLessons = d.lessons.length;
-        // Clamp current active node so tooltip is always visible on the active lesson
         const currentActiveIdx = Math.min(unlockedCount - 1, totalLessons - 1);
 
         d.lessons.forEach((l, i) => {
@@ -266,7 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
         comboCounter.classList.add('hidden');
         updateStats();
 
-        // Hide bottom nav bar so lesson has full viewport
         const bottomNav = $('bottom-nav-bar');
         if (bottomNav) bottomNav.style.display = 'none';
 
@@ -283,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (bottomNav) bottomNav.style.display = 'flex';
         }
     });
-    ttsNormal.addEventListener('click',()=>speak(promptText.textContent,0.95));
+    ttsNormal.addEventListener('click',()=>speak(promptText.textContent,0.9));
     ttsSlow.addEventListener('click',()=>speak(promptText.textContent,0.55));
 
     // ====== LOAD QUESTION ======
@@ -297,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
         progressFill.style.width=`${(state.currentQuestionIdx/total)*100}%`;
 
         // Hide all modules
-        [modImageSelect,modEmojiMatch,modTranslate,modMatching,modChoice].forEach(m=>m.classList.add('hidden'));
+        [modImageSelect,modEmojiMatch,modListenSelect,modTranslate,modMatching,modChoice].forEach(m=>m.classList.add('hidden'));
 
         // Show/hide character prompt based on type
         const showBubble = q.type==='translate'||q.type==='choice';
@@ -307,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
             promptTitle.textContent=q.prompt;
             modImageSelect.classList.remove('hidden');
             bigEmoji.textContent=q.emoji;
-            bigEmoji.style.animation='none';bigEmoji.offsetHeight;bigEmoji.style.animation='';
+            if(phoneticBadge) phoneticBadge.textContent=q.phonetic||'';
             speak(q.word,0.9);
             imageOptions.innerHTML='';
             q.options.sort(()=>Math.random()-0.5).forEach(opt=>{
@@ -320,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
             promptTitle.textContent=q.prompt;
             modEmojiMatch.classList.remove('hidden');
             bigWord.textContent=q.word;
-            bigWord.style.animation='none';bigWord.offsetHeight;bigWord.style.animation='';
+            if(bigWordPhonetic) bigWordPhonetic.textContent=q.phonetic||'';
             speak(q.word,0.9);
             emojiOptions.innerHTML='';
             q.emojis.sort(()=>Math.random()-0.5).forEach(em=>{
@@ -329,8 +371,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 emojiOptions.appendChild(btn);
             });
 
+        } else if(q.type==='listen_select'){
+            promptTitle.textContent=q.prompt;
+            modListenSelect.classList.remove('hidden');
+            // Auto play audio for listening exercise
+            setTimeout(()=>speak(q.word, 0.85), 200);
+
+            if(listenBigBtn) listenBigBtn.onclick=()=>speak(q.word, 0.85);
+            if(listenNormalBtn) listenNormalBtn.onclick=()=>speak(q.word, 0.9);
+            if(listenSlowBtn) listenSlowBtn.onclick=()=>speak(q.word, 0.5);
+
+            listenOptions.innerHTML='';
+            q.options.sort(()=>Math.random()-0.5).forEach(opt=>{
+                const btn=document.createElement('button');btn.className='listen-option';
+                btn.innerHTML=`<span>${opt.emoji}</span><span class="listen-option-lbl">${opt.text}</span>`;
+                btn.addEventListener('click',()=>{
+                    playClick();
+                    listenOptions.querySelectorAll('.listen-option').forEach(b=>b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    state.selectedChoice=opt.text;
+                    checkBtn.disabled=false;
+                });
+                listenOptions.appendChild(btn);
+            });
+
         } else if(q.type==='translate'){
-            promptTitle.textContent='Traduce esta oración';promptText.textContent=q.prompt;
+            promptTitle.textContent='Traduce la frase';promptText.textContent=q.prompt;
             modTranslate.classList.remove('hidden');speak(q.prompt,0.95);
             wordPool.innerHTML='';answerSlot.innerHTML='';answerSlot.appendChild(placeholder);placeholder.style.display='inline';
             [...q.pool].sort(()=>Math.random()-0.5).forEach((w,i)=>{
@@ -346,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
         } else if(q.type==='matching'){
-            promptTitle.textContent='Empareja los pares';promptText.textContent=q.prompt;
+            promptTitle.textContent='Empareja los pares de palabras';promptText.textContent=q.prompt;
             modMatching.classList.remove('hidden');matchingGrid.innerHTML='';
             const cards=[];q.pairs.forEach((p,i)=>{cards.push({id:i,text:p.en,lang:'en'});cards.push({id:i,text:p.es,lang:'es'});});
             cards.sort(()=>Math.random()-0.5);
@@ -392,19 +458,19 @@ document.addEventListener('DOMContentLoaded', () => {
         let ok=false;
         if(q.type==='translate'){ok=JSON.stringify(state.selectedChips.map(c=>c.text))===JSON.stringify(q.answer);}
         else if(q.type==='matching'){ok=state.matchedPairsCount===q.pairs.length;}
-        else if(q.type==='choice'||q.type==='image_select'){ok=state.selectedChoice===q.correct;}
+        else if(q.type==='choice'||q.type==='image_select'||q.type==='listen_select'){ok=state.selectedChoice===q.correct;}
         else if(q.type==='emoji_match'){ok=state.selectedChoice===q.correct;}
 
         if(ok){
             playSuccess();state.correctCount++;updateCombo(true);
             feedbackSheet.className='feedback-sheet show success';feedbackIcon.textContent='✓';
             feedbackTitleEl.textContent=randMsg(msgs.ok);
-            feedbackSubtitle.textContent=state.comboStreak>=2?`🔥 Combo x${state.comboStreak}`:'¡Sigue así!';
+            feedbackSubtitle.textContent=q.word?`${q.word} ${q.phonetic||''}`:'¡Respuesta correcta!';
         } else {
             playError();updateCombo(false);triggerHeartLoss();state.hearts=Math.max(0,state.hearts-1);updateStats();
             feedbackSheet.className='feedback-sheet show error';feedbackIcon.textContent='✕';
             feedbackTitleEl.textContent='No te preocupes, la respuesta era:';
-            feedbackSubtitle.textContent=q.type==='translate'?q.answer.join(' '):(q.correct||'Sigue practicando');
+            feedbackSubtitle.textContent=q.word?`${q.word} (${q.correct})`: (q.correct||'Sigue practicando');
         }
     });
 
@@ -428,16 +494,14 @@ document.addEventListener('DOMContentLoaded', () => {
         state.gems += 20;
         state.xp += bonus;
 
-        // Unlock next lesson or next level
         const currentLessons = curriculum[state.currentLevel].lessons;
         const activeIdx = currentLessons.findIndex(l => l.id === state.activeLesson.id);
         
         if (activeIdx !== -1) {
             const isLastLesson = activeIdx === currentLessons.length - 1;
-            const nextUnlocked = activeIdx + 2; // 1-indexed next lesson
+            const nextUnlocked = activeIdx + 2;
 
             if (isLastLesson) {
-                // Find next level in order (e.g. A1 -> A2)
                 const currentLvlIdx = levelOrder.indexOf(state.currentLevel);
                 if (currentLvlIdx !== -1 && currentLvlIdx + 1 < levelOrder.length) {
                     const nextLvlKey = levelOrder[currentLvlIdx + 1];
@@ -470,11 +534,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const bottomNav = $('bottom-nav-bar');
         if (bottomNav) bottomNav.style.display = 'flex';
 
-        // Reset modal title back to standard for regular lessons
         const modalTitle = completionModal.querySelector('h2');
         if (modalTitle) modalTitle.textContent = '¡Lección Completada!';
 
-        // Advance to next level if completed current level
         if (state.nextLevelToSwitch) {
             state.currentLevel = state.nextLevelToSwitch;
             state.nextLevelToSwitch = null;
@@ -486,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
             saveProgress();
         }
 
-        renderPath(); // Re-render path tree to show newly unlocked node or new level!
+        renderPath();
     });
 
     // ====== SHOP ======

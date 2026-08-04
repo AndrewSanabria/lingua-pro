@@ -171,8 +171,28 @@ body {
 .normal-speed { background: var(--brand-blue); }
 .slow-speed { background: #E5A100; }
 
+/* WORD PRESENTATION CARD & PHONETICS */
+.word-presentation-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 4px 0 18px;
+}
+.word-phonetic-badge {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--brand-blue);
+    background: rgba(28, 176, 246, 0.12);
+    border: 1px solid rgba(28, 176, 246, 0.3);
+    padding: 3px 12px;
+    border-radius: 12px;
+    letter-spacing: 0.05em;
+}
+
 /* IMAGE SELECT EXERCISE (BIG EMOJI) */
-.big-emoji { font-size: 6rem; text-align: center; margin: 10px 0 20px; animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
+.big-emoji { font-size: 5.5rem; text-align: center; margin: 4px 0; animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
 @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
 .image-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .image-option {
@@ -185,16 +205,63 @@ body {
 .image-option.selected { border-color: var(--brand-blue); background: rgba(28,176,246,0.15); transform: scale(1.03); }
 
 /* EMOJI MATCH EXERCISE (Word -> pick emoji) */
-.big-word { font-size: 2.5rem; font-weight: 900; text-align: center; margin: 10px 0 20px; animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
+.big-word { font-size: 2.3rem; font-weight: 900; text-align: center; margin: 4px 0; animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
 .emoji-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .emoji-option {
     background: var(--surface-dark); border: 2px solid var(--border-color); border-radius: 16px;
-    padding: 20px; text-align: center; font-size: 3rem; cursor: pointer;
+    padding: 18px; text-align: center; font-size: 3rem; cursor: pointer;
     box-shadow: 0 4px 0 var(--border-color); user-select: none;
     transition: all 0.15s cubic-bezier(0.175,0.885,0.32,1.275);
 }
 .emoji-option:active { transform: translateY(3px); box-shadow: none; }
 .emoji-option.selected { border-color: var(--brand-blue); background: rgba(28,176,246,0.15); transform: scale(1.05); }
+
+/* LISTEN & SELECT EXERCISE (Escucha audio -> Pick Emoji or Word) */
+.listen-prompt-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0 20px;
+}
+.big-listen-btn {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1CB0F6 0%, #0A88C2 100%);
+    border: 3px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 0 #086B99, 0 0 25px rgba(28,176,246,0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.15s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.big-listen-btn:active {
+    transform: translateY(6px);
+    box-shadow: 0 2px 0 #086B99;
+}
+.listen-speaker-icon { font-size: 2.8rem; animation: pulseSpeaker 1.8s infinite; }
+@keyframes pulseSpeaker {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+.listen-hint-lbl { font-size: 0.65rem; font-weight: 800; color: white; text-transform: uppercase; margin-top: 2px; }
+.listen-speeds { gap: 10px; }
+.listen-speeds .audio-btn { width: 85px; height: 36px; border-radius: 12px; font-weight: 800; font-size: 0.85rem; color: white; }
+
+.listen-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.listen-option {
+    background: var(--surface-dark); border: 2px solid var(--border-color); border-radius: 16px;
+    padding: 16px; text-align: center; font-size: 2.5rem; cursor: pointer;
+    box-shadow: 0 4px 0 var(--border-color); user-select: none;
+    transition: all 0.15s cubic-bezier(0.175,0.885,0.32,1.275);
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.listen-option:active { transform: translateY(3px); box-shadow: none; }
+.listen-option.selected { border-color: var(--brand-blue); background: rgba(28,176,246,0.15); transform: scale(1.05); }
+.listen-option-lbl { font-size: 1rem; font-weight: 800; color: var(--text-primary); }
 
 /* TRANSLATE */
 .answer-construction-zone { min-height: 80px; margin-bottom: 16px; }

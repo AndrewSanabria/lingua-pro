@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Lingua Pro - Aprende Inglés Jugando</title>
+    <title>Lingua Pro - Aprende Palabras Jugando</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -11,6 +11,7 @@
     <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
 
     <div class="app-viewport">
+        <!-- TOP NAV -->
         <header class="top-nav" id="top-nav">
             <div class="nav-item level-item" id="level-selector-btn">
                 <span class="flag-icon">🇲🇽 ➔ 🇺🇸</span>
@@ -25,13 +26,14 @@
             </div>
         </header>
 
+        <!-- LEVEL DRAWER -->
         <div class="level-drawer" id="level-drawer">
             <div class="level-drawer-header">Selecciona tu Nivel</div>
             <div class="level-options">
-                <button class="level-opt active" data-level="A1"><span class="opt-badge">A1</span><div class="opt-info"><strong>Principiante Total</strong><span>Colores, animales, objetos y saludos</span></div></button>
-                <button class="level-opt" data-level="A2"><span class="opt-badge">A2</span><div class="opt-info"><strong>Elemental</strong><span>Frases completas y conversaciones</span></div></button>
-                <button class="level-opt" data-level="B1"><span class="opt-badge">B1</span><div class="opt-info"><strong>Intermedio</strong><span>Trabajo, viajes y gramática</span></div></button>
-                <button class="level-opt" data-level="C1"><span class="opt-badge">C1</span><div class="opt-info"><strong>Avanzado</strong><span>Modismos y fluidez nativa</span></div></button>
+                <button class="level-opt active" data-level="A1"><span class="opt-badge">A1</span><div class="opt-info"><strong>Vocabulario Esencial (Desde Cero)</strong><span>Animales, colores, comida, cuerpo, casa y ropa</span></div></button>
+                <button class="level-opt" data-level="A2"><span class="opt-badge">A2</span><div class="opt-info"><strong>Vocabulario Extendido</strong><span>Verbos, emociones, naturaleza y escuela</span></div></button>
+                <button class="level-opt" data-level="B1"><span class="opt-badge">B1</span><div class="opt-info"><strong>Frases & Lugares</strong><span>Viajes, trabajo y expresiones frecuentes</span></div></button>
+                <button class="level-opt" data-level="C1"><span class="opt-badge">C1</span><div class="opt-info"><strong>Avanzado & Modismos</strong><span>Idioms nativos y soltura total</span></div></button>
             </div>
         </div>
 
@@ -41,8 +43,8 @@
                 <div class="section-banner" id="section-banner">
                     <div class="banner-content">
                         <span class="unit-badge" id="banner-unit">Nivel A1</span>
-                        <h2 id="banner-title">Primeras Palabras</h2>
-                        <p id="banner-desc">Aprende jugando con colores, animales y objetos</p>
+                        <h2 id="banner-title">Vocabulario Esencial</h2>
+                        <p id="banner-desc">Palabras sencillas con texto, pronunciación y apoyo visual</p>
                     </div>
                 </div>
                 <div class="path-tree" id="path-tree"></div>
@@ -50,14 +52,15 @@
 
             <!-- REVIEW VIEW -->
             <main class="view review-view" id="review-view">
-                <div class="view-header"><h2>🔄 Repaso</h2><p>Refuerza lo que aprendiste</p></div>
+                <div class="view-header"><h2>🔄 Repaso de Palabras</h2><p>Refuerza las palabras aprendidas</p></div>
                 <div class="review-card-container">
                     <div class="srs-card" id="srs-card">
+                        <div class="srs-emoji" id="srs-emoji">🍎</div>
                         <div class="srs-word" id="srs-word">Apple</div>
-                        <div class="srs-phonetic">/ˈæp.əl/</div>
-                        <button class="audio-btn srs-audio" id="srs-tts-btn">🔊</button>
-                        <div class="srs-translation hidden" id="srs-translation">Manzana 🍎</div>
-                        <button class="action-btn reveal-btn" id="reveal-srs-btn">MOSTRAR</button>
+                        <div class="srs-phonetic" id="srs-phonetic">/ˈæp.əl/</div>
+                        <button class="audio-btn srs-audio" id="srs-tts-btn">🔊 Escuchar</button>
+                        <div class="srs-translation hidden" id="srs-translation">Manzana</div>
+                        <button class="action-btn reveal-btn" id="reveal-srs-btn">MOSTRAR SIGNIFICADO</button>
                     </div>
                 </div>
             </main>
@@ -111,19 +114,40 @@
                         </div>
                     </div>
 
-                    <!-- IMAGE SELECT (New! Emoji-based visual learning) -->
+                    <!-- EXERCISE 1: IMAGE SELECT (Emoji -> Select English word) -->
                     <div class="exercise-module hidden" id="mod-image-select">
-                        <div class="big-emoji" id="big-emoji">🐱</div>
+                        <div class="word-presentation-card">
+                            <div class="big-emoji" id="big-emoji">🐱</div>
+                            <div class="word-phonetic-badge" id="phonetic-badge">/kæt/</div>
+                        </div>
                         <div class="image-options" id="image-options"></div>
                     </div>
 
-                    <!-- EMOJI MATCH (Pick the emoji for the word) -->
+                    <!-- EXERCISE 2: EMOJI MATCH (English word -> Select Emoji) -->
                     <div class="exercise-module hidden" id="mod-emoji-match">
-                        <div class="big-word" id="big-word">Cat</div>
+                        <div class="word-presentation-card">
+                            <div class="big-word" id="big-word">Cat</div>
+                            <div class="word-phonetic-badge" id="big-word-phonetic">/kæt/</div>
+                        </div>
                         <div class="emoji-options" id="emoji-options"></div>
                     </div>
 
-                    <!-- TRANSLATE (Sentence builder) -->
+                    <!-- EXERCISE 3: LISTEN & SELECT (Escucha audio -> Selecciona la imagen o palabra) -->
+                    <div class="exercise-module hidden" id="mod-listen-select">
+                        <div class="listen-prompt-card">
+                            <button class="big-listen-btn" id="listen-big-btn">
+                                <span class="listen-speaker-icon">🔊</span>
+                                <span class="listen-hint-lbl">Toca para escuchar</span>
+                            </button>
+                            <div class="audio-controls-group listen-speeds">
+                                <button class="audio-btn normal-speed" id="listen-normal-btn"><span>🐇 1x</span></button>
+                                <button class="audio-btn slow-speed" id="listen-slow-btn"><span>🐢 0.5x</span></button>
+                            </div>
+                        </div>
+                        <div class="listen-options" id="listen-options"></div>
+                    </div>
+
+                    <!-- EXERCISE 4: TRANSLATE (Word/Sentence Builder) -->
                     <div class="exercise-module hidden" id="mod-translate">
                         <div class="answer-construction-zone">
                             <div class="answer-slot-line" id="answer-slot-line"><span class="placeholder-hint" id="placeholder-hint">Toca las palabras</span></div>
@@ -131,13 +155,13 @@
                         <div class="word-pool-zone"><div class="word-pool" id="word-pool"></div></div>
                     </div>
 
-                    <!-- PAIR MATCHING -->
+                    <!-- EXERCISE 5: PAIR MATCHING (Emparejar palabras) -->
                     <div class="exercise-module hidden" id="mod-matching">
                         <p class="sub-instruction">Toca los pares que significan lo mismo:</p>
                         <div class="matching-grid" id="matching-grid"></div>
                     </div>
 
-                    <!-- MULTIPLE CHOICE -->
+                    <!-- EXERCISE 6: MULTIPLE CHOICE -->
                     <div class="exercise-module hidden" id="mod-choice">
                         <div class="choices-grid" id="choices-grid"></div>
                     </div>
@@ -165,6 +189,7 @@
             </main>
         </div>
 
+        <!-- BOTTOM NAV BAR -->
         <nav class="bottom-nav-bar" id="bottom-nav-bar">
             <button class="nav-tab active" data-target="path-view"><span class="tab-icon">🗺️</span><span class="tab-label">Aprender</span></button>
             <button class="nav-tab" data-target="review-view"><span class="tab-icon">🔄</span><span class="tab-label">Repaso</span></button>
@@ -172,6 +197,7 @@
             <button class="nav-tab" data-target="profile-view"><span class="tab-icon">👤</span><span class="tab-label">Perfil</span></button>
         </nav>
 
+        <!-- TUTORIAL OVERLAY -->
         <div class="tutorial-overlay hidden" id="tutorial-overlay">
             <div class="tutorial-card" id="tutorial-card">
                 <div class="tutorial-mascot">🤖</div>
@@ -181,6 +207,7 @@
             </div>
         </div>
 
+        <!-- LESSON COMPLETE MODAL -->
         <div class="modal-overlay" id="completion-modal">
             <div class="completion-card">
                 <div class="celebration-icon">🎉</div>
