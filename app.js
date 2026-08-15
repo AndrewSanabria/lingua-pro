@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         A2: {
             title: "Vocabulario Fundamental (A2)",
-            desc: "10 Unidades de verbos de acción, emociones, lugares, números y descripciones",
+            desc: "10 Unidades de verbos de acción, emociones, lugares, números, oficios y comida",
             lessons: [
                 { id:'a2-1', name:'Verbos de Acción 🏃', icon:'🏃', questions:[
                     { type:'image_select', emoji:'🏃', word:'Run', soundsLike:'rán', phonetic:'/rʌn/', prompt:'¿Qué acción es esta?', options:['Run','Walk','Sleep','Eat'], correct:'Run', es:'Correr', context:'Run fast in the park (Corre rápido en el parque)' },
@@ -221,12 +221,53 @@ document.addEventListener('DOMContentLoaded', () => {
                     { type:'matching', prompt:'Empareja los adjetivos opuestos:', pairs:[
                         {en:'Big',es:'Grande (bíg)'},{en:'Small',es:'Pequeño (smól)'},{en:'Hot',es:'Caliente (jót)'},{en:'Cold',es:'Frío (kóuld)'},{en:'Fast',es:'Rápido (fást)'}
                     ]}
+                ]},
+                { id:'a2-6', name:'Verbos Cotidianos 🍳', icon:'🍳', questions:[
+                    { type:'image_select', emoji:'🍳', word:'Cook', soundsLike:'kúk', phonetic:'/kʊk/', prompt:'¿Qué acción es esta?', options:['Cook','Wash','Clean','Open'], correct:'Cook', es:'Cocinar', context:'I cook delicious dinner (Cocino una cena deliciosa)' },
+                    { type:'emoji_match', word:'Wash', soundsLike:'uósh', phonetic:'/wɑːʃ/', prompt:'¿Cuál es el emoji de Wash (Lavar)?', emojis:['🧼','🍳','🧹','🚪'], correct:'🧼', es:'Lavar', context:'Wash your hands (Lava tus manos)' },
+                    { type:'listen_select', word:'Clean', soundsLike:'klín', phonetic:'/kliːn/', prompt:'Escucha y selecciona la acción:', options:[{text:'Clean',emoji:'🧹'},{text:'Cook',emoji:'🍳'},{text:'Wash',emoji:'🧼'},{text:'Sleep',emoji:'😴'}], correct:'Clean', es:'Limpiar', context:'Clean my bedroom (Limpiar mi habitación)' },
+                    { type:'translate', prompt:'I wash and clean', answer:['Yo','lavo','y','limpio'], pool:['Yo','lavo','y','limpio','cocino','abro','cierro'], context:'I wash and clean (Yo lavo y limpio)' },
+                    { type:'matching', prompt:'Empareja verbos cotidianos:', pairs:[
+                        {en:'Cook',es:'🍳 Cocinar (kúk)'},{en:'Wash',es:'🧼 Lavar (uósh)'},{en:'Clean',es:'🧹 Limpiar (klín)'},{en:'Open',es:'🚪 Abrir (óupen)'},{en:'Close',es:'🔒 Cerrar (klóus)'}
+                    ]}
+                ]},
+                { id:'a2-7', name:'Animales Salvajes 🦁', icon:'🦁', questions:[
+                    { type:'image_select', emoji:'🦁', word:'Lion', soundsLike:'láion', phonetic:'/ˈlaɪ.ən/', prompt:'¿Qué animal salvaje es?', options:['Lion','Tiger','Elephant','Monkey'], correct:'Lion', es:'León', context:'King lion of the jungle (El león rey de la selva)' },
+                    { type:'emoji_match', word:'Elephant', soundsLike:'él-e-fant', phonetic:'/ˈel.ə.fənt/', prompt:'¿Cuál es el Elephant?', emojis:['🐘','🦁','🐅','🐒'], correct:'🐘', es:'Elefante', context:'Giant grey elephant (Elefante gris gigante)' },
+                    { type:'listen_select', word:'Monkey', soundsLike:'món-ki', phonetic:'/ˈmʌŋ.ki/', prompt:'Escucha la palabra:', options:[{text:'Monkey',emoji:'🐒'},{text:'Lion',emoji:'🦁'},{text:'Tiger',emoji:'🐅'},{text:'Bear',emoji:'🐻'}], correct:'Monkey', es:'Mono', context:'A playful monkey (Un mono juguetón)' },
+                    { type:'matching', prompt:'Empareja animales salvajes:', pairs:[
+                        {en:'Lion',es:'🦁 León (láion)'},{en:'Elephant',es:'🐘 Elefante (él-e-fant)'},{en:'Monkey',es:'🐒 Mono (món-ki)'},{en:'Tiger',es:'🐅 Tigre (tái-guer)'},{en:'Snake',es:'🐍 Serpiente (snéik)'}
+                    ]}
+                ]},
+                { id:'a2-8', name:'Comida en Restaurante 🍽️', icon:'🍽️', questions:[
+                    { type:'image_select', emoji:'🍗', word:'Chicken', soundsLike:'chí-ken', phonetic:'/ˈtʃɪk.ɪn/', prompt:'¿Qué comida es?', options:['Chicken','Meat','Rice','Soup'], correct:'Chicken', es:'Pollo', context:'Roasted chicken with salad (Pollo asado con ensalada)' },
+                    { type:'emoji_match', word:'Rice', soundsLike:'ráis', phonetic:'/raɪs/', prompt:'¿Cuál es el Rice (Arroz)?', emojis:['🍚','🍗','🥩','🍲'], correct:'🍚', es:'Arroz', context:'White steamed rice (Arroz blanco al vapor)' },
+                    { type:'listen_select', word:'Soup', soundsLike:'súp', phonetic:'/suːp/', prompt:'Escucha la palabra de comida:', options:[{text:'Soup',emoji:'🍲'},{text:'Salad',emoji:'🥗'},{text:'Chicken',emoji:'🍗'},{text:'Rice',emoji:'🍚'}], correct:'Soup', es:'Sopa', context:'Warm vegetable soup (Sopa caliente de verduras)' },
+                    { type:'matching', prompt:'Empareja comidas de restaurante:', pairs:[
+                        {en:'Chicken',es:'🍗 Pollo (chí-ken)'},{en:'Meat',es:'🥩 Carne (mít)'},{en:'Rice',es:'🍚 Arroz (ráis)'},{en:'Soup',es:'🍲 Sopa (súp)'},{en:'Salad',es:'🥗 Ensalada (sá-lad)'}
+                    ]}
+                ]},
+                { id:'a2-9', name:'Profesiones & Oficios 👨‍⚕️', icon:'👨‍⚕️', questions:[
+                    { type:'image_select', emoji:'👨‍⚕️', word:'Doctor', soundsLike:'dók-tor', phonetic:'/ˈdɑːk.tɚ/', prompt:'¿Qué profesión es esta?', options:['Doctor','Teacher','Police','Nurse'], correct:'Doctor', es:'Doctor', context:'The doctor helps patients (El doctor ayuda a los pacientes)' },
+                    { type:'emoji_match', word:'Teacher', soundsLike:'tí-cher', phonetic:'/ˈtiː.tʃɚ/', prompt:'¿Cuál es Teacher (Profesor)?', emojis:['👩‍🏫','👨‍⚕️','👮','👨‍🍳'], correct:'👩‍🏫', es:'Profesor', context:'Our English teacher (Nuestro profesor de inglés)' },
+                    { type:'listen_select', word:'Police', soundsLike:'po-lís', phonetic:'/pəˈliːs/', prompt:'Escucha la profesión:', options:[{text:'Police',emoji:'👮'},{text:'Doctor',emoji:'👨‍⚕️'},{text:'Teacher',emoji:'👩‍🏫'},{text:'Nurse',emoji:'👩‍⚕️'}], correct:'Police', es:'Policía', context:'Police officer on duty (Oficial de policía en servicio)' },
+                    { type:'matching', prompt:'Empareja las profesiones:', pairs:[
+                        {en:'Doctor',es:'👨‍⚕️ Doctor (dók-tor)'},{en:'Teacher',es:'👩‍🏫 Profesor (tí-cher)'},{en:'Police',es:'👮 Policía (po-lís)'},{en:'Nurse',es:'👩‍⚕️ Enfermero (nérs)'},{en:'Chef',es:'👨‍🍳 Chef / Cocinero (shéf)'}
+                    ]}
+                ]},
+                { id:'a2-10', name:'Tiempo Libre & Deportes ⚽', icon:'⚽', questions:[
+                    { type:'image_select', emoji:'⚽', word:'Soccer', soundsLike:'só-ker', phonetic:'/ˈsɑː.kɚ/', prompt:'¿Qué deporte es este?', options:['Soccer','Music','Dance','Game'], correct:'Soccer', es:'Fútbol', context:'Play soccer with friends (Jugar fútbol con amigos)' },
+                    { type:'emoji_match', word:'Music', soundsLike:'miú-zik', phonetic:'/ˈmjuː.zɪk/', prompt:'¿Cuál es Music (Música)?', emojis:['🎵','⚽','🎮','💃'], correct:'🎵', es:'Música', context:'Listen to good music (Escuchar buena música)' },
+                    { type:'listen_select', word:'Dance', soundsLike:'dáns', phonetic:'/dæns/', prompt:'Escucha la acción de tiempo libre:', options:[{text:'Dance',emoji:'💃'},{text:'Sing',emoji:'🎤'},{text:'Play',emoji:'🎮'},{text:'Music',emoji:'🎵'}], correct:'Dance', es:'Bailar', context:'Dance to the rhythm (Bailar al ritmo)' },
+                    { type:'matching', prompt:'Empareja pasatiempos y deportes:', pairs:[
+                        {en:'Soccer',es:'⚽ Fútbol (só-ker)'},{en:'Music',es:'🎵 Música (miú-zik)'},{en:'Dance',es:'💃 Bailar (dáns)'},{en:'Sing',es:'🎤 Cantar (síng)'},{en:'Game',es:'🎮 Juego (guéim)'}
+                    ]}
                 ]}
             ]
         },
         B1: {
             title: "Situaciones Reales (B1)",
-            desc: "8 Unidades de viajes, trabajo, restaurantes y compras con vocabulario práctico",
+            desc: "6 Unidades de viajes, oficina, hoteles, supermercado, salud y restaurantes",
             lessons: [
                 { id:'b1-1', name:'Viajes & Aeropuerto ✈️', icon:'✈️', questions:[
                     { type:'image_select', emoji:'🛂', word:'Passport', soundsLike:'pás-port', phonetic:'/ˈpæs.pɔːrt/', prompt:'¿Qué documento es?', options:['Passport','Ticket','Money','Hotel'], correct:'Passport', es:'Pasaporte', context:'Show your passport at security (Muestra tu pasaporte en seguridad)' },
@@ -243,18 +284,69 @@ document.addEventListener('DOMContentLoaded', () => {
                     { type:'matching', prompt:'Empareja palabras de oficina:', pairs:[
                         {en:'Computer',es:'💻 Computadora (kom-piú-ter)'},{en:'Email',es:'📧 Correo (í-meil)'},{en:'Meeting',es:'👥 Reunión (mí-ting)'},{en:'Office',es:'🏢 Oficina (ó-fis)'},{en:'Boss',es:'👔 Jefe (bós)'}
                     ]}
+                ]},
+                { id:'b1-3', name:'En el Hotel 🏨', icon:'🏨', questions:[
+                    { type:'image_select', emoji:'🏨', word:'Hotel', soundsLike:'jo-tél', phonetic:'/hoʊˈtel/', prompt:'¿Qué establecimiento es?', options:['Hotel','Airport','Office','School'], correct:'Hotel', es:'Hotel', context:'Book a nice hotel room (Reservar una buena habitación de hotel)' },
+                    { type:'emoji_match', word:'Keycard', soundsLike:'kí-kard', phonetic:'/ˈkiː.kɑːrd/', prompt:'¿Cuál es la tarjeta Keycard?', emojis:['💳','🏨','🛏️','🔑'], correct:'💳', es:'Tarjeta Llave', context:'Your room keycard (Tu tarjeta llave de habitación)' },
+                    { type:'listen_select', word:'Bed', soundsLike:'béd', phonetic:'/bed/', prompt:'Escucha la palabra:', options:[{text:'Bed',emoji:'🛏️'},{text:'Door',emoji:'🚪'},{text:'Hotel',emoji:'🏨'},{text:'Keycard',emoji:'💳'}], correct:'Bed', es:'Cama', context:'Comfortable king bed (Cama king cómoda)' },
+                    { type:'matching', prompt:'Empareja términos de hotel:', pairs:[
+                        {en:'Hotel',es:'🏨 Hotel (jo-tél)'},{en:'Room',es:'🚪 Habitación (rúm)'},{en:'Keycard',es:'💳 Tarjeta Llave (kí-kard)'},{en:'Bed',es:'🛏️ Cama (béd)'},{en:'Reception',es:'🛎️ Recepción (re-sép-shon)'}
+                    ]}
+                ]},
+                { id:'b1-4', name:'Supermercado & Compras 🛒', icon:'🛒', questions:[
+                    { type:'image_select', emoji:'🛒', word:'Cart', soundsLike:'kárt', phonetic:'/kɑːrt/', prompt:'¿Qué objeto de compras es?', options:['Cart','Bag','Cash','Card'], correct:'Cart', es:'Carrito', context:'Fill the shopping cart (Llenar el carrito de compras)' },
+                    { type:'emoji_match', word:'Cash', soundsLike:'kásh', phonetic:'/kæʃ/', prompt:'¿Cuál representa Cash (Efectivo)?', emojis:['💵','🛒','💳','🧾'], correct:'💵', es:'Efectivo', context:'Pay with cash (Pagar con efectivo)' },
+                    { type:'listen_select', word:'Discount', soundsLike:'dís-kaunt', phonetic:'/ˈdɪs.kaʊnt/', prompt:'Escucha la palabra de compras:', options:[{text:'Discount',emoji:'🏷️'},{text:'Cash',emoji:'💵'},{text:'Receipt',emoji:'🧾'},{text:'Cart',emoji:'🛒'}], correct:'Discount', es:'Descuento', context:'Special discount today (Descuento especial hoy)' },
+                    { type:'matching', prompt:'Empareja términos de compras:', pairs:[
+                        {en:'Cart',es:'🛒 Carrito (kárt)'},{en:'Cash',es:'💵 Efectivo (kásh)'},{en:'Receipt',es:'🧾 Recibo (ri-sít)'},{en:'Discount',es:'🏷️ Descuento (dís-kaunt)'},{en:'Price',es:'💲 Precio (práis)'}
+                    ]}
+                ]},
+                { id:'b1-5', name:'Salud & Farmacia 🏥', icon:'🏥', questions:[
+                    { type:'image_select', emoji:'💊', word:'Medicine', soundsLike:'méd-i-sin', phonetic:'/ˈmed.ə.sɪn/', prompt:'¿Qué producto médico es?', options:['Medicine','Bandage','Doctor','Water'], correct:'Medicine', es:'Medicina', context:'Take your daily medicine (Toma tu medicina diaria)' },
+                    { type:'listen_select', word:'Emergency', soundsLike:'i-mér-jen-si', phonetic:'/ɪˈmɝː.dʒən.si/', prompt:'Escucha la palabra:', options:[{text:'Emergency',emoji:'🚨'},{text:'Medicine',emoji:'💊'},{text:'Hospital',emoji:'🏥'},{text:'Doctor',emoji:'👨‍⚕️'}], correct:'Emergency', es:'Emergencia', context:'Call emergency service (Llamar al servicio de emergencias)' },
+                    { type:'matching', prompt:'Empareja términos de salud:', pairs:[
+                        {en:'Medicine',es:'💊 Medicina (méd-i-sin)'},{en:'Emergency',es:'🚨 Emergencia (i-mér-jen-si)'},{en:'Hospital',es:'🏥 Hospital (jós-pi-tal)'},{en:'Doctor',es:'👨‍⚕️ Doctor (dók-tor)'},{en:'Pain',es:'🤕 Dolor (péin)'}
+                    ]}
+                ]},
+                { id:'b1-6', name:'Restaurante & Cuentas 🍽️', icon:'🍽️', questions:[
+                    { type:'image_select', emoji:'📜', word:'Menu', soundsLike:'mé-niu', phonetic:'/ˈmen.juː/', prompt:'¿Qué documento del restaurante es?', options:['Menu','Bill','Tip','Water'], correct:'Menu', es:'Menú', context:'Look at the dinner menu (Mira el menú de la cena)' },
+                    { type:'listen_select', word:'Bill', soundsLike:'bíl', phonetic:'/bɪl/', prompt:'Escucha la palabra:', options:[{text:'Bill',emoji:'🧾'},{text:'Menu',emoji:'📜'},{text:'Tip',emoji:'🪙'},{text:'Table',emoji:'🪑'}], correct:'Bill', es:'Cuenta', context:'Can I have the bill please? (¿Me da la cuenta por favor?)' },
+                    { type:'matching', prompt:'Empareja palabras de restaurante:', pairs:[
+                        {en:'Menu',es:'📜 Menú (mé-niu)'},{en:'Bill',es:'🧾 Cuenta (bíl)'},{en:'Tip',es:'🪙 Propina (típ)'},{en:'Waiter',es:'🤵 Mesero (uéi-ter)'},{en:'Order',es:'🍽️ Orden (ór-der)'}
+                    ]}
                 ]}
             ]
         },
         C1: {
             title: "Fluidez & Modismos (C1)",
-            desc: "6 Unidades de modismos nativos y expresiones de conversación avanzada",
+            desc: "4 Unidades de modismos nativos, phrasal verbs y debate avanzado",
             lessons: [
                 { id:'c1-1', name:'Native Idioms 🚀', icon:'🚀', questions:[
                     { type:'choice', prompt:'¿Qué significa "Break a leg"?', options:['¡Buena suerte!','Rómpete una pierna','Cálmate','Llegas tarde'], correct:'¡Buena suerte!', es:'¡Buena suerte!', context:'Break a leg in your presentation (¡Buena suerte en tu presentación!)' },
                     { type:'choice', prompt:'¿Qué significa "Piece of cake"?', options:['Muy fácil','Un pastel','Muy caro','Imposible'], correct:'Muy fácil', es:'Muy fácil', context:'The test was a piece of cake (El examen fue muy fácil)' },
                     { type:'matching', prompt:'Empareja modismos nativos:', pairs:[
                         {en:'Break a leg',es:'¡Buena suerte! (bréik a lég)'},{en:'Piece of cake',es:'Muy fácil (pís of kéik)'},{en:'Under the weather',es:'Enfermo (án-der de ué-der)'},{en:'Time flies',es:'El tiempo vuela (táim fláis)'},{en:'Hit the books',es:'Estudiar (jít de búks)'}
+                    ]}
+                ]},
+                { id:'c1-2', name:'Expresiones Nativas 🎯', icon:'🎯', questions:[
+                    { type:'choice', prompt:'¿Qué significa "Hit the road"?', options:['Ponerse en marcha / Salir','Golpear el camino','Manejar rápido','Perderse'], correct:'Ponerse en marcha / Salir', es:'Salir de viaje', context:'Let’s hit the road now (Pongámonos en marcha ahora)' },
+                    { type:'choice', prompt:'¿Qué significa "Call it a day"?', options:['Dar por terminado el día','Llamar a un amigo','Empezar el día','Celebrar'], correct:'Dar por terminado el día', es:'Terminar por hoy', context:'It is late, let’s call it a day (Es tarde, terminemos por hoy)' },
+                    { type:'matching', prompt:'Empareja expresiones nativas:', pairs:[
+                        {en:'Hit the road',es:'Ponerse en marcha (jít de róud)'},{en:'Call it a day',es:'Terminar por hoy (kól it a déi)'},{en:'No way',es:'¡De ninguna manera! (nóu uéi)'},{en:'So far so good',es:'Hasta ahora todo bien (sóu far sóu gud)'},{en:'Never mind',es:'No importa (né-ver máind)'}
+                    ]}
+                ]},
+                { id:'c1-3', name:'Conectores de Debate 🔗', icon:'🔗', questions:[
+                    { type:'choice', prompt:'¿Qué significa el conector "Furthermore"?', options:['Además / Asimismo','Sin embargo','Por lo tanto','Por el contrario'], correct:'Además / Asimismo', es:'Además', context:'Furthermore, the results are positive (Asimismo, los resultados son positivos)' },
+                    { type:'choice', prompt:'¿Qué significa "However"?', options:['Sin embargo','Por qué','Siempre','Nunca'], correct:'Sin embargo', es:'Sin embargo', context:'However, we need more time (Sin embargo, necesitamos más tiempo)' },
+                    { type:'matching', prompt:'Empareja conectores avanzados:', pairs:[
+                        {en:'Furthermore',es:'Asimismo / Además (fér-der-mor)'},{en:'However',es:'Sin embargo (jau-é-ver)'},{en:'Therefore',es:'Por lo tanto (dér-for)'},{en:'In conclusion',es:'En conclusión (in kon-klú-shon)'},{en:'On the other hand',es:'Por otro lado (on di ó-der jánd)'}
+                    ]}
+                ]},
+                { id:'c1-4', name:'Phrasal Verbs Clave ⚡', icon:'⚡', questions:[
+                    { type:'choice', prompt:'¿Qué significa el phrasal verb "Give up"?', options:['Rendirse','Regalar algo','Subir','Aumentar'], correct:'Rendirse', es:'Rendirse', context:'Never give up on your dreams (Nunca te rindas en tus sueños)' },
+                    { type:'choice', prompt:'¿Qué significa "Find out"?', options:['Descubrir / Enterarse','Buscar afuera','Perder','Salir'], correct:'Descubrir / Enterarse', es:'Descubrir', context:'I need to find out the truth (Necesito descubrir la verdad)' },
+                    { type:'matching', prompt:'Empareja los phrasal verbs:', pairs:[
+                        {en:'Give up',es:'Rendirse (guív áp)'},{en:'Find out',es:'Descubrir (fáind áut)'},{en:'Look after',es:'Cuidar a alguien (lúk áf-ter)'},{en:'Turn down',es:'Rechazar / Bajar volumen (térn dáun)'},{en:'Carry on',es:'Continuar (ká-ri on)'}
                     ]}
                 ]}
             ]
