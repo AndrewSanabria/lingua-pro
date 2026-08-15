@@ -1,14 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const levelOrder = ['A1', 'A2', 'B1', 'C1'];
+
     const state = {
         currentLevel: 'A1', streak: 1, gems: 50, hearts: 5, xp: 0,
         activeLesson: null, currentQuestionIdx: 0, correctCount: 0,
         selectedChips: [], audioCtx: null, firstMatchCard: null,
         matchedPairsCount: 0, comboStreak: 0, maxCombo: 0, hintsUsed: 0,
-        selectedChoice: null,
-        tutorialSeen: localStorage.getItem('lp_tut') === '1'
+        selectedChoice: null, nextLevelToSwitch: null,
+        tutorialSeen: localStorage.getItem('lp_tut') === '1',
+        unlockedIndex: { A1: 1, A2: 1, B1: 1, C1: 1 }
     };
 
-    // ====== EXTENSIVE WORD-FIRST CURRICULUM WITH SPANISH PHONETIC GUIDES ======
+    // ====== PROGRESS STORAGE & NORMALIZATION ======
+    function normalizeProgress() {
+        const savedUnlocked = localStorage.getItem('lp_unlocked');
+        if (savedUnlocked) {
+            try {
+                const parsed = JSON.parse(savedUnlocked);
+                if (parsed && typeof parsed === 'object') {
+                    levelOrder.forEach(lvl => {
+                        state.unlockedIndex[lvl] = (typeof parsed[lvl] === 'number' && parsed[lvl] >= 1) ? parsed[lvl] : 1;
+                    });
+                }
+            } catch (e) {
+                state.unlockedIndex = { A1: 1, A2: 1, B1: 1, C1: 1 };
+            }
+        }
+        const savedLevel = localStorage.getItem('lp_level');
+        if (savedLevel && levelOrder.includes(savedLevel)) {
+            state.currentLevel = savedLevel;
+        }
+    }
+    normalizeProgress();
+
+    function saveProgress() {
+        localStorage.setItem('lp_unlocked', JSON.stringify(state.unlockedIndex));
+        localStorage.setItem('lp_level', state.currentLevel);
+    }
+
+    // ====== COMPLETE MULTI-LEVEL VOCABULARY CURRICULUM ======
     const curriculum = {
         A1: {
             title: "Vocabulario Esencial (A1)",
@@ -54,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ]},
                 { id:'a1-5', name:'Cuerpo Humano 👁️', icon:'👁️', questions:[
                     { type:'image_select', emoji:'👁️', word:'Eye', soundsLike:'ái', phonetic:'/aɪ/', prompt:'¿Qué parte del cuerpo es?', options:['Eye','Ear','Nose','Hand'], correct:'Eye', es:'Ojo' },
-                    { type:'emoji_match', word:'Hand', soundsLike:'jánd', phonetic:'/hænd/', prompt:'Selecciona el emoji de Hand:', emojis:['🖐️','🦶','👁️','👂'], correct:'🖐️', es:'Mano' },
+                    { type:'emoji_match', word:'Hand', soundsLike:'jánd', phonetic:'/hænd/', prompt:'Selecciona el emoji de Hand:', emojis:['🖐️','🦶','👁️','👂'], correct:'🖐️' },
                     { type:'listen_select', word:'Ear', soundsLike:'íar', phonetic:'/ɪər/', prompt:'Escucha y selecciona la imagen:', options:[{text:'Ear',emoji:'👂'},{text:'Nose',emoji:'👃'},{text:'Eye',emoji:'👁️'},{text:'Foot',emoji:'🦶'}], correct:'Ear', es:'Oreja' },
                     { type:'image_select', emoji:'👃', word:'Nose', soundsLike:'nóus', phonetic:'/noʊz/', prompt:'¿Qué parte del cuerpo es?', options:['Nose','Mouth','Eye','Head'], correct:'Nose', es:'Nariz' },
                     { type:'matching', prompt:'Empareja las partes del cuerpo:', pairs:[
@@ -127,6 +157,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     { type:'matching', prompt:'Empareja las emociones:', pairs:[
                         {en:'Happy',es:'😊 Feliz (já-pi)'},{en:'Sad',es:'😢 Triste (sád)'},{en:'Angry',es:'😡 Enojado (án-gri)'},{en:'Tired',es:'😴 Cansado (táierd)'},{en:'Scared',es:'😱 Asustado (skérd)'}
                     ]}
+                ]},
+                { id:'a2-3', name:'Lugares 🏖️', icon:'🏖️', questions:[
+                    { type:'image_select', emoji:'🏫', word:'School', soundsLike:'skúl', phonetic:'/skuːl/', prompt:'¿Qué lugar es este?', options:['School','Hospital','Park','Beach'], correct:'School', es:'Escuela' },
+                    { type:'listen_select', word:'Beach', soundsLike:'bích', phonetic:'/biːtʃ/', prompt:'Escucha y elige el lugar:', options:[{text:'Beach',emoji:'🏖️'},{text:'Park',emoji:'🏞️'},{text:'School',emoji:'🏫'},{text:'Hotel',emoji:'🏨'}], correct:'Beach', es:'Playa' },
+                    { type:'image_select', emoji:'🏥', word:'Hospital', soundsLike:'jós-pi-tal', phonetic:'/ˈhɑː.spɪ.t̬əl/', prompt:'¿Qué lugar es este?', options:['Hospital','Park','Store','School'], correct:'Hospital', es:'Hospital' },
+                    { type:'matching', prompt:'Empareja los lugares:', pairs:[
+                        {en:'School',es:'🏫 Escuela (skúl)'},{en:'Hospital',es:'🏥 Hospital (jós-pi-tal)'},{en:'Park',es:'🏞️ Parque (párk)'},{en:'Beach',es:'🏖️ Playa (bích)'},{en:'Store',es:'🏪 Tienda (stór)'}
+                    ]}
+                ]},
+                { id:'a2-4', name:'Números & Cantidades 🔢', icon:'🔢', questions:[
+                    { type:'image_select', emoji:'1️⃣', word:'One', soundsLike:'uán', phonetic:'/wʌn/', prompt:'¿Qué número es?', options:['One','Two','Three','Four'], correct:'One', es:'Uno' },
+                    { type:'emoji_match', word:'Two', soundsLike:'tú', phonetic:'/tuː/', prompt:'¿Cuál es el número Two?', emojis:['2️⃣','1️⃣','3️⃣','4️⃣'], correct:'2️⃣', es:'Dos' },
+                    { type:'listen_select', word:'Three', soundsLike:'zrí', phonetic:'/θriː/', prompt:'Escucha el número:', options:[{text:'Three',emoji:'3️⃣'},{text:'Five',emoji:'5️⃣'},{text:'Four',emoji:'4️⃣'},{text:'Two',emoji:'2️⃣'}], correct:'Three', es:'Tres' },
+                    { type:'matching', prompt:'Empareja los números:', pairs:[
+                        {en:'One',es:'1️⃣ Uno (uán)'},{en:'Two',es:'2️⃣ Dos (tú)'},{en:'Three',es:'3️⃣ Tres (zrí)'},{en:'Four',es:'4️⃣ Cuatro (fór)'},{en:'Five',es:'5️⃣ Cinco (fáiv)'}
+                    ]}
+                ]},
+                { id:'a2-5', name:'Adjetivos & Opuestos 🌟', icon:'🌟', questions:[
+                    { type:'image_select', emoji:'🐘', word:'Big', soundsLike:'bíg', phonetic:'/bɪɡ/', prompt:'¿Qué cualidad es?', options:['Big','Small','Fast','Cold'], correct:'Big', es:'Grande' },
+                    { type:'emoji_match', word:'Small', soundsLike:'smól', phonetic:'/smɔːl/', prompt:'¿Cuál representa Small?', emojis:['🐜','🐘','🔥','❄️'], correct:'🐜', es:'Pequeño' },
+                    { type:'listen_select', word:'Hot', soundsLike:'jót', phonetic:'/hɑːt/', prompt:'Escucha y selecciona la cualidad:', options:[{text:'Hot',emoji:'🔥'},{text:'Cold',emoji:'❄️'},{text:'Fast',emoji:'⚡'},{text:'Slow',emoji:'🐢'}], correct:'Hot', es:'Caliente' },
+                    { type:'matching', prompt:'Empareja los adjetivos opuestos:', pairs:[
+                        {en:'Big',es:'Grande (bíg)'},{en:'Small',es:'Pequeño (smól)'},{en:'Hot',es:'Caliente (jót)'},{en:'Cold',es:'Frío (kóuld)'},{en:'Fast',es:'Rápido (fást)'}
+                    ]}
                 ]}
             ]
         },
@@ -136,8 +190,17 @@ document.addEventListener('DOMContentLoaded', () => {
             lessons: [
                 { id:'b1-1', name:'Viajes & Aeropuerto ✈️', icon:'✈️', questions:[
                     { type:'image_select', emoji:'🛂', word:'Passport', soundsLike:'pás-port', phonetic:'/ˈpæs.pɔːrt/', prompt:'¿Qué documento es?', options:['Passport','Ticket','Money','Hotel'], correct:'Passport', es:'Pasaporte' },
+                    { type:'emoji_match', word:'Luggage', soundsLike:'lá-guij', phonetic:'/ˈlʌɡ.ɪdʒ/', prompt:'¿Cuál es Luggage?', emojis:['🧳','🎫','✈️','🏨'], correct:'🧳', es:'Equipaje' },
+                    { type:'listen_select', word:'Ticket', soundsLike:'tí-ket', phonetic:'/ˈtɪk.ɪt/', prompt:'Escucha la palabra:', options:[{text:'Ticket',emoji:'🎫'},{text:'Passport',emoji:'🛂'},{text:'Money',emoji:'💵'},{text:'Hotel',emoji:'🏨'}], correct:'Ticket', es:'Boleto' },
                     { type:'matching', prompt:'Empareja términos de viaje:', pairs:[
                         {en:'Passport',es:'🛂 Pasaporte (pás-port)'},{en:'Ticket',es:'🎫 Boleto (tí-ket)'},{en:'Luggage',es:'🧳 Equipaje (lá-guij)'},{en:'Airport',es:'✈️ Aeropuerto (ér-port)'},{en:'Hotel',es:'🏨 Hotel (jo-tél)'}
+                    ]}
+                ]},
+                { id:'b1-2', name:'Trabajo & Oficina 💼', icon:'💼', questions:[
+                    { type:'image_select', emoji:'💻', word:'Computer', soundsLike:'kom-piú-ter', phonetic:'/kəmˈpjuː.t̬ɚ/', prompt:'¿Qué equipo es?', options:['Computer','Phone','Desk','Paper'], correct:'Computer', es:'Computadora' },
+                    { type:'listen_select', word:'Meeting', soundsLike:'mí-ting', phonetic:'/ˈmiː.tɪŋ/', prompt:'Escucha la palabra:', options:[{text:'Meeting',emoji:'👥'},{text:'Email',emoji:'📧'},{text:'Office',emoji:'🏢'},{text:'Boss',emoji:'👔'}], correct:'Meeting', es:'Reunión' },
+                    { type:'matching', prompt:'Empareja palabras de oficina:', pairs:[
+                        {en:'Computer',es:'💻 Computadora (kom-piú-ter)'},{en:'Email',es:'📧 Correo (í-meil)'},{en:'Meeting',es:'👥 Reunión (mí-ting)'},{en:'Office',es:'🏢 Oficina (ó-fis)'},{en:'Boss',es:'👔 Jefe (bós)'}
                     ]}
                 ]}
             ]
@@ -148,8 +211,9 @@ document.addEventListener('DOMContentLoaded', () => {
             lessons: [
                 { id:'c1-1', name:'Native Idioms 🚀', icon:'🚀', questions:[
                     { type:'choice', prompt:'¿Qué significa "Break a leg"?', options:['¡Buena suerte!','Rómpete una pierna','Cálmate','Llegas tarde'], correct:'¡Buena suerte!' },
+                    { type:'choice', prompt:'¿Qué significa "Piece of cake"?', options:['Muy fácil','Un pastel','Muy caro','Imposible'], correct:'Muy fácil' },
                     { type:'matching', prompt:'Empareja modismos:', pairs:[
-                        {en:'Break a leg',es:'¡Buena suerte!'},{en:'Piece of cake',es:'Muy fácil'},{en:'Under the weather',es:'Enfermo'},{en:'Time flies',es:'El tiempo vuela'},{en:'Hit the books',es:'Estudiar'}
+                        {en:'Break a leg',es:'¡Buena suerte! (bréik a lég)'},{en:'Piece of cake',es:'Muy fácil (pís of kéik)'},{en:'Under the weather',es:'Enfermo (án-der de ué-der)'},{en:'Time flies',es:'El tiempo vuela (táim fláis)'},{en:'Hit the books',es:'Estudiar (jít de búks)'}
                     ]}
                 ]}
             ]
@@ -186,9 +250,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const msgs={ok:['¡Excelente! 🌟','¡Genial! ⚡','¡Perfecto! 🎯','¡Correcto! ✨','¡Bravo! 🏆','¡Increíble! 🚀','¡Muy bien! 💪'],combo:['🔥 ¡Racha de fuego!','⚡ ¡Imparable!','💎 ¡Brillante!','🌟 ¡Combo increíble!'],end:['¡Tu inglés mejora cada día!','¡Eres un campeón del aprendizaje!','¡Cada palabra te acerca a la fluidez!','¡Sigue así, vas increíble!']};
     function randMsg(arr){return arr[Math.floor(Math.random()*arr.length)];}
 
-    // ====== DOM ======
+    // ====== DOM ELEMENTS ======
     const $=id=>document.getElementById(id);
     const levelSelectorBtn=$('level-selector-btn'),levelDrawer=$('level-drawer'),currentLevelBadge=$('current-level-badge');
+    const levelOpts = document.querySelectorAll('.level-opt');
     const pathTree=$('path-tree'),bannerUnit=$('banner-unit'),bannerTitle=$('banner-title'),bannerDesc=$('banner-desc');
     const lessonView=$('lesson-view'),closeLessonBtn=$('close-lesson-btn'),progressFill=$('lesson-progress-fill'),lessonHeartsCount=$('lesson-hearts-count');
     const promptTitle=$('prompt-title'),promptText=$('prompt-text'),ttsNormal=$('tts-normal-btn'),ttsSlow=$('tts-slow-btn');
@@ -205,7 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainHeartIcon=$('main-heart-icon'),floatingHeartLoss=$('floating-heart-loss');
     const tutorialOverlay=$('tutorial-overlay'),tutorialText=$('tutorial-text'),tutorialNextBtn=$('tutorial-next-btn'),tutorialDots=$('tutorial-dots'),tutorialMascot=document.querySelector('.tutorial-mascot');
     const dictionaryCategories=$('dictionary-categories');
-    const srsSoundsLike=$('srs-sounds-like');
 
     // ====== TUTORIAL ======
     const tutSteps=[
@@ -227,30 +291,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ====== LEVEL SELECTOR ======
     levelSelectorBtn.addEventListener('click',()=>{playClick();levelDrawer.classList.toggle('active');});
-    document.querySelectorAll('.level-opt').forEach(o=>o.addEventListener('click',()=>{playClick();document.querySelectorAll('.level-opt').forEach(x=>x.classList.remove('active'));o.classList.add('active');state.currentLevel=o.dataset.level;currentLevelBadge.textContent=state.currentLevel;levelDrawer.classList.remove('active');renderPath();renderDictionary();}));
+    levelOpts.forEach(o=>o.addEventListener('click',()=>{
+        playClick();
+        levelOpts.forEach(x=>x.classList.remove('active'));
+        o.classList.add('active');
+        state.currentLevel=o.dataset.level;
+        currentLevelBadge.textContent=state.currentLevel;
+        levelDrawer.classList.remove('active');
+        saveProgress();
+        renderPath();
+        renderDictionary();
+    }));
 
     // ====== NAV TABS ======
-    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>{playClick();const id=t.dataset.target;document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.view').forEach(v=>{v.id===id?v.classList.add('active'):v.classList.remove('active');});if(id==='dictionary-view')renderDictionary();}));
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>{
+        playClick();
+        const id=t.dataset.target;
+        document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
+        t.classList.add('active');
+        document.querySelectorAll('.view').forEach(v=>{v.id===id?v.classList.add('active'):v.classList.remove('active');});
+        if(id==='dictionary-view')renderDictionary();
+    }));
 
-    // ====== PROGRESS STORAGE ======
-    const levelOrder = ['A1', 'A2', 'B1', 'C1'];
-    const savedUnlocked = localStorage.getItem('lp_unlocked');
-    state.unlockedIndex = savedUnlocked ? JSON.parse(savedUnlocked) : { A1: 1, A2: 1, B1: 1, C1: 1 };
-    
-    const savedLevel = localStorage.getItem('lp_level');
-    if (savedLevel && curriculum[savedLevel]) {
-        state.currentLevel = savedLevel;
-        if (currentLevelBadge) currentLevelBadge.textContent = state.currentLevel;
-    }
-
-    function saveProgress() {
-        localStorage.setItem('lp_unlocked', JSON.stringify(state.unlockedIndex));
-        localStorage.setItem('lp_level', state.currentLevel);
-    }
-
-    // ====== PATH TREE ======
+    // ====== PATH TREE ROADMAP ======
     function renderPath(){
-        const d = curriculum[state.currentLevel];
+        const d = curriculum[state.currentLevel] || curriculum.A1;
         bannerUnit.textContent = `Nivel ${state.currentLevel}`;
         bannerTitle.textContent = d.title;
         bannerDesc.textContent = d.desc;
@@ -289,13 +354,40 @@ document.addEventListener('DOMContentLoaded', () => {
             w.appendChild(lbl);
             pathTree.appendChild(w);
         });
+
+        // If all lessons in current level are completed, show next level card
+        const currentLvlIdx = levelOrder.indexOf(state.currentLevel);
+        if (unlockedCount >= totalLessons && currentLvlIdx + 1 < levelOrder.length) {
+            const nextLvlKey = levelOrder[currentLvlIdx + 1];
+            const nextCard = document.createElement('div');
+            nextCard.className = 'next-level-card';
+            nextCard.innerHTML = `
+                <div class="next-level-icon">🚀</div>
+                <div class="next-level-info">
+                    <strong>¡Nivel ${state.currentLevel} Superado!</strong>
+                    <span>Continúa tu aprendizaje en el Nivel ${nextLvlKey}</span>
+                </div>
+                <button class="next-level-btn">IR A NIVEL ${nextLvlKey} ➔</button>
+            `;
+            nextCard.querySelector('.next-level-btn').addEventListener('click', () => {
+                playSuccess();
+                state.currentLevel = nextLvlKey;
+                state.unlockedIndex[nextLvlKey] = Math.max(state.unlockedIndex[nextLvlKey] || 1, 1);
+                if (currentLevelBadge) currentLevelBadge.textContent = state.currentLevel;
+                levelOpts.forEach(o => o.classList.toggle('active', o.dataset.level === state.currentLevel));
+                saveProgress();
+                renderPath();
+                renderDictionary();
+            });
+            pathTree.appendChild(nextCard);
+        }
     }
 
     // ====== RENDER VISUAL DICTIONARY ======
     function renderDictionary() {
         if (!dictionaryCategories) return;
         dictionaryCategories.innerHTML = '';
-        const currentLvlData = curriculum[state.currentLevel];
+        const currentLvlData = curriculum[state.currentLevel] || curriculum.A1;
 
         currentLvlData.lessons.forEach(l => {
             const block = document.createElement('div');
@@ -588,6 +680,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         renderPath();
+        renderDictionary();
     });
 
     // ====== SHOP ======
