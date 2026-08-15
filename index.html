@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Lingua Pro - Aprende Vocabulario & Pronunciación</title>
+    <title>Lingua Pro - Inmersión Total de Vocabulario & Contexto</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -16,6 +16,7 @@
             <div class="nav-item level-item" id="level-selector-btn">
                 <span class="flag-icon">🇲🇽 ➔ 🇺🇸</span>
                 <span class="level-badge" id="current-level-badge">A1</span>
+                <span class="level-arrow">▾</span>
             </div>
             <div class="nav-item streak-item"><span class="stat-icon">🔥</span><span class="stat-val" id="user-streak">1</span></div>
             <div class="nav-item gems-item"><span class="stat-icon">💎</span><span class="stat-val" id="user-gems">50</span></div>
@@ -28,12 +29,12 @@
 
         <!-- LEVEL DRAWER -->
         <div class="level-drawer" id="level-drawer">
-            <div class="level-drawer-header">Selecciona tu Nivel</div>
+            <div class="level-drawer-header">Selecciona tu Nivel de Aprendizaje</div>
             <div class="level-options">
-                <button class="level-opt active" data-level="A1"><span class="opt-badge">A1</span><div class="opt-info"><strong>Vocabulario Esencial (Desde Cero)</strong><span>10 categorías de palabras simples con imágenes y pronunciación</span></div></button>
-                <button class="level-opt" data-level="A2"><span class="opt-badge">A2</span><div class="opt-info"><strong>Vocabulario Extendido</strong><span>Verbos, emociones, naturaleza y escuela</span></div></button>
-                <button class="level-opt" data-level="B1"><span class="opt-badge">B1</span><div class="opt-info"><strong>Frases & Lugares</strong><span>Viajes, trabajo y expresiones frecuentes</span></div></button>
-                <button class="level-opt" data-level="C1"><span class="opt-badge">C1</span><div class="opt-info"><strong>Avanzado & Modismos</strong><span>Idioms nativos y soltura total</span></div></button>
+                <button class="level-opt active" data-level="A1"><span class="opt-badge">A1</span><div class="opt-info"><strong>Vocabulario Inicial (12 Unidades)</strong><span>Animales, colores, comida, cuerpo, familia, ropa, casa y transporte</span></div></button>
+                <button class="level-opt" data-level="A2"><span class="opt-badge">A2</span><div class="opt-info"><strong>Vocabulario Fundamental (10 Unidades)</strong><span>Verbos de acción, emociones, lugares, números, adjetivos y rutinas</span></div></button>
+                <button class="level-opt" data-level="B1"><span class="opt-badge">B1</span><div class="opt-info"><strong>Situaciones Reales (8 Unidades)</strong><span>Viajes, oficina, compras, hotel, emergencias y restaurantes</span></div></button>
+                <button class="level-opt" data-level="C1"><span class="opt-badge">C1</span><div class="opt-info"><strong>Fluidez & Modismos (6 Unidades)</strong><span>Idioms nativos, phrasal verbs clave y debates</span></div></button>
             </div>
         </div>
 
@@ -44,17 +45,17 @@
                     <div class="banner-content">
                         <span class="unit-badge" id="banner-unit">Nivel A1</span>
                         <h2 id="banner-title">Vocabulario Esencial</h2>
-                        <p id="banner-desc">Aprende cómo suena cada palabra con imágenes y guía fonética en español</p>
+                        <p id="banner-desc">Repetición espaciada con imágenes, pronunciación en español y frases de contexto</p>
                     </div>
                 </div>
                 <div class="path-tree" id="path-tree"></div>
             </main>
 
-            <!-- DICTIONARY VIEW (NEW!) -->
+            <!-- DICTIONARY VIEW -->
             <main class="view dictionary-view" id="dictionary-view">
                 <div class="view-header">
-                    <h2>📖 Diccionario Visual</h2>
-                    <p>Explora cómo se escriben, suenan y significan las palabras</p>
+                    <h2>📖 Diccionario Visual & Contexto</h2>
+                    <p>Repasa cómo suena cada palabra con su pronunciación y ejemplos prácticos</p>
                 </div>
                 <div class="dictionary-categories" id="dictionary-categories">
                     <!-- Dynamic categories rendered by JS -->
@@ -63,13 +64,14 @@
 
             <!-- REVIEW VIEW -->
             <main class="view review-view" id="review-view">
-                <div class="view-header"><h2>🔄 Tarjetas de Vocabulario</h2><p>Refuerza tu memoria con audio e imágenes</p></div>
+                <div class="view-header"><h2>🔄 Tarjetas de Repaso SRS</h2><p>Memoria activa con imágenes, audio y contexto</p></div>
                 <div class="review-card-container">
                     <div class="srs-card" id="srs-card">
                         <div class="srs-emoji" id="srs-emoji">🍎</div>
                         <div class="srs-word" id="srs-word">Apple</div>
                         <div class="srs-sounds-like" id="srs-sounds-like">🗣️ Suena: "áp-ol"</div>
                         <div class="srs-phonetic" id="srs-phonetic">/ˈæp.əl/</div>
+                        <div class="srs-context-line" id="srs-context-line">📌 "A sweet red apple" (Una manzana roja dulce)</div>
                         <button class="audio-btn srs-audio" id="srs-tts-btn">🔊 Escuchar Pronunciación</button>
                         <div class="srs-translation hidden" id="srs-translation">Manzana 🍎</div>
                         <button class="action-btn reveal-btn" id="reveal-srs-btn">MOSTRAR SIGNIFICADO</button>
@@ -91,7 +93,7 @@
                 <div class="profile-card">
                     <div class="avatar-circle"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaProMaster" alt="Avatar"></div>
                     <h2 class="user-name">Andrew Sanabria</h2>
-                    <span class="user-rank">Liga de Oro 🥇</span>
+                    <span class="user-rank">Liga Diamante 💎</span>
                 </div>
                 <div class="profile-stats-grid">
                     <div class="prof-stat"><span class="prof-icon">🔥</span><span class="prof-val" id="prof-streak">1</span><span class="prof-lbl">Racha</span></div>
@@ -109,7 +111,7 @@
                 </header>
 
                 <div class="combo-counter hidden" id="combo-counter"><span class="combo-flame">🔥</span><span class="combo-number" id="combo-number">2</span><span class="combo-label">COMBO</span></div>
-                <div class="question-badge" id="question-badge"><span id="q-current">1</span> / <span id="q-total">5</span></div>
+                <div class="question-badge" id="question-badge"><span id="q-current">1</span> / <span id="q-total">8</span></div>
                 <div class="encouragement-toast hidden" id="encouragement-toast"><span id="encouragement-text">¡Genial!</span></div>
 
                 <div class="exercise-area" id="exercise-area">
@@ -132,6 +134,7 @@
                             <div class="big-emoji" id="big-emoji">🐱</div>
                             <div class="sounds-like-pill" id="sounds-like-pill">🗣️ Suena: "kat"</div>
                             <div class="word-phonetic-badge" id="phonetic-badge">/kæt/</div>
+                            <div class="word-context-box" id="word-context-box">📌 "The cat is sleeping"</div>
                         </div>
                         <div class="image-options" id="image-options"></div>
                     </div>
@@ -142,6 +145,7 @@
                             <div class="big-word" id="big-word">Cat</div>
                             <div class="sounds-like-pill" id="big-word-sounds-like">🗣️ Suena: "kat"</div>
                             <div class="word-phonetic-badge" id="big-word-phonetic">/kæt/</div>
+                            <div class="word-context-box" id="big-word-context-box">📌 "A small cat"</div>
                         </div>
                         <div class="emoji-options" id="emoji-options"></div>
                     </div>
@@ -229,7 +233,7 @@
                 <h2>¡Lección Completada!</h2>
                 <p class="completion-encourage" id="completion-encourage">¡Increíble!</p>
                 <div class="rewards-grid">
-                    <div class="reward-box"><span class="reward-label">XP</span><span class="reward-value xp-val" id="xp-reward-val">+15</span></div>
+                    <div class="reward-box"><span class="reward-label">XP</span><span class="reward-value xp-val" id="xp-reward-val">+20</span></div>
                     <div class="reward-box"><span class="reward-label">PRECISIÓN</span><span class="reward-value acc-val" id="accuracy-val">100%</span></div>
                     <div class="reward-box"><span class="reward-label">COMBO</span><span class="reward-value combo-max-val" id="combo-max-val">🔥 0</span></div>
                 </div>

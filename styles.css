@@ -227,6 +227,24 @@ body {
     letter-spacing: 0.02em;
     animation: popIn 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
 }
+.word-context-box {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 6px 14px;
+    margin-top: 4px;
+    text-align: center;
+    line-height: 1.35;
+    animation: fadeIn 0.3s ease;
+}
+.word-context-box em {
+    color: var(--brand-yellow);
+    font-style: normal;
+    font-weight: 800;
+}
 .srs-sounds-like {
     font-size: 1.1rem;
     font-weight: 800;
@@ -235,6 +253,20 @@ body {
     border: 1px solid rgba(255, 150, 0, 0.3);
     padding: 4px 14px;
     border-radius: 14px;
+}
+.srs-context-line {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    text-align: center;
+    line-height: 1.4;
+    padding: 4px 8px;
+}
+.dict-context {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    line-height: 1.3;
 }
 .word-phonetic-badge {
     font-size: 0.9rem;
