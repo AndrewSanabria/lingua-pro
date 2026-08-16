@@ -499,7 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ====== CONFETTI ======
     const confettiCanvas=document.getElementById('confetti-canvas');
-    const ctx=confettiCanvas?confettiCanvas.getContext('2d'):null;
+    const ctx=(confettiCanvas && typeof confettiCanvas.getContext === 'function') ? confettiCanvas.getContext('2d') : null;
     function resizeCanvas(){if(confettiCanvas){confettiCanvas.width=window.innerWidth;confettiCanvas.height=window.innerHeight;}}
     window.addEventListener('resize',resizeCanvas); resizeCanvas();
     function triggerConfetti(){if(!ctx)return;const ps=[];const colors=['#10B981','#0EA5E9','#F59E0B','#EF4444','#A855F7','#FFC800'];for(let i=0;i<100;i++)ps.push({x:window.innerWidth/2,y:window.innerHeight/2,vx:(Math.random()-0.5)*14,vy:(Math.random()-0.7)*16,size:Math.random()*8+6,color:colors[Math.floor(Math.random()*colors.length)],rot:Math.random()*360,rs:(Math.random()-0.5)*10,op:1});(function draw(){ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);let alive=false;ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.4;p.rot+=p.rs;p.op-=0.012;if(p.op>0){alive=true;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.color;ctx.globalAlpha=Math.max(0,p.op);ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);ctx.restore();}});if(alive)requestAnimationFrame(draw);else ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);})();}
@@ -526,7 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hintBtn=$('hint-btn'),charPrompt=$('character-prompt');
     const completionModal=$('completion-modal'),finishBtn=$('finish-lesson-btn'),accuracyVal=$('accuracy-val'),comboMaxVal=$('combo-max-val'),xpRewardVal=$('xp-reward-val'),completionEncourage=$('completion-encourage');
     const mainHeartIcon=$('main-heart-icon'),floatingHeartLoss=$('floating-heart-loss');
-    const tutorialOverlay=$('tutorial-overlay'),tutorialText=$('tutorial-text'),tutorialNextBtn=$('tutorial-next-btn'),tutorialDots=$('tutorial-dots'),tutorialMascot=document.querySelector('.tutorial-mascot');
+    const tutorialOverlay=$('tutorial-overlay'),tutorialText=$('tutorial-text'),tutorialNextBtn=$('tutorial-next-btn'),tutorialDots=$('tutorial-dots'),tutorialMascot=document.querySelector('.tutorial-mascot'),tutorialCloseBtn=$('tutorial-close-btn');
     const dictionaryCategories=$('dictionary-categories');
     
     // AAC DOM
@@ -543,9 +543,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let tutStep=0;
 
     function showTutorial(){if(state.tutorialSeen)return;tutorialOverlay.classList.remove('hidden');tutStep=0;renderTutDots();renderTutStep();}
+    function dismissTutorial(){tutorialOverlay.classList.add('hidden');state.tutorialSeen=true;localStorage.setItem('lp_tut','1');}
     function renderTutDots(){tutorialDots.innerHTML='';tutSteps.forEach((_,i)=>{const d=document.createElement('span');d.className=`tutorial-dot ${i===0?'active':''}`;tutorialDots.appendChild(d);});}
     function renderTutStep(){tutorialText.textContent=tutSteps[tutStep].t;tutorialMascot.textContent=tutSteps[tutStep].m;tutorialDots.querySelectorAll('.tutorial-dot').forEach((d,i)=>d.classList.toggle('active',i===tutStep));tutorialNextBtn.textContent=tutStep===tutSteps.length-1?'¡A JUGAR! 🚀':'SIGUIENTE →';}
-    tutorialNextBtn.addEventListener('click',()=>{playClick();tutStep++;if(tutStep>=tutSteps.length){tutorialOverlay.classList.add('hidden');state.tutorialSeen=true;localStorage.setItem('lp_tut','1');}else renderTutStep();});
+    tutorialNextBtn.addEventListener('click',()=>{playClick();tutStep++;if(tutStep>=tutSteps.length){dismissTutorial();}else renderTutStep();});
+    if(tutorialCloseBtn) tutorialCloseBtn.addEventListener('click',()=>{playClick();dismissTutorial();});
+    tutorialOverlay.addEventListener('click',(e)=>{if(e.target===tutorialOverlay){dismissTutorial();}});
 
     // ====== ENCOURAGEMENT ======
     function showToast(msg){const t=$('encouragement-toast'),tx=$('encouragement-text');if(!t||!tx)return;tx.textContent=msg;t.classList.remove('hidden');t.style.animation='none';t.offsetHeight;t.style.animation='';setTimeout(()=>t.classList.add('hidden'),2200);}
@@ -705,17 +708,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <button class="next-level-btn">IR A NIVEL ${nextLvlKey} ➔</button>
             `;
-            nextCard.querySelector('.next-level-btn').addEventListener('click', () => {
-                playSuccess();
-                state.currentLevel = nextLvlKey;
-                state.unlockedIndex[nextLvlKey] = Math.max(state.unlockedIndex[nextLvlKey] || 1, 1);
-                if (currentLevelBadge) currentLevelBadge.textContent = state.currentLevel;
-                levelOpts.forEach(o => o.classList.toggle('active', o.dataset.level === state.currentLevel));
-                saveProgress();
-                renderPath();
-                renderDictionary();
-                updateStats();
-            });
+            const nextBtn = nextCard.querySelector('.next-level-btn');
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    playSuccess();
+                    state.currentLevel = nextLvlKey;
+                    state.unlockedIndex[nextLvlKey] = Math.max(state.unlockedIndex[nextLvlKey] || 1, 1);
+                    if (currentLevelBadge) currentLevelBadge.textContent = state.currentLevel;
+                    levelOpts.forEach(o => o.classList.toggle('active', o.dataset.level === state.currentLevel));
+                    saveProgress();
+                    renderPath();
+                    renderDictionary();
+                    updateStats();
+                });
+            }
             pathTree.appendChild(nextCard);
         }
     }
@@ -754,7 +760,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <button class="dict-listen-btn">🔊</button>
                     `;
-                    card.querySelector('.dict-listen-btn').onclick = () => speak(q.word, 0.85);
+                    const listenBtn = card.querySelector('.dict-listen-btn');
+                    if (listenBtn) listenBtn.onclick = () => speak(q.word, 0.85);
                     grid.appendChild(card);
                 }
             });
@@ -837,7 +844,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (mouthGuideBox) {
                 if (q.mouth) {
                     mouthGuideBox.classList.remove('hidden');
-                    mouthGuideBox.querySelector('span').textContent = q.mouth;
+                    const span = mouthGuideBox.querySelector('span');
+                    if (span) span.textContent = q.mouth;
                 } else {
                     mouthGuideBox.classList.add('hidden');
                 }
@@ -871,7 +879,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (bigMouthGuideBox) {
                 if (q.mouth) {
                     bigMouthGuideBox.classList.remove('hidden');
-                    bigMouthGuideBox.querySelector('span').textContent = q.mouth;
+                    const span = bigMouthGuideBox.querySelector('span');
+                    if (span) span.textContent = q.mouth;
                 } else {
                     bigMouthGuideBox.classList.add('hidden');
                 }
