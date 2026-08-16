@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Lingua Pro - Inmersión Total de Vocabulario & Contexto</title>
+    <title>Lingua Pro - Inglés Inclusivo & Terapia de Lenguaje</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -29,12 +29,13 @@
 
         <!-- LEVEL DRAWER -->
         <div class="level-drawer" id="level-drawer">
-            <div class="level-drawer-header">Selecciona tu Nivel de Aprendizaje</div>
+            <div class="level-drawer-header">Selecciona el Modo de Aprendizaje</div>
             <div class="level-options">
+                <button class="level-opt" data-level="K0"><span class="opt-badge opt-kids">🧸 K0</span><div class="opt-info"><strong>Kids & Terapia de Lenguaje 🌈</strong><span>Pictogramas PECS, silabeo rítmico con palmas, sonidos guía y sin estrés de vidas</span></div></button>
                 <button class="level-opt active" data-level="A1"><span class="opt-badge">A1</span><div class="opt-info"><strong>Vocabulario Inicial (12 Unidades)</strong><span>Animales, colores, comida, cuerpo, familia, ropa, casa y transporte</span></div></button>
                 <button class="level-opt" data-level="A2"><span class="opt-badge">A2</span><div class="opt-info"><strong>Vocabulario Fundamental (10 Unidades)</strong><span>Verbos de acción, emociones, lugares, números, adjetivos y rutinas</span></div></button>
-                <button class="level-opt" data-level="B1"><span class="opt-badge">B1</span><div class="opt-info"><strong>Situaciones Reales (8 Unidades)</strong><span>Viajes, oficina, compras, hotel, emergencias y restaurantes</span></div></button>
-                <button class="level-opt" data-level="C1"><span class="opt-badge">C1</span><div class="opt-info"><strong>Fluidez & Modismos (6 Unidades)</strong><span>Idioms nativos, phrasal verbs clave y debates</span></div></button>
+                <button class="level-opt" data-level="B1"><span class="opt-badge">B1</span><div class="opt-info"><strong>Situaciones Reales (6 Unidades)</strong><span>Viajes, oficina, hotel, supermercado, salud y restaurantes</span></div></button>
+                <button class="level-opt" data-level="C1"><span class="opt-badge">C1</span><div class="opt-info"><strong>Fluidez & Modismos (4 Unidades)</strong><span>Idioms nativos, phrasal verbs clave y debates</span></div></button>
             </div>
         </div>
 
@@ -51,11 +52,43 @@
                 <div class="path-tree" id="path-tree"></div>
             </main>
 
+            <!-- AAC COMMUNICATOR VIEW (TABLERO PECS PARA DÉFICIT DE LENGUAJE) -->
+            <main class="view aac-view" id="aac-view">
+                <div class="view-header">
+                    <h2>🧩 Tablero Visual de Comunicación (CAA)</h2>
+                    <p>Toca los pictogramas para armar frases y escuchar la voz en inglés y español</p>
+                </div>
+
+                <!-- SENTENCE STRIP -->
+                <div class="aac-strip-container">
+                    <div class="aac-strip" id="aac-strip">
+                        <span class="aac-placeholder" id="aac-placeholder">Toca los pictogramas para hablar...</span>
+                    </div>
+                    <div class="aac-actions">
+                        <button class="aac-speak-btn" id="aac-speak-btn">🔊 HABLAR</button>
+                        <button class="aac-clear-btn" id="aac-clear-btn">🗑️</button>
+                    </div>
+                </div>
+
+                <!-- CATEGORY TABS -->
+                <div class="aac-category-tabs" id="aac-category-tabs">
+                    <button class="aac-cat-btn active" data-cat="needs">🥤 Necesidades</button>
+                    <button class="aac-cat-btn" data-cat="feelings">😊 Emociones</button>
+                    <button class="aac-cat-btn" data-cat="actions">🏃 Acciones</button>
+                    <button class="aac-cat-btn" data-cat="social">👋 Social</button>
+                </div>
+
+                <!-- PECS GRID -->
+                <div class="aac-cards-grid" id="aac-cards-grid">
+                    <!-- Rendered dynamically by JS -->
+                </div>
+            </main>
+
             <!-- DICTIONARY VIEW -->
             <main class="view dictionary-view" id="dictionary-view">
                 <div class="view-header">
-                    <h2>📖 Diccionario Visual & Contexto</h2>
-                    <p>Repasa cómo suena cada palabra con su pronunciación y ejemplos prácticos</p>
+                    <h2>📖 Diccionario Visual & Silabeo</h2>
+                    <p>Repasa cómo suena cada palabra con su pronunciación, silabeo y ejemplos prácticos</p>
                 </div>
                 <div class="dictionary-categories" id="dictionary-categories">
                     <!-- Dynamic categories rendered by JS -->
@@ -107,7 +140,7 @@
                 <header class="lesson-header">
                     <button class="close-btn" id="close-lesson-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
                     <div class="progress-container"><div class="progress-bar"><div class="progress-fill" id="lesson-progress-fill"><div class="progress-shimmer"></div></div></div></div>
-                    <div class="lesson-hearts-display"><span>❤️</span><span id="lesson-hearts-count">5</span></div>
+                    <div class="lesson-hearts-display"><span id="lesson-heart-icon">❤️</span><span id="lesson-hearts-count">5</span></div>
                 </header>
 
                 <div class="combo-counter hidden" id="combo-counter"><span class="combo-flame">🔥</span><span class="combo-number" id="combo-number">2</span><span class="combo-label">COMBO</span></div>
@@ -121,8 +154,9 @@
                         <div class="mascot-container"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaPro" alt="Mascot" class="mascot-img" id="mascot-avatar"></div>
                         <div class="speech-bubble">
                             <div class="audio-controls-group">
-                                <button class="audio-btn normal-speed" id="tts-normal-btn"><span>🐇</span></button>
-                                <button class="audio-btn slow-speed" id="tts-slow-btn"><span>🐢</span></button>
+                                <button class="audio-btn normal-speed" id="tts-normal-btn" title="Velocidad normal"><span>🐇</span></button>
+                                <button class="audio-btn slow-speed" id="tts-slow-btn" title="Velocidad lenta"><span>🐢</span></button>
+                                <button class="audio-btn echo-speed" id="tts-echo-btn" title="Repetir con eco"><span>🔁</span></button>
                             </div>
                             <span class="prompt-text" id="prompt-text">Hello!</span>
                         </div>
@@ -133,6 +167,8 @@
                         <div class="word-presentation-card">
                             <div class="big-emoji" id="big-emoji">🐱</div>
                             <div class="sounds-like-pill" id="sounds-like-pill">🗣️ Suena: "kat"</div>
+                            <div class="syllables-clap-row" id="syllables-clap-row">👏 <span id="syllables-text">KAT</span></div>
+                            <div class="mouth-guide-pill hidden" id="mouth-guide-box">👄 <span>Junta los labios</span></div>
                             <div class="word-phonetic-badge" id="phonetic-badge">/kæt/</div>
                             <div class="word-context-box" id="word-context-box">📌 "The cat is sleeping"</div>
                         </div>
@@ -144,6 +180,8 @@
                         <div class="word-presentation-card">
                             <div class="big-word" id="big-word">Cat</div>
                             <div class="sounds-like-pill" id="big-word-sounds-like">🗣️ Suena: "kat"</div>
+                            <div class="syllables-clap-row" id="big-syllables-clap-row">👏 <span id="big-syllables-text">KAT</span></div>
+                            <div class="mouth-guide-pill hidden" id="big-mouth-guide-box">👄 <span>Articulación</span></div>
                             <div class="word-phonetic-badge" id="big-word-phonetic">/kæt/</div>
                             <div class="word-context-box" id="big-word-context-box">📌 "A small cat"</div>
                         </div>
@@ -160,6 +198,7 @@
                             <div class="audio-controls-group listen-speeds">
                                 <button class="audio-btn normal-speed" id="listen-normal-btn"><span>🐇 1x</span></button>
                                 <button class="audio-btn slow-speed" id="listen-slow-btn"><span>🐢 0.5x</span></button>
+                                <button class="audio-btn echo-speed" id="listen-echo-btn"><span>🔁 Eco</span></button>
                             </div>
                         </div>
                         <div class="listen-options" id="listen-options"></div>
@@ -210,6 +249,7 @@
         <!-- BOTTOM NAV BAR -->
         <nav class="bottom-nav-bar" id="bottom-nav-bar">
             <button class="nav-tab active" data-target="path-view"><span class="tab-icon">🗺️</span><span class="tab-label">Aprender</span></button>
+            <button class="nav-tab" data-target="aac-view"><span class="tab-icon">🧩</span><span class="tab-label">Comunicador</span></button>
             <button class="nav-tab" data-target="dictionary-view"><span class="tab-icon">📖</span><span class="tab-label">Diccionario</span></button>
             <button class="nav-tab" data-target="review-view"><span class="tab-icon">🔄</span><span class="tab-label">Repaso</span></button>
             <button class="nav-tab" data-target="shop-view"><span class="tab-icon">🏪</span><span class="tab-label">Tienda</span></button>

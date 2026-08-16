@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const levelOrder = ['A1', 'A2', 'B1', 'C1'];
+    const levelOrder = ['K0', 'A1', 'A2', 'B1', 'C1'];
 
     const state = {
         currentLevel: 'A1', streak: 1, gems: 50, hearts: 5, xp: 0,
@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
         matchedPairsCount: 0, comboStreak: 0, maxCombo: 0, hintsUsed: 0,
         selectedChoice: null, nextLevelToSwitch: null,
         tutorialSeen: localStorage.getItem('lp_tut') === '1',
-        unlockedIndex: { A1: 1, A2: 1, B1: 1, C1: 1 }
+        unlockedIndex: { K0: 1, A1: 1, A2: 1, B1: 1, C1: 1 },
+        aacPhrase: []
     };
 
     // ====== PROGRESS STORAGE & NORMALIZATION ======
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
             } catch (e) {
-                state.unlockedIndex = { A1: 1, A2: 1, B1: 1, C1: 1 };
+                state.unlockedIndex = { K0: 1, A1: 1, A2: 1, B1: 1, C1: 1 };
             }
         }
         const savedLevel = localStorage.getItem('lp_level');
@@ -38,15 +39,55 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('lp_level', state.currentLevel);
     }
 
-    // ====== MASSIVE COMPREHENSIVE CURRICULUM WITH REPETITION & CONTEXT ======
+    // ====== MASSIVE CURRICULUM WITH SPECIALIZED KIDS & SPEECH THERAPY MODULE (K0) ======
     const curriculum = {
+        K0: {
+            title: "Kids & Terapia de Lenguaje 🧸",
+            desc: "Pictogramas PECS, sonidos onomatopéyicos, silabeo con palmas y guía de articulación sin frustración",
+            lessons: [
+                { id:'k0-1', name:'Sonidos Guía & Animales 🐮', icon:'🐮', questions:[
+                    { type:'image_select', emoji:'🐮', word:'Cow', soundsLike:'káu (Moo!)', phonetic:'/kaʊ/', prompt:'¿Qué animal dice "Moo"?', options:['Cow','Cat','Dog','Duck'], correct:'Cow', es:'Vaca', context:'The cow says Moo (La vaca dice Mu)', syllables:'KÁU 🐮', mouth:'Junta los labios para el sonido "Mmm-oo" 👄' },
+                    { type:'emoji_match', word:'Cat', soundsLike:'kat (Meow!)', phonetic:'/kæt/', prompt:'¿Cuál es el Cat que dice "Meow"?', emojis:['🐱','🐶','🐮','🦆'], correct:'🐱', es:'Gato', context:'The cat says Meow (El gato dice Miau)', syllables:'KAT 🐱', mouth:'Abre la boca suavemente: "M-iáu" 👄' },
+                    { type:'listen_select', word:'Dog', soundsLike:'dog (Woof!)', phonetic:'/dɔːɡ/', prompt:'Escucha el animal y selecciona:', options:[{text:'Dog',emoji:'🐶'},{text:'Cow',emoji:'🐮'},{text:'Duck',emoji:'🦆'},{text:'Cat',emoji:'🐱'}], correct:'Dog', es:'Perro', context:'The friendly dog (El perro amigable)', syllables:'DOG 🐶', mouth:'Coloca la lengua detrás de los dientes para la D 👅' },
+                    { type:'image_select', emoji:'🦆', word:'Duck', soundsLike:'dák (Quack!)', phonetic:'/dʌk/', prompt:'¿Qué animal nada y dice "Quack"?', options:['Duck','Cow','Cat','Dog'], correct:'Duck', es:'Pato', context:'Yellow duck swims (El pato amarillo nada)', syllables:'DAK 🦆', mouth:'Sonido corto y claro: "Kuák" 👄' },
+                    { type:'matching', prompt:'Empareja los animales y sus sonidos:', pairs:[
+                        {en:'Cow',es:'🐮 Vaca (Moo / káu)'},{en:'Cat',es:'🐱 Gato (Meow / kat)'},{en:'Dog',es:'🐶 Perro (Woof / dog)'},{en:'Duck',es:'🦆 Pato (Quack / dák)'},{en:'Car',es:'🚗 Carro (Beep / kár)'}
+                    ]}
+                ]},
+                { id:'k0-2', name:'Pictogramas PECS & Necesidades 🥤', icon:'🥤', questions:[
+                    { type:'image_select', emoji:'💧', word:'Water', soundsLike:'uá-ter', phonetic:'/ˈwɔː.tər/', prompt:'Pictograma: Quiero agua', options:['Water','Food','Sleep','Help'], correct:'Water', es:'Agua', context:'I want water please (Quiero agua por favor)', syllables:'UÁ - TER (2 palmas 👏)', mouth:'Redondea los labios como un círculo: "Uá" 👄' },
+                    { type:'emoji_match', word:'Food', soundsLike:'fúd', phonetic:'/fuːd/', prompt:'¿Cuál es el pictograma de Comida (Food)?', emojis:['🍕','💧','😴','🚽'], correct:'🍕', es:'Comida', context:'I want food (Quiero comida)', syllables:'FUD 🍕', mouth:'Dientes superiores sobre labio inferior para la F 👄' },
+                    { type:'listen_select', word:'Help', soundsLike:'jélp', phonetic:'/help/', prompt:'Escucha la palabra de ayuda:', options:[{text:'Help',emoji:'🆘'},{text:'Water',emoji:'💧'},{text:'Food',emoji:'🍕'},{text:'Sleep',emoji:'😴'}], correct:'Help', es:'Ayuda', context:'Help me please (Ayúdame por favor)', syllables:'JELP 🆘', mouth:'Expulsa aire suave como un suspiro: "Jélp" 💨' },
+                    { type:'image_select', emoji:'😴', word:'Sleep', soundsLike:'slíp', phonetic:'/sliːp/', prompt:'Pictograma: Tengo sueño / Dormir', options:['Sleep','Help','Water','Bathroom'], correct:'Sleep', es:'Dormir / Sueño', context:'Time to sleep (Hora de dormir)', syllables:'SLIP 😴', mouth:'Sonido de serpiente suave: "Sss-líp" 🐍' },
+                    { type:'matching', prompt:'Empareja las necesidades básicas PECS:', pairs:[
+                        {en:'Water',es:'💧 Agua (uá-ter)'},{en:'Food',es:'🍕 Comida (fúd)'},{en:'Sleep',es:'😴 Dormir (slíp)'},{en:'Help',es:'🆘 Ayuda (jélp)'},{en:'Bathroom',es:'🚽 Baño (báz-rum)'}
+                    ]}
+                ]},
+                { id:'k0-3', name:'Silabeo con Palmas 👏', icon:'👏', questions:[
+                    { type:'image_select', emoji:'🍌', word:'Banana', soundsLike:'ba-ná-na', phonetic:'/bəˈnæn.ə/', prompt:'Silabeo: 3 palmadas (Ba - Na - Na)', options:['Banana','Apple','Milk','Baby'], correct:'Banana', es:'Plátano', context:'Sweet banana (Plátano dulce)', syllables:'BA - NÁ - NA (3 palmas 👏)', mouth:'Junta labios (BA), lengua arriba (NA) 👄' },
+                    { type:'emoji_match', word:'Apple', soundsLike:'áp-ol', phonetic:'/ˈæp.əl/', prompt:'Silabeo: 2 palmadas (Áp - Ol)', emojis:['🍎','🍌','🥛','👶'], correct:'🍎', es:'Manzana', context:'Red apple (Manzana roja)', syllables:'ÁP - OL (2 palmas 👏)', mouth:'Abre bien la boca para la A: "Áp" 👄' },
+                    { type:'listen_select', word:'Baby', soundsLike:'béi-bi', phonetic:'/ˈbeɪ.bi/', prompt:'Escucha la palabra con 2 sílabas:', options:[{text:'Baby',emoji:'👶'},{text:'Sun',emoji:'☀️'},{text:'Star',emoji:'⭐'},{text:'Ball',emoji:'⚽'}], correct:'Baby', es:'Bebé', context:'Little baby (Pequeño bebé)', syllables:'BÉI - BI (2 palmas 👏)', mouth:'Junta los labios dos veces: "Béi-bi" 👄' },
+                    { type:'matching', prompt:'Empareja las palabras y su silabeo:', pairs:[
+                        {en:'Banana',es:'🍌 BA-NÁ-NA (3 palmas)'},{en:'Apple',es:'🍎 ÁP-OL (2 palmas)'},{en:'Baby',es:'👶 BÉI-BI (2 palmas)'},{en:'Milk',es:'🥛 MÍLK (1 palma)'},{en:'Star',es:'⭐ STÁR (1 palma)'}
+                    ]}
+                ]},
+                { id:'k0-4', name:'Emociones & Calma Sensorial 💖', icon:'💖', questions:[
+                    { type:'image_select', emoji:'😊', word:'Happy', soundsLike:'já-pi', phonetic:'/ˈhæp.i/', prompt:'Pictograma: Me siento Feliz', options:['Happy','Calm','Sad','Love'], correct:'Happy', es:'Feliz', context:'I am happy (Estoy feliz)', syllables:'JÁ - PI 😊', mouth:'Sonríe mostrando los dientes: "Já-pi" 😁' },
+                    { type:'emoji_match', word:'Calm', soundsLike:'kám', phonetic:'/kɑːm/', prompt:'¿Cuál representa Calma / Respirar?', emojis:['🧘','😊','😢','😡'], correct:'🧘', es:'Calma / Tranquilo', context:'Take a deep breath and stay calm (Respira hondo y mantén la calma)', syllables:'KÁM 🧘', mouth:'Inhala y exhala despacio: "Kám" 🌬️' },
+                    { type:'listen_select', word:'Love', soundsLike:'láv', phonetic:'/lʌv/', prompt:'Escucha la palabra de afecto:', options:[{text:'Love',emoji:'❤️'},{text:'Sad',emoji:'😢'},{text:'Angry',emoji:'😡'},{text:'Tired',emoji:'😴'}], correct:'Love', es:'Amor / Cariño', context:'I love my family (Amo a mi familia)', syllables:'LÁV ❤️', mouth:'Lengua detrás de los dientes: "Lll-av" 👄' },
+                    { type:'matching', prompt:'Empareja emociones y calma:', pairs:[
+                        {en:'Happy',es:'😊 Feliz (já-pi)'},{en:'Calm',es:'🧘 Calma (kám)'},{en:'Love',es:'❤️ Amor (láv)'},{en:'Hug',es:'🤗 Abrazo (jág)'},{en:'Smile',es:'😄 Sonrisa (smáil)'}
+                    ]}
+                ]}
+            ]
+        },
         A1: {
             title: "Vocabulario Inicial (A1)",
             desc: "12 Unidades de vocabulario esencial con repetición espaciada, contexto y audio",
             lessons: [
                 { id:'a1-1', name:'Animales 🐾', icon:'🐱', questions:[
-                    { type:'image_select', emoji:'🐱', word:'Cat', soundsLike:'kat', phonetic:'/kæt/', prompt:'¿Qué animal es este?', options:['Cat','Dog','Bird','Fish'], correct:'Cat', es:'Gato', context:'The cat is sleeping (El gato está durmiendo)' },
-                    { type:'emoji_match', word:'Dog', soundsLike:'dog', phonetic:'/dɔːɡ/', prompt:'¿Cuál es el emoji de Dog?', emojis:['🐶','🐱','🐴','🐰'], correct:'🐶', es:'Perro', context:'My dog is friendly (Mi perro es amigable)' },
+                    { type:'image_select', emoji:'🐱', word:'Cat', soundsLike:'kat', phonetic:'/kæt/', prompt:'¿Qué animal es este?', options:['Cat','Dog','Bird','Fish'], correct:'Cat', es:'Gato', context:'The cat is sleeping (El gato está durmiendo)', syllables:'KAT 🐱' },
+                    { type:'emoji_match', word:'Dog', soundsLike:'dog', phonetic:'/dɔːɡ/', prompt:'¿Cuál es el emoji de Dog?', emojis:['🐶','🐱','🐴','🐰'], correct:'🐶', es:'Perro', context:'My dog is friendly (Mi perro es amigable)', syllables:'DOG 🐶' },
                     { type:'listen_select', word:'Bird', soundsLike:'bérd', phonetic:'/bɜːrd/', prompt:'Escucha y selecciona la imagen:', options:[{text:'Bird',emoji:'🐦'},{text:'Fish',emoji:'🐟'},{text:'Cat',emoji:'🐱'},{text:'Bear',emoji:'🐻'}], correct:'Bird', es:'Pájaro', context:'A blue bird flies (Un pájaro azul vuela)' },
                     { type:'image_select', emoji:'🐟', word:'Fish', soundsLike:'físh', phonetic:'/fɪʃ/', prompt:'¿Qué animal es este?', options:['Fish','Bird','Cat','Rabbit'], correct:'Fish', es:'Pez', context:'The fish swims in water (El pez nada en el agua)' },
                     { type:'translate', prompt:'The cat and the dog', answer:['El','gato','y','el','perro'], pool:['El','gato','y','el','perro','un','pájaro','pez'], context:'The cat and the dog (El gato y el perro)' },
@@ -57,8 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     ]}
                 ]},
                 { id:'a1-2', name:'Colores 🎨', icon:'🌈', questions:[
-                    { type:'image_select', emoji:'🔴', word:'Red', soundsLike:'réd', phonetic:'/red/', prompt:'¿Qué color es este?', options:['Red','Blue','Green','Yellow'], correct:'Red', es:'Rojo', context:'A red apple (Una manzana roja)' },
-                    { type:'emoji_match', word:'Blue', soundsLike:'blú', phonetic:'/bluː/', prompt:'¿Cuál es el color Blue?', emojis:['🔵','🔴','🟢','🟡'], correct:'🔵', es:'Azul', context:'The sky is blue (El cielo es azul)' },
+                    { type:'image_select', emoji:'🔴', word:'Red', soundsLike:'réd', phonetic:'/red/', prompt:'¿Qué color es este?', options:['Red','Blue','Green','Yellow'], correct:'Red', es:'Rojo', context:'A red apple (Una manzana roja)', syllables:'RÉD 🔴' },
+                    { type:'emoji_match', word:'Blue', soundsLike:'blú', phonetic:'/bluː/', prompt:'¿Cuál es el color Blue?', emojis:['🔵','🔴','🟢','🟡'], correct:'🔵', es:'Azul', context:'The sky is blue (El cielo es azul)', syllables:'BLÚ 🔵' },
                     { type:'listen_select', word:'Green', soundsLike:'grín', phonetic:'/ɡriːn/', prompt:'Escucha y selecciona el color:', options:[{text:'Green',emoji:'🟢'},{text:'Orange',emoji:'🟠'},{text:'Purple',emoji:'🟣'},{text:'Red',emoji:'🔴'}], correct:'Green', es:'Verde', context:'Green tree (Árbol verde)' },
                     { type:'image_select', emoji:'🟡', word:'Yellow', soundsLike:'yél-ou', phonetic:'/ˈjel.oʊ/', prompt:'¿Qué color es este?', options:['Yellow','Red','Blue','White'], correct:'Yellow', es:'Amarillo', context:'Yellow sun (Sol amarillo)' },
                     { type:'translate', prompt:'The red car is fast', answer:['El','carro','rojo','es','rápido'], pool:['El','carro','rojo','es','rápido','azul','verde','un'], context:'The red car is fast (El carro rojo es rápido)' },
@@ -353,6 +394,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // ====== AAC COMMUNICATOR DATABASE (CAA - COMUNICACIÓN AUMENTATIVA) ======
+    const aacDB = {
+        needs: [
+            { en:'I want', es:'Quiero', sounds:'Ai uónt', emoji:'🙋‍♂️' },
+            { en:'Water', es:'Agua', sounds:'uá-ter', emoji:'💧' },
+            { en:'Food', es:'Comida', sounds:'fúd', emoji:'🍕' },
+            { en:'Bathroom', es:'Baño', sounds:'báz-rum', emoji:'🚽' },
+            { en:'Sleep', es:'Dormir', sounds:'slíp', emoji:'😴' },
+            { en:'Help', es:'Ayuda', sounds:'jélp', emoji:'🆘' },
+            { en:'Milk', es:'Leche', sounds:'mílk', emoji:'🥛' },
+            { en:'Apple', es:'Manzana', sounds:'áp-ol', emoji:'🍎' }
+        ],
+        feelings: [
+            { en:'I feel', es:'Me siento', sounds:'Ai fíl', emoji:'❤️' },
+            { en:'Happy', es:'Feliz', sounds:'já-pi', emoji:'😊' },
+            { en:'Calm', es:'Calmado', sounds:'kám', emoji:'🧘' },
+            { en:'Sad', es:'Triste', sounds:'sád', emoji:'😢' },
+            { en:'Tired', es:'Cansado', sounds:'táierd', emoji:'🥱' },
+            { en:'Pain', es:'Me duele', sounds:'péin', emoji:'🤕' },
+            { en:'Hug', es:'Abrazo', sounds:'jág', emoji:'🤗' }
+        ],
+        actions: [
+            { en:'Play', es:'Jugar', sounds:'pléi', emoji:'🎮' },
+            { en:'Listen', es:'Escuchar', sounds:'lís-en', emoji:'🎧' },
+            { en:'Look', es:'Mirar', sounds:'lúk', emoji:'👀' },
+            { en:'Go', es:'Ir / Salir', sounds:'góu', emoji:'🚶' },
+            { en:'Stop', es:'Parar', sounds:'stóp', emoji:'✋' },
+            { en:'Eat', es:'Comer', sounds:'ít', emoji:'🍽️' },
+            { en:'Drink', es:'Beber', sounds:'drínk', emoji:'🥤' }
+        ],
+        social: [
+            { en:'Hello', es:'Hola', sounds:'je-lóu', emoji:'👋' },
+            { en:'Please', es:'Por favor', sounds:'plís', emoji:'🙏' },
+            { en:'Thank you', es:'Gracias', sounds:'zánk iu', emoji:'✨' },
+            { en:'Yes', es:'Sí', sounds:'yés', emoji:'👍' },
+            { en:'No', es:'No', sounds:'nóu', emoji:'👎' },
+            { en:'Goodbye', es:'Adiós', sounds:'gud-bái', emoji:'👋' }
+        ]
+    };
+
     // ====== SOUNDS ======
     function initAudio() { if (!state.audioCtx) state.audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
     function playClick() { try { initAudio(); const o=state.audioCtx.createOscillator(),g=state.audioCtx.createGain(); o.type='sine'; o.frequency.setValueAtTime(450,state.audioCtx.currentTime); o.frequency.exponentialRampToValueAtTime(850,state.audioCtx.currentTime+0.04); g.gain.setValueAtTime(0.12,state.audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,state.audioCtx.currentTime+0.04); o.connect(g); g.connect(state.audioCtx.destination); o.start(); o.stop(state.audioCtx.currentTime+0.04); } catch(e){} }
@@ -372,6 +453,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function speakEcho(text) {
+        speak(text, 0.85);
+        setTimeout(() => speak(text, 0.65), 1400);
+    }
+
     // ====== CONFETTI ======
     const confettiCanvas=document.getElementById('confetti-canvas');
     const ctx=confettiCanvas?confettiCanvas.getContext('2d'):null;
@@ -388,11 +474,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const levelSelectorBtn=$('level-selector-btn'),levelDrawer=$('level-drawer'),currentLevelBadge=$('current-level-badge');
     const levelOpts = document.querySelectorAll('.level-opt');
     const pathTree=$('path-tree'),bannerUnit=$('banner-unit'),bannerTitle=$('banner-title'),bannerDesc=$('banner-desc');
-    const lessonView=$('lesson-view'),closeLessonBtn=$('close-lesson-btn'),progressFill=$('lesson-progress-fill'),lessonHeartsCount=$('lesson-hearts-count');
-    const promptTitle=$('prompt-title'),promptText=$('prompt-text'),ttsNormal=$('tts-normal-btn'),ttsSlow=$('tts-slow-btn');
-    const modImageSelect=$('mod-image-select'),bigEmoji=$('big-emoji'),imageOptions=$('image-options'),phoneticBadge=$('phonetic-badge'),soundsLikePill=$('sounds-like-pill'),wordContextBox=$('word-context-box');
-    const modEmojiMatch=$('mod-emoji-match'),bigWord=$('big-word'),emojiOptions=$('emoji-options'),bigWordPhonetic=$('big-word-phonetic'),bigWordSoundsLike=$('big-word-sounds-like'),bigWordContextBox=$('big-word-context-box');
-    const modListenSelect=$('mod-listen-select'),listenBigBtn=$('listen-big-btn'),listenNormalBtn=$('listen-normal-btn'),listenSlowBtn=$('listen-slow-btn'),listenOptions=$('listen-options');
+    const lessonView=$('lesson-view'),closeLessonBtn=$('close-lesson-btn'),progressFill=$('lesson-progress-fill'),lessonHeartsCount=$('lesson-hearts-count'),lessonHeartIcon=$('lesson-heart-icon');
+    const promptTitle=$('prompt-title'),promptText=$('prompt-text'),ttsNormal=$('tts-normal-btn'),ttsSlow=$('tts-slow-btn'),ttsEcho=$('tts-echo-btn');
+    const modImageSelect=$('mod-image-select'),bigEmoji=$('big-emoji'),imageOptions=$('image-options'),phoneticBadge=$('phonetic-badge'),soundsLikePill=$('sounds-like-pill'),wordContextBox=$('word-context-box'),syllablesClapRow=$('syllables-clap-row'),syllablesText=$('syllables-text'),mouthGuideBox=$('mouth-guide-box');
+    const modEmojiMatch=$('mod-emoji-match'),bigWord=$('big-word'),emojiOptions=$('emoji-options'),bigWordPhonetic=$('big-word-phonetic'),bigWordSoundsLike=$('big-word-sounds-like'),bigWordContextBox=$('big-word-context-box'),bigSyllablesClapRow=$('big-syllables-clap-row'),bigSyllablesText=$('big-syllables-text'),bigMouthGuideBox=$('big-mouth-guide-box');
+    const modListenSelect=$('mod-listen-select'),listenBigBtn=$('listen-big-btn'),listenNormalBtn=$('listen-normal-btn'),listenSlowBtn=$('listen-slow-btn'),listenEchoBtn=$('listen-echo-btn'),listenOptions=$('listen-options');
     const modTranslate=$('mod-translate'),answerSlot=$('answer-slot-line'),placeholder=$('placeholder-hint'),wordPool=$('word-pool');
     const modMatching=$('mod-matching'),matchingGrid=$('matching-grid');
     const modChoice=$('mod-choice'),choicesGrid=$('choices-grid');
@@ -403,13 +489,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainHeartIcon=$('main-heart-icon'),floatingHeartLoss=$('floating-heart-loss');
     const tutorialOverlay=$('tutorial-overlay'),tutorialText=$('tutorial-text'),tutorialNextBtn=$('tutorial-next-btn'),tutorialDots=$('tutorial-dots'),tutorialMascot=document.querySelector('.tutorial-mascot');
     const dictionaryCategories=$('dictionary-categories');
+    
+    // AAC DOM
+    const aacStrip=$('aac-strip'), aacPlaceholder=$('aac-placeholder'), aacSpeakBtn=$('aac-speak-btn'), aacClearBtn=$('aac-clear-btn');
+    const aacCategoryTabs=$('aac-category-tabs'), aacCardsGrid=$('aac-cards-grid');
 
     // ====== TUTORIAL ======
     const tutSteps=[
-        {t:'¡Hola! 👋 Te enseñaremos palabras en inglés con imágenes, pronunciación y frases de contexto.',m:'🤖'},
-        {t:'🗣️ Fíjate en "Suena: kat" para pronunciar como un nativo.',m:'🎧'},
-        {t:'📌 Lee la frase de contexto para saber exactamente cómo usar la palabra.',m:'📚'},
-        {t:'💡 ¡Acumula combos 🔥 respondiendo bien seguido!',m:'🏆'}
+        {t:'¡Hola! 👋 Te damos la bienvenida a Lingua Pro inclusivo y adaptado.',m:'🤖'},
+        {t:'🧸 Prueba el Nivel K0 para niños con déficit de lenguaje: pictogramas PECS, silabeo y articulación.',m:'🧩'},
+        {t:'🧩 Usa la pestaña "Comunicador" para armar frases y expresarte tocando pictogramas.',m:'🗣️'},
+        {t:'💡 ¡Aprende sin frustración a tu propio ritmo!',m:'🏆'}
     ];
     let tutStep=0;
 
@@ -434,6 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveProgress();
         renderPath();
         renderDictionary();
+        updateStats();
     }));
 
     // ====== NAV TABS ======
@@ -443,8 +534,81 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
         t.classList.add('active');
         document.querySelectorAll('.view').forEach(v=>{v.id===id?v.classList.add('active'):v.classList.remove('active');});
-        if(id==='dictionary-view')renderDictionary();
+        if(id==='dictionary-view') renderDictionary();
+        if(id==='aac-view') renderAAC('needs');
     }));
+
+    // ====== AAC COMMUNICATOR LOGIC ======
+    function renderAAC(cat='needs') {
+        if (!aacCardsGrid) return;
+        aacCardsGrid.innerHTML = '';
+        const items = aacDB[cat] || aacDB.needs;
+
+        items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'aac-card';
+            card.innerHTML = `
+                <div class="aac-card-emoji">${item.emoji}</div>
+                <div class="aac-card-en">${item.en}</div>
+                <div class="aac-card-sounds">${item.sounds}</div>
+                <div class="aac-card-es">${item.es}</div>
+            `;
+            card.addEventListener('click', () => {
+                playPop();
+                speak(item.en, 0.85);
+                addAACToStrip(item);
+            });
+            aacCardsGrid.appendChild(card);
+        });
+    }
+
+    function addAACToStrip(item) {
+        state.aacPhrase.push(item);
+        if (aacPlaceholder) aacPlaceholder.style.display = 'none';
+        
+        const chip = document.createElement('div');
+        chip.className = 'aac-phrase-chip';
+        chip.innerHTML = `<span>${item.emoji}</span> <span>${item.en}</span>`;
+        chip.addEventListener('click', () => {
+            chip.remove();
+            state.aacPhrase = state.aacPhrase.filter(x => x !== item);
+            if (state.aacPhrase.length === 0 && aacPlaceholder) aacPlaceholder.style.display = 'inline';
+        });
+        aacStrip.appendChild(chip);
+    }
+
+    if (aacSpeakBtn) {
+        aacSpeakBtn.addEventListener('click', () => {
+            if (state.aacPhrase.length === 0) {
+                alert('Toca los pictogramas abajo para armar tu frase 🧩');
+                return;
+            }
+            playSuccess();
+            const phraseText = state.aacPhrase.map(p => p.en).join(' ');
+            speak(phraseText, 0.8);
+            showToast(`🗣️ "${phraseText}"`);
+        });
+    }
+
+    if (aacClearBtn) {
+        aacClearBtn.addEventListener('click', () => {
+            playClick();
+            state.aacPhrase = [];
+            aacStrip.querySelectorAll('.aac-phrase-chip').forEach(c => c.remove());
+            if (aacPlaceholder) aacPlaceholder.style.display = 'inline';
+        });
+    }
+
+    if (aacCategoryTabs) {
+        aacCategoryTabs.querySelectorAll('.aac-cat-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                playClick();
+                aacCategoryTabs.querySelectorAll('.aac-cat-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderAAC(btn.dataset.cat);
+            });
+        });
+    }
 
     // ====== PATH TREE ROADMAP ======
     function renderPath(){
@@ -511,6 +675,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveProgress();
                 renderPath();
                 renderDictionary();
+                updateStats();
             });
             pathTree.appendChild(nextCard);
         }
@@ -544,6 +709,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="dict-english">${q.word}</span>
                             <span class="dict-sounds">🗣️ Suena: "${q.soundsLike || ''}"</span>
                             <span class="dict-spanish">🇲🇽 ${q.es}</span>
+                            ${q.syllables ? `<span class="dict-context">👏 Silabeo: ${q.syllables}</span>` : ''}
                             ${q.context ? `<span class="dict-context">📌 ${q.context}</span>` : ''}
                         </div>
                         <button class="dict-listen-btn">🔊</button>
@@ -565,7 +731,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.activeLesson = l;
         state.currentQuestionIdx = 0;
         state.correctCount = 0;
-        state.hearts = 5;
+        state.hearts = state.currentLevel === 'K0' ? 99 : 5;
         state.comboStreak = 0;
         state.maxCombo = 0;
         state.hintsUsed = 0;
@@ -582,15 +748,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     closeLessonBtn.addEventListener('click', () => {
-        if (confirm('¿Salir? Perderás el progreso.')) {
+        if (confirm('¿Salir? Perderás el progreso de esta lección.')) {
             lessonView.classList.remove('active');
             $('path-view').classList.add('active');
             const bottomNav = $('bottom-nav-bar');
             if (bottomNav) bottomNav.style.display = 'flex';
         }
     });
+
     ttsNormal.addEventListener('click',()=>speak(promptText.textContent,0.9));
-    ttsSlow.addEventListener('click',()=>speak(promptText.textContent,0.55));
+    ttsSlow.addEventListener('click',()=>speak(promptText.textContent,0.5));
+    if (ttsEcho) ttsEcho.addEventListener('click',()=>speakEcho(promptText.textContent));
 
     // ====== LOAD QUESTION ======
     function loadQ(){
@@ -616,6 +784,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if(soundsLikePill) soundsLikePill.textContent=q.soundsLike ? `🗣️ Suena: "${q.soundsLike}"` : '';
             if(phoneticBadge) phoneticBadge.textContent=q.phonetic||'';
             if(wordContextBox) wordContextBox.innerHTML=q.context ? `📌 <em>"${q.context}"</em>` : '';
+            
+            if (syllablesClapRow) {
+                if (q.syllables) {
+                    syllablesClapRow.classList.remove('hidden');
+                    syllablesText.textContent = q.syllables;
+                } else {
+                    syllablesClapRow.classList.add('hidden');
+                }
+            }
+
+            if (mouthGuideBox) {
+                if (q.mouth) {
+                    mouthGuideBox.classList.remove('hidden');
+                    mouthGuideBox.querySelector('span').textContent = q.mouth;
+                } else {
+                    mouthGuideBox.classList.add('hidden');
+                }
+            }
+
             speak(q.word,0.9);
             imageOptions.innerHTML='';
             q.options.sort(()=>Math.random()-0.5).forEach(opt=>{
@@ -631,6 +818,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if(bigWordSoundsLike) bigWordSoundsLike.textContent=q.soundsLike ? `🗣️ Suena: "${q.soundsLike}"` : '';
             if(bigWordPhonetic) bigWordPhonetic.textContent=q.phonetic||'';
             if(bigWordContextBox) bigWordContextBox.innerHTML=q.context ? `📌 <em>"${q.context}"</em>` : '';
+            
+            if (bigSyllablesClapRow) {
+                if (q.syllables) {
+                    bigSyllablesClapRow.classList.remove('hidden');
+                    bigSyllablesText.textContent = q.syllables;
+                } else {
+                    bigSyllablesClapRow.classList.add('hidden');
+                }
+            }
+
+            if (bigMouthGuideBox) {
+                if (q.mouth) {
+                    bigMouthGuideBox.classList.remove('hidden');
+                    bigMouthGuideBox.querySelector('span').textContent = q.mouth;
+                } else {
+                    bigMouthGuideBox.classList.add('hidden');
+                }
+            }
+
             speak(q.word,0.9);
             emojiOptions.innerHTML='';
             q.emojis.sort(()=>Math.random()-0.5).forEach(em=>{
@@ -647,6 +853,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(listenBigBtn) listenBigBtn.onclick=()=>speak(q.word, 0.85);
             if(listenNormalBtn) listenNormalBtn.onclick=()=>speak(q.word, 0.9);
             if(listenSlowBtn) listenSlowBtn.onclick=()=>speak(q.word, 0.5);
+            if(listenEchoBtn) listenEchoBtn.onclick=()=>speakEcho(q.word);
 
             listenOptions.innerHTML='';
             q.options.sort(()=>Math.random()-0.5).forEach(opt=>{
@@ -734,9 +941,12 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackTitleEl.textContent=randMsg(msgs.ok);
             feedbackSubtitle.textContent=q.word?`${q.word} (Suena: "${q.soundsLike||''}") = ${q.es||''}`:'¡Respuesta correcta!';
         } else {
-            playError();updateCombo(false);triggerHeartLoss();state.hearts=Math.max(0,state.hearts-1);updateStats();
+            playError();updateCombo(false);
+            if (state.currentLevel !== 'K0') {
+                triggerHeartLoss();state.hearts=Math.max(0,state.hearts-1);updateStats();
+            }
             feedbackSheet.className='feedback-sheet show error';feedbackIcon.textContent='✕';
-            feedbackTitleEl.textContent='No te preocupes, la respuesta era:';
+            feedbackTitleEl.textContent=state.currentLevel==='K0'?'¡Casi! Escucha y repite:':'No te preocupes, la respuesta era:';
             feedbackSubtitle.textContent=q.word?`${q.word} (Suena: "${q.soundsLike||''}")` : (q.correct||'Sigue practicando');
         }
     });
@@ -745,7 +955,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     continueBtn.addEventListener('click',()=>{
         feedbackSheet.classList.remove('show');state.currentQuestionIdx++;
-        if(state.currentQuestionIdx<state.activeLesson.questions.length&&state.hearts>0)loadQ();
+        if(state.currentQuestionIdx<state.activeLesson.questions.length && (state.hearts>0 || state.currentLevel==='K0')) loadQ();
         else finishLesson();
     });
 
@@ -756,7 +966,7 @@ document.addEventListener('DOMContentLoaded', () => {
         accuracyVal.textContent = `${acc}%`;
         comboMaxVal.textContent = `🔥 ${state.maxCombo}`;
         xpRewardVal.textContent = `+${bonus}`;
-        completionEncourage.textContent = randMsg(msgs.end);
+        completionEncourage.textContent = state.currentLevel==='K0'?'¡Excelente trabajo! Has aprendido nuevas palabras 🌟':randMsg(msgs.end);
 
         state.gems += 20;
         state.xp += bonus;
@@ -817,6 +1027,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         renderPath();
         renderDictionary();
+        updateStats();
     });
 
     // ====== SHOP ======
@@ -826,9 +1037,12 @@ document.addEventListener('DOMContentLoaded', () => {
     $('srs-tts-btn').addEventListener('click',()=>speak('Apple',0.95));
 
     function updateStats(){
-        $('user-streak').textContent=state.streak;$('user-gems').textContent=state.gems;$('user-hearts').textContent=state.hearts;
-        lessonHeartsCount.textContent=state.hearts;$('prof-streak').textContent=state.streak;$('prof-xp').textContent=`${state.xp} XP`;$('prof-gems').textContent=state.gems;
+        $('user-streak').textContent=state.streak;$('user-gems').textContent=state.gems;
+        const heartsDisplay = state.currentLevel === 'K0' ? '∞' : state.hearts;
+        $('user-hearts').textContent=heartsDisplay;
+        if (lessonHeartsCount) lessonHeartsCount.textContent=heartsDisplay;
+        $('prof-streak').textContent=state.streak;$('prof-xp').textContent=`${state.xp} XP`;$('prof-gems').textContent=state.gems;
     }
 
-    renderPath();renderDictionary();updateStats();showTutorial();
+    renderPath();renderDictionary();renderAAC('needs');updateStats();showTutorial();
 });
