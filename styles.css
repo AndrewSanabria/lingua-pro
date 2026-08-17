@@ -150,6 +150,20 @@ body {
     white-space: nowrap;
 }
 
+.user-avatar-item {
+    background: rgba(30, 41, 59, 0.9);
+    padding: 4px 8px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: var(--shadow-sm);
+}
+.user-avatar-item:hover { border-color: var(--brand-blue); }
+.top-user-avatar-badge { font-size: 1.2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+.top-user-name { font-size: 0.8rem; font-weight: 800; max-width: 65px; overflow: hidden; text-overflow: ellipsis; }
+
 .nav-item:active { transform: scale(0.92); }
 
 .level-item {
@@ -333,6 +347,61 @@ body {
 .path-view {
     align-items: center;
 }
+
+/* PATH USER BANNER */
+.path-user-banner {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+    border: 1.5px solid var(--border-color);
+    border-radius: 18px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    flex-shrink: 0;
+}
+.banner-avatar-wrap {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    background: var(--surface-dark);
+    border: 2px solid var(--brand-blue);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+    flex-shrink: 0;
+}
+.banner-status-dot {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--brand-green);
+    border: 2px solid var(--surface-dark);
+}
+.banner-info { flex-grow: 1; min-width: 0; }
+.banner-greeting { font-family: var(--font-heading); font-size: 0.95rem; font-weight: 800; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.banner-sub { font-size: 0.75rem; color: var(--brand-amber); font-weight: 700; margin-top: 1px; }
+.banner-profile-link {
+    background: rgba(14, 165, 233, 0.15);
+    border: 1.5px solid var(--brand-blue);
+    color: var(--brand-blue);
+    font-family: var(--font-heading);
+    font-size: 0.76rem;
+    font-weight: 800;
+    padding: 6px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+}
+.banner-profile-link:active { transform: scale(0.92); }
 
 .section-banner {
     width: 100%;
@@ -1156,6 +1225,28 @@ body {
     align-items: center;
     gap: 10px;
     margin-bottom: 14px;
+}
+
+.mascot-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.mascot-avatar-circle {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: var(--surface-dark);
+    border: 2.5px solid var(--brand-blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.3rem;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    animation: mascotFloat 3s ease-in-out infinite;
+    user-select: none;
 }
 
 .mascot-img {

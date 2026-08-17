@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=12.0">
+    <link rel="stylesheet" href="styles.css?v=13.0">
 </head>
 <body>
     <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
@@ -15,6 +15,10 @@
     <div class="app-viewport">
         <!-- TOP NAV -->
         <header class="top-nav" id="top-nav">
+            <div class="nav-item user-avatar-item" id="top-user-avatar-btn" title="Ver mi perfil">
+                <span class="top-user-avatar-badge" id="top-user-avatar-icon">🦁</span>
+                <span class="top-user-name" id="top-user-name">Usuario</span>
+            </div>
             <div class="nav-item level-item" id="level-selector-btn">
                 <span class="flag-icon">🇲🇽 ➔ 🇺🇸</span>
                 <span class="level-badge" id="current-level-badge">A1</span>
@@ -44,6 +48,17 @@
         <div class="views-wrapper">
             <!-- PATH VIEW -->
             <main class="view path-view active" id="path-view">
+                <div class="path-user-banner" id="path-user-banner">
+                    <div class="banner-avatar-wrap">
+                        <span class="banner-avatar" id="banner-user-avatar">🦁</span>
+                        <span class="banner-status-dot"></span>
+                    </div>
+                    <div class="banner-info">
+                        <div class="banner-greeting">¡Hola, <strong id="banner-user-name">Usuario</strong>! 👋</div>
+                        <div class="banner-sub" id="banner-user-sub">Nivel A1 • 0 XP acumulados</div>
+                    </div>
+                    <button class="banner-profile-link" id="banner-profile-link">Mi Perfil 👤</button>
+                </div>
                 <div class="section-banner" id="section-banner">
                     <div class="banner-content">
                         <span class="unit-badge" id="banner-unit">Nivel A1</span>
@@ -168,7 +183,7 @@
                     <h1 class="prompt-title" id="prompt-title">¿Qué es esto?</h1>
 
                     <div class="character-prompt" id="character-prompt">
-                        <div class="mascot-container"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaPro" alt="Mascot" class="mascot-img" id="mascot-avatar"></div>
+                        <div class="mascot-container"><div class="mascot-avatar-circle" id="mascot-avatar">🦁</div></div>
                         <div class="speech-bubble">
                             <div class="audio-controls-group">
                                 <button class="audio-btn normal-speed" id="tts-normal-btn" title="Velocidad normal"><span>🐇</span></button>
@@ -345,6 +360,6 @@
             </div>
         </div>
     </div>
-    <script src="app.js?v=12.0"></script>
+    <script src="app.js?v=13.0"></script>
 </body>
 </html>

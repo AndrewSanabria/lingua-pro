@@ -1523,6 +1523,18 @@ document.addEventListener('DOMContentLoaded', () => {
         $('user-hearts').textContent = heartsDisplay;
         if (lessonHeartsCount) lessonHeartsCount.textContent = heartsDisplay;
 
+        // Top Nav Avatar & Name
+        if ($('top-user-avatar-icon')) $('top-user-avatar-icon').textContent = state.avatar;
+        if ($('top-user-name')) $('top-user-name').textContent = state.name;
+
+        // Path Banner Avatar & Info
+        if ($('banner-user-avatar')) $('banner-user-avatar').textContent = state.avatar;
+        if ($('banner-user-name')) $('banner-user-name').textContent = state.name;
+        if ($('banner-user-sub')) $('banner-user-sub').textContent = `Nivel ${state.currentLevel} • ${state.xp} XP acumulados`;
+
+        // Lesson Mascot Avatar
+        if ($('mascot-avatar')) $('mascot-avatar').textContent = state.avatar;
+
         // Profile View Elements
         if ($('profile-name-display')) $('profile-name-display').textContent = state.name;
         if ($('profile-avatar-display')) $('profile-avatar-display').textContent = state.avatar;
@@ -1532,6 +1544,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if ($('prof-gems')) $('prof-gems').textContent = state.gems;
 
         renderProfilesList();
+    }
+
+    // Top avatar click -> Open Profile
+    if ($('top-user-avatar-btn')) {
+        $('top-user-avatar-btn').addEventListener('click', () => {
+            playClick();
+            switchTab('profile-view');
+        });
+    }
+
+    if ($('banner-profile-link')) {
+        $('banner-profile-link').addEventListener('click', () => {
+            playClick();
+            switchTab('profile-view');
+        });
     }
 
     // ====== INITIAL APP LAUNCH ======
