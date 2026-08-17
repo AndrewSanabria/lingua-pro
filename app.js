@@ -1,7 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const levelOrder = ['K0', 'A1', 'A2', 'B1', 'C1'];
 
+    let profiles = [];
+    let activeUser = null;
+
     const state = {
+        name: 'Aventurero', avatar: '🦁',
         currentLevel: 'A1', streak: 1, gems: 50, hearts: 5, xp: 0,
         activeLesson: null, currentQuestionIdx: 0, correctCount: 0,
         selectedChips: [], audioCtx: null, firstMatchCard: null,
@@ -12,32 +16,60 @@ document.addEventListener('DOMContentLoaded', () => {
         aacPhrase: []
     };
 
-    // ====== PROGRESS STORAGE & NORMALIZATION ======
-    function normalizeProgress() {
-        const savedUnlocked = localStorage.getItem('lp_unlocked');
-        if (savedUnlocked) {
-            try {
-                const parsed = JSON.parse(savedUnlocked);
-                if (parsed && typeof parsed === 'object') {
-                    levelOrder.forEach(lvl => {
-                        state.unlockedIndex[lvl] = (typeof parsed[lvl] === 'number' && parsed[lvl] >= 1) ? parsed[lvl] : 1;
-                    });
-                }
-            } catch (e) {
-                state.unlockedIndex = { K0: 1, A1: 1, A2: 1, B1: 1, C1: 1 };
-            }
+    // ====== MULTI-USER PROFILE STORAGE & NORMALIZATION ======
+    function loadProfiles() {
+        try {
+            const data = localStorage.getItem('lp_profiles_v2');
+            if (data) profiles = JSON.parse(data) || [];
+            if (!Array.isArray(profiles)) profiles = [];
+        } catch (e) {
+            profiles = [];
         }
-        const savedLevel = localStorage.getItem('lp_level');
-        if (savedLevel && levelOrder.includes(savedLevel)) {
-            state.currentLevel = savedLevel;
+
+        const activeId = localStorage.getItem('lp_active_user_v2');
+        activeUser = profiles.find(p => p.id === activeId) || profiles[0] || null;
+
+        if (activeUser) {
+            syncStateFromActiveUser();
         }
     }
-    normalizeProgress();
+
+    function syncStateFromActiveUser() {
+        if (!activeUser) return;
+        state.name = activeUser.name || 'Aventurero';
+        state.avatar = activeUser.avatar || '🦁';
+        state.currentLevel = levelOrder.includes(activeUser.currentLevel) ? activeUser.currentLevel : 'A1';
+        state.streak = typeof activeUser.streak === 'number' ? activeUser.streak : 1;
+        state.gems = typeof activeUser.gems === 'number' ? activeUser.gems : 50;
+        state.hearts = typeof activeUser.hearts === 'number' ? activeUser.hearts : 5;
+        state.xp = typeof activeUser.xp === 'number' ? activeUser.xp : 0;
+        
+        state.unlockedIndex = { K0: 1, A1: 1, A2: 1, B1: 1, C1: 1 };
+        if (activeUser.unlockedIndex && typeof activeUser.unlockedIndex === 'object') {
+            levelOrder.forEach(lvl => {
+                if (typeof activeUser.unlockedIndex[lvl] === 'number') {
+                    state.unlockedIndex[lvl] = Math.max(activeUser.unlockedIndex[lvl], 1);
+                }
+            });
+        }
+    }
 
     function saveProgress() {
-        localStorage.setItem('lp_unlocked', JSON.stringify(state.unlockedIndex));
-        localStorage.setItem('lp_level', state.currentLevel);
+        if (!activeUser) return;
+        activeUser.name = state.name;
+        activeUser.avatar = state.avatar;
+        activeUser.currentLevel = state.currentLevel;
+        activeUser.streak = state.streak;
+        activeUser.gems = state.gems;
+        activeUser.hearts = state.hearts;
+        activeUser.xp = state.xp;
+        activeUser.unlockedIndex = { ...state.unlockedIndex };
+
+        localStorage.setItem('lp_profiles_v2', JSON.stringify(profiles));
+        localStorage.setItem('lp_active_user_v2', activeUser.id);
     }
+
+    loadProfiles();
 
     // ====== MASSIVE CURRICULUM WITH CLINICAL SPEECH & COGNITIVE THERAPY (K0) ======
         const curriculum = {
@@ -1283,13 +1315,232 @@ document.addEventListener('DOMContentLoaded', () => {
     $('reveal-srs-btn').addEventListener('click',()=>{playClick();$('srs-translation').classList.remove('hidden');});
     $('srs-tts-btn').addEventListener('click',()=>speak('Apple',0.85));
 
-    function updateStats(){
-        $('user-streak').textContent=state.streak;$('user-gems').textContent=state.gems;
-        const heartsDisplay = state.currentLevel === 'K0' ? '∞' : state.hearts;
-        $('user-hearts').textContent=heartsDisplay;
-        if (lessonHeartsCount) lessonHeartsCount.textContent=heartsDisplay;
-        $('prof-streak').textContent=state.streak;$('prof-xp').textContent=`${state.xp} XP`;$('prof-gems').textContent=state.gems;
+    // ====== MULTI-USER PROFILE MANAGEMENT & ONBOARDING ======
+    const onboardingModal = $('onboarding-modal');
+    const onboardingNameInput = $('onboarding-name-input');
+    const onboardingSubmitBtn = $('onboarding-submit-btn');
+    const onboardingTitle = $('onboarding-title');
+    const onboardingSubtitle = $('onboarding-subtitle');
+    const profilesList = $('profiles-list');
+    const addProfileBtn = $('add-profile-btn');
+    const editProfileBtn = $('edit-profile-btn');
+    const deleteProfileBtn = $('delete-profile-btn');
+
+    let selectedOnboardingAvatar = '🦁';
+    let selectedOnboardingLevel = 'A1';
+    let isEditingProfile = false;
+
+    // Avatar selection in onboarding
+    document.querySelectorAll('.avatar-opt-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            playClick();
+            document.querySelectorAll('.avatar-opt-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedOnboardingAvatar = btn.dataset.avatar || '🦁';
+        });
+    });
+
+    // Level choice in onboarding
+    document.querySelectorAll('.level-choice-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            playClick();
+            document.querySelectorAll('.level-choice-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedOnboardingLevel = btn.dataset.level || 'A1';
+        });
+    });
+
+    function showOnboardingModal(isNew = true) {
+        if (!onboardingModal) return;
+        isEditingProfile = !isNew;
+        onboardingModal.classList.add('active');
+
+        if (isNew) {
+            onboardingTitle.textContent = profiles.length === 0 ? '¡Bienvenido a Lingua Pro! 🌟' : 'Crear Nuevo Perfil 👤';
+            onboardingSubtitle.textContent = 'Cada usuario tiene su propio avance, nivel y logros individuales.';
+            onboardingNameInput.value = '';
+            selectedOnboardingAvatar = '🦁';
+            selectedOnboardingLevel = 'A1';
+            onboardingSubmitBtn.textContent = '¡COMENZAR APRENDIZAJE! 🚀';
+        } else {
+            onboardingTitle.textContent = 'Editar Perfil ✏️';
+            onboardingSubtitle.textContent = 'Actualiza tu nombre y tu avatar favorito.';
+            onboardingNameInput.value = state.name;
+            selectedOnboardingAvatar = state.avatar;
+            selectedOnboardingLevel = state.currentLevel;
+            onboardingSubmitBtn.textContent = 'GUARDAR CAMBIOS ✓';
+        }
+
+        // Set selected avatar in UI
+        document.querySelectorAll('.avatar-opt-btn').forEach(b => {
+            b.classList.toggle('selected', b.dataset.avatar === selectedOnboardingAvatar);
+        });
+
+        // Set selected level in UI
+        document.querySelectorAll('.level-choice-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.level === selectedOnboardingLevel);
+        });
+
+        setTimeout(() => {
+            if (onboardingNameInput) onboardingNameInput.focus();
+        }, 150);
     }
 
-    renderPath();renderDictionary();renderAAC('needs');updateStats();showTutorial();
+    function handleOnboardingSubmit() {
+        const rawName = onboardingNameInput ? onboardingNameInput.value.trim() : '';
+        const name = rawName || (isEditingProfile ? state.name : `Aventurero ${profiles.length + 1}`);
+
+        if (isEditingProfile && activeUser) {
+            activeUser.name = name;
+            activeUser.avatar = selectedOnboardingAvatar;
+            state.name = name;
+            state.avatar = selectedOnboardingAvatar;
+            saveProgress();
+            playSuccess();
+        } else {
+            const newProfile = {
+                id: 'usr_' + Date.now(),
+                name: name,
+                avatar: selectedOnboardingAvatar,
+                currentLevel: selectedOnboardingLevel,
+                streak: 1,
+                gems: 50,
+                hearts: 5,
+                xp: 0,
+                unlockedIndex: { K0: 1, A1: 1, A2: 1, B1: 1, C1: 1 },
+                createdAt: Date.now()
+            };
+
+            profiles.push(newProfile);
+            activeUser = newProfile;
+            syncStateFromActiveUser();
+            saveProgress();
+            playSuccess();
+            triggerConfetti();
+        }
+
+        onboardingModal.classList.remove('active');
+        if (currentLevelBadge) currentLevelBadge.textContent = state.currentLevel;
+        levelOpts.forEach(o => o.classList.toggle('active', o.dataset.level === state.currentLevel));
+
+        renderPath();
+        renderDictionary();
+        renderAAC('needs');
+        updateStats();
+    }
+
+    if (onboardingSubmitBtn) {
+        onboardingSubmitBtn.addEventListener('click', () => {
+            handleOnboardingSubmit();
+        });
+    }
+
+    if (onboardingNameInput) {
+        onboardingNameInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleOnboardingSubmit();
+        });
+    }
+
+    function switchUserProfile(profileId) {
+        const target = profiles.find(p => p.id === profileId);
+        if (!target) return;
+        playClick();
+        activeUser = target;
+        syncStateFromActiveUser();
+        saveProgress();
+
+        if (currentLevelBadge) currentLevelBadge.textContent = state.currentLevel;
+        levelOpts.forEach(o => o.classList.toggle('active', o.dataset.level === state.currentLevel));
+
+        renderPath();
+        renderDictionary();
+        renderAAC('needs');
+        updateStats();
+        playSuccess();
+    }
+
+    function renderProfilesList() {
+        if (!profilesList) return;
+        profilesList.innerHTML = '';
+
+        profiles.forEach(p => {
+            const card = document.createElement('div');
+            card.className = `profile-item-card ${activeUser && activeUser.id === p.id ? 'active' : ''}`;
+            card.innerHTML = `
+                <div class="profile-item-avatar">${p.avatar || '🦁'}</div>
+                <div class="profile-item-info">
+                    <div class="profile-item-name">
+                        ${p.name || 'Usuario'}
+                        ${activeUser && activeUser.id === p.id ? '<span class="profile-item-active-badge">ACTIVO</span>' : ''}
+                    </div>
+                    <div class="profile-item-sub">Nivel: ${p.currentLevel || 'A1'} • ${p.xp || 0} XP • 🔥 ${p.streak || 1}</div>
+                </div>
+            `;
+            card.addEventListener('click', () => switchUserProfile(p.id));
+            profilesList.appendChild(card);
+        });
+    }
+
+    if (addProfileBtn) {
+        addProfileBtn.addEventListener('click', () => {
+            playClick();
+            showOnboardingModal(true);
+        });
+    }
+
+    if (editProfileBtn) {
+        editProfileBtn.addEventListener('click', () => {
+            playClick();
+            showOnboardingModal(false);
+        });
+    }
+
+    if (deleteProfileBtn) {
+        deleteProfileBtn.addEventListener('click', () => {
+            if (profiles.length <= 1) {
+                alert('No puedes eliminar el único perfil activo. Puedes editar su nombre o crear otro.');
+                return;
+            }
+            if (confirm(`¿Seguro que deseas eliminar el perfil de "${state.name}"? Todos sus avances se perderán.`)) {
+                profiles = profiles.filter(p => p.id !== activeUser.id);
+                activeUser = profiles[0] || null;
+                if (activeUser) {
+                    syncStateFromActiveUser();
+                    saveProgress();
+                }
+                updateStats();
+                renderPath();
+                renderDictionary();
+                playSuccess();
+            }
+        });
+    }
+
+    function updateStats(){
+        $('user-streak').textContent = state.streak;
+        $('user-gems').textContent = state.gems;
+        const heartsDisplay = state.currentLevel === 'K0' ? '∞' : state.hearts;
+        $('user-hearts').textContent = heartsDisplay;
+        if (lessonHeartsCount) lessonHeartsCount.textContent = heartsDisplay;
+
+        // Profile View Elements
+        if ($('profile-name-display')) $('profile-name-display').textContent = state.name;
+        if ($('profile-avatar-display')) $('profile-avatar-display').textContent = state.avatar;
+        if ($('profile-rank-display')) $('profile-rank-display').textContent = `Nivel ${state.currentLevel} • ${state.xp} XP`;
+        if ($('prof-streak')) $('prof-streak').textContent = state.streak;
+        if ($('prof-xp')) $('prof-xp').textContent = `${state.xp} XP`;
+        if ($('prof-gems')) $('prof-gems').textContent = state.gems;
+
+        renderProfilesList();
+    }
+
+    // ====== INITIAL APP LAUNCH ======
+    if (!activeUser || profiles.length === 0) {
+        showOnboardingModal(true);
+    } else {
+        renderPath();
+        renderDictionary();
+        renderAAC('needs');
+        updateStats();
+    }
 });

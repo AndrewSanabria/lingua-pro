@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=11.0">
+    <link rel="stylesheet" href="styles.css?v=12.0">
 </head>
 <body>
     <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
@@ -128,14 +128,27 @@
             <!-- PROFILE VIEW -->
             <main class="view profile-view" id="profile-view">
                 <div class="profile-card">
-                    <div class="avatar-circle"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=LinguaProMaster" alt="Avatar"></div>
-                    <h2 class="user-name">Andrew Sanabria</h2>
-                    <span class="user-rank">Liga Diamante 💎</span>
+                    <div class="avatar-circle" id="profile-avatar-display">🦁</div>
+                    <h2 class="user-name" id="profile-name-display">Usuario</h2>
+                    <span class="user-rank" id="profile-rank-display">Nivel A1 💎</span>
                 </div>
                 <div class="profile-stats-grid">
                     <div class="prof-stat"><span class="prof-icon">🔥</span><span class="prof-val" id="prof-streak">1</span><span class="prof-lbl">Racha</span></div>
                     <div class="prof-stat"><span class="prof-icon">⚡</span><span class="prof-val" id="prof-xp">0 XP</span><span class="prof-lbl">Experiencia</span></div>
                     <div class="prof-stat"><span class="prof-icon">💎</span><span class="prof-val" id="prof-gems">50</span><span class="prof-lbl">Gemas</span></div>
+                </div>
+
+                <div class="profiles-section">
+                    <div class="section-title-row">
+                        <h3>👥 Perfiles de Usuario</h3>
+                        <button class="add-profile-btn" id="add-profile-btn">+ Nuevo Perfil</button>
+                    </div>
+                    <div class="profiles-list" id="profiles-list"></div>
+                </div>
+
+                <div class="profile-actions-row">
+                    <button class="profile-action-btn edit-btn" id="edit-profile-btn">✏️ Editar Mi Nombre</button>
+                    <button class="profile-action-btn delete-btn" id="delete-profile-btn">🗑️ Eliminar Perfil</button>
                 </div>
             </main>
 
@@ -271,6 +284,52 @@
             </div>
         </div>
 
+        <!-- USER ONBOARDING & PROFILE CREATION MODAL -->
+        <div class="modal-overlay" id="onboarding-modal">
+            <div class="onboarding-card">
+                <div class="onboarding-header">
+                    <span class="onboarding-badge">🌟 ¡BIENVENIDO!</span>
+                    <h2 id="onboarding-title">Crea tu Perfil</h2>
+                    <p id="onboarding-subtitle">Tus avances, nivel y puntos se guardarán de forma 100% individual.</p>
+                </div>
+
+                <div class="onboarding-form">
+                    <label class="form-label" for="onboarding-name-input">¿Cómo te llamas?</label>
+                    <input type="text" class="onboarding-input" id="onboarding-name-input" placeholder="Escribe tu nombre..." maxlength="20" autocomplete="off">
+
+                    <label class="form-label">Elige tu Avatar o Mascota:</label>
+                    <div class="avatar-options-grid" id="avatar-options-grid">
+                        <button class="avatar-opt-btn selected" data-avatar="🦁">🦁</button>
+                        <button class="avatar-opt-btn" data-avatar="🤖">🤖</button>
+                        <button class="avatar-opt-btn" data-avatar="🐼">🐼</button>
+                        <button class="avatar-opt-btn" data-avatar="🦊">🦊</button>
+                        <button class="avatar-opt-btn" data-avatar="🦄">🦄</button>
+                        <button class="avatar-opt-btn" data-avatar="🚀">🚀</button>
+                        <button class="avatar-opt-btn" data-avatar="👑">👑</button>
+                        <button class="avatar-opt-btn" data-avatar="⭐">⭐</button>
+                    </div>
+
+                    <label class="form-label">¿Por qué nivel deseas comenzar?</label>
+                    <div class="level-choice-row" id="onboarding-level-row">
+                        <button class="level-choice-btn" data-level="K0">
+                            <span class="lvl-ico">🧸</span>
+                            <div class="lvl-txt"><strong>K0: Niños & Terapia</strong><span>Estimulación, fonación y vidas infinitas</span></div>
+                        </button>
+                        <button class="level-choice-btn active" data-level="A1">
+                            <span class="lvl-ico">🌱</span>
+                            <div class="lvl-txt"><strong>A1: Principiante</strong><span>Vocabulario esencial y frases base</span></div>
+                        </button>
+                        <button class="level-choice-btn" data-level="A2">
+                            <span class="lvl-ico">🏙️</span>
+                            <div class="lvl-txt"><strong>A2: Elemental</strong><span>Vida cotidiana, viajes y compras</span></div>
+                        </button>
+                    </div>
+
+                    <button class="action-btn continue-action onboarding-submit-btn" id="onboarding-submit-btn">¡COMENZAR APRENDIZAJE! 🚀</button>
+                </div>
+            </div>
+        </div>
+
         <!-- LESSON COMPLETE MODAL -->
         <div class="modal-overlay" id="completion-modal">
             <div class="completion-card">
@@ -286,6 +345,6 @@
             </div>
         </div>
     </div>
-    <script src="app.js?v=11.0"></script>
+    <script src="app.js?v=12.0"></script>
 </body>
 </html>
