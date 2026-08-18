@@ -1103,13 +1103,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            speak(q.word,0.85);
             imageOptions.innerHTML='';
             q.options.sort(()=>Math.random()-0.5).forEach(opt=>{
                 const btn=document.createElement('button');btn.className='image-option';btn.textContent=opt;
                 btn.addEventListener('click',()=>{playClick();imageOptions.querySelectorAll('.image-option').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.selectedChoice=opt;checkBtn.disabled=false;});
                 imageOptions.appendChild(btn);
             });
+            setTimeout(()=>speak(q.word,0.85), 100);
 
         } else if(q.type==='emoji_match'){
             promptTitle.textContent=q.prompt;
@@ -1138,18 +1138,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            speak(q.word,0.85);
             emojiOptions.innerHTML='';
             q.emojis.sort(()=>Math.random()-0.5).forEach(em=>{
                 const btn=document.createElement('button');btn.className='emoji-option';btn.textContent=em;
                 btn.addEventListener('click',()=>{playClick();emojiOptions.querySelectorAll('.emoji-option').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.selectedChoice=em;checkBtn.disabled=false;});
                 emojiOptions.appendChild(btn);
             });
+            setTimeout(()=>speak(q.word,0.85), 100);
 
         } else if(q.type==='listen_select'){
             promptTitle.textContent=q.prompt;
             modListenSelect.classList.remove('hidden');
-            setTimeout(()=>speak(q.word, 0.85), 200);
 
             if(listenBigBtn) listenBigBtn.onclick=()=>speak(q.word, 0.85);
             if(listenNormalBtn) listenNormalBtn.onclick=()=>speak(q.word, 0.85);
@@ -1169,10 +1168,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 listenOptions.appendChild(btn);
             });
+            setTimeout(()=>speak(q.word, 0.85), 150);
 
         } else if(q.type==='translate'){
             promptTitle.textContent='Traduce al español';promptText.textContent=q.prompt;
-            modTranslate.classList.remove('hidden');speak(q.prompt,0.85);
+            modTranslate.classList.remove('hidden');
             wordPool.innerHTML='';answerSlot.innerHTML='';answerSlot.appendChild(placeholder);placeholder.style.display='inline';
             [...q.pool].sort(()=>Math.random()-0.5).forEach((w,i)=>{
                 const cid=`c${i}-${Date.now()}`;
@@ -1185,6 +1185,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 wordPool.appendChild(chip);
             });
+            setTimeout(()=>speak(q.prompt,0.85), 100);
 
         } else if(q.type==='matching'){
             promptTitle.textContent='Empareja los pares de palabras';promptText.textContent=q.prompt;
