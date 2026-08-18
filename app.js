@@ -714,11 +714,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // ====== SPEECH SYNTHESIS ======
     const mascotAvatar = document.getElementById('mascot-avatar');
     function speak(text, rate=0.85) {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const u = new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=rate;
-            if (mascotAvatar) { mascotAvatar.classList.add('mascot-speaking'); u.onend=()=>mascotAvatar.classList.remove('mascot-speaking'); }
-            window.speechSynthesis.speak(u);
+        try {
+            if (typeof window !== 'undefined' && 'speechSynthesis' in window && typeof window.SpeechSynthesisUtterance !== 'undefined') {
+                window.speechSynthesis.cancel();
+                const u = new window.SpeechSynthesisUtterance(text);
+                u.lang = 'en-US';
+                u.rate = rate;
+                if (mascotAvatar) {
+                    mascotAvatar.classList.add('mascot-speaking');
+                    u.onend = () => mascotAvatar.classList.remove('mascot-speaking');
+                    u.onerror = () => mascotAvatar.classList.remove('mascot-speaking');
+                }
+                window.speechSynthesis.speak(u);
+            }
+        } catch(e) {
+            console.warn('Speech synthesis error or unsupported:', e);
         }
     }
 
@@ -799,15 +809,27 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStats();
     }));
 
-    // ====== NAV TABS ======
-    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>{
+    // ====== NAV TABS & VIEW SWITCHING ======
+    function switchTab(id) {
+        document.querySelectorAll('.nav-tab').forEach(x => {
+            x.classList.toggle('active', x.dataset.target === id);
+        });
+        document.querySelectorAll('.view').forEach(v => {
+            if (v.id === id) {
+                v.classList.add('active');
+            } else {
+                v.classList.remove('active');
+            }
+        });
+        if (id === 'dictionary-view') renderDictionary();
+        if (id === 'aac-view') renderAAC('needs');
+        if (id === 'path-view') renderPath();
+    }
+
+    document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => {
         playClick();
-        const id=t.dataset.target;
-        document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
-        t.classList.add('active');
-        document.querySelectorAll('.view').forEach(v=>{v.id===id?v.classList.add('active'):v.classList.remove('active');});
-        if(id==='dictionary-view') renderDictionary();
-        if(id==='aac-view') renderAAC('needs');
+        const id = t.dataset.target;
+        switchTab(id);
     }));
 
     // ====== AAC COMMUNICATOR LOGIC ======
@@ -1025,7 +1047,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     closeLessonBtn.addEventListener('click', () => {
-        if (confirm('¿Salir? Perderás el progreso de esta lección.')) {
+        if (typeof window === 'undefined' || !window.confirm || window.confirm('¿Salir? Perderás el progreso de esta lección.')) {
             lessonView.classList.remove('active');
             $('path-view').classList.add('active');
             const bottomNav = $('bottom-nav-bar');
@@ -1310,8 +1332,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ====== SHOP ======
-    $('buy-hearts-btn').addEventListener('click',()=>{if(state.gems>=50){state.gems-=50;state.hearts=5;updateStats();playSuccess();alert('¡5 ❤️ recargadas!');}else alert('Necesitas 50 💎');});
-    $('buy-freeze-btn').addEventListener('click',()=>{if(state.gems>=100){state.gems-=100;updateStats();playSuccess();alert('🛡️ Escudo activado');}else alert('Necesitas 100 💎');});
+    $('buy-hearts-btn').addEventListener('click',()=>{if(state.gems>=50){state.gems-=50;state.hearts=5;updateStats();playSuccess();if(typeof window!=='undefined'&&window.alert)window.alert('¡5 ❤️ recargadas!');}else if(typeof window!=='undefined'&&window.alert)window.alert('Necesitas 50 💎');});
+    $('buy-freeze-btn').addEventListener('click',()=>{if(state.gems>=100){state.gems-=100;updateStats();playSuccess();if(typeof window!=='undefined'&&window.alert)window.alert('🛡️ Escudo activado');}else if(typeof window!=='undefined'&&window.alert)window.alert('Necesitas 100 💎');});
     $('reveal-srs-btn').addEventListener('click',()=>{playClick();$('srs-translation').classList.remove('hidden');});
     $('srs-tts-btn').addEventListener('click',()=>speak('Apple',0.85));
 
@@ -1498,10 +1520,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (deleteProfileBtn) {
         deleteProfileBtn.addEventListener('click', () => {
             if (profiles.length <= 1) {
-                alert('No puedes eliminar el único perfil activo. Puedes editar su nombre o crear otro.');
+                if (typeof window !== 'undefined' && window.alert) window.alert('No puedes eliminar el único perfil activo. Puedes editar su nombre o crear otro.');
                 return;
             }
-            if (confirm(`¿Seguro que deseas eliminar el perfil de "${state.name}"? Todos sus avances se perderán.`)) {
+            if (typeof window === 'undefined' || !window.confirm || window.confirm(`¿Seguro que deseas eliminar el perfil de "${state.name}"? Todos sus avances se perderán.`)) {
                 profiles = profiles.filter(p => p.id !== activeUser.id);
                 activeUser = profiles[0] || null;
                 if (activeUser) {
@@ -1562,12 +1584,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ====== INITIAL APP LAUNCH ======
+    renderPath();
+    renderDictionary();
+    renderAAC('needs');
+    updateStats();
+
     if (!activeUser || profiles.length === 0) {
         showOnboardingModal(true);
-    } else {
-        renderPath();
-        renderDictionary();
-        renderAAC('needs');
-        updateStats();
     }
 });
