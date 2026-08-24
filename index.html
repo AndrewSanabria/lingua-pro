@@ -2,181 +2,231 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Lingua Pro - Dominio del Inglés & Aprendizaje Adaptativo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Lingua Pro — Inglés paso a paso</title>
+    <meta name="description" content="Aprende inglés con lecciones visuales, audio y un comunicador PECS. De K0 a C1.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=15.0">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=16.0">
 </head>
 <body>
+    <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
+        <symbol id="i-learn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V7l8-3 8 3v12"/><path d="M4 19l8-3 8 3"/><path d="M12 4v12"/></symbol>
+        <symbol id="i-aac" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+        <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+        <symbol id="i-review" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="14" height="16" rx="2"/><path d="M8 3h10a2 2 0 0 1 2 2v14"/><path d="M8 10h6M8 14h4"/></symbol>
+        <symbol id="i-shop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h12l-1 11H7L6 9z"/><path d="M9 9V7a3 3 0 0 1 6 0v2"/></symbol>
+        <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4-6 8-6s6.5 2 8 6"/></symbol>
+        <symbol id="i-fire" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s5 5 5 9a5 5 0 1 1-10 0c0-2 2-4 3-6 2 2 3 3 3 5"/></symbol>
+        <symbol id="i-gem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 7-10 11L2 10l4-7z"/><path d="M2 10h20M8 3l4 7 4-7"/></symbol>
+        <symbol id="i-heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.6-9.5-8.2C.4 9.6 2.1 5 6.4 5c2.3 0 3.6 1.3 5.6 3.6C14 6.3 15.3 5 17.6 5c4.3 0 6 4.6 3.9 7.8C19 16.4 12 21 12 21z"/></symbol>
+        <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+        <symbol id="i-hint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 1 4 12c-.8.8-1 1.6-1 3H9c0-1.4-.2-2.2-1-3A7 7 0 0 1 12 2z"/></symbol>
+        <symbol id="i-rabbit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 14c0-6 2-11 4-11s2 3 2 6"/><path d="M16 14c0-4 1-8 3-9"/><circle cx="12" cy="16" r="5"/></symbol>
+        <symbol id="i-turtle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><ellipse cx="12" cy="14" rx="7" ry="5"/><path d="M5 14h-2M21 14h-2M8 19v2M16 19v2M16 9c1-3 3-4 4-4"/></symbol>
+        <symbol id="i-echo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></symbol>
+        <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+        <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.6 6.6L22 10l-5 4.4L18.2 22 12 18.2 5.8 22 7 14.4 2 10l7.4-1.4L12 2z"/></symbol>
+        <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></symbol>
+        <symbol id="i-speak" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4h4l5 4V6L7 10H3z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 7a7 7 0 0 1 0 10"/></symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+        <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/></symbol>
+        <symbol id="i-clap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 13l-3-3 2-2 3 3"/><path d="M11 10l4-4 2 2-4 4"/><path d="M7 17c2 2 6 3 10 0"/></symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    </svg>
+
     <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
 
     <div class="app-viewport">
-        <!-- TOP NAV -->
         <header class="top-nav" id="top-nav">
-            <div class="nav-item user-avatar-item" id="top-user-avatar-btn" title="Ver mi perfil">
+            <button class="nav-item user-chip" id="top-user-avatar-btn" type="button" title="Ver mi perfil">
+                <img class="mascot-mini hidden" id="top-mascot-img" src="assets/mascot.jpg" alt="">
                 <span class="top-user-avatar-badge" id="top-user-avatar-icon">🦁</span>
                 <span class="top-user-name" id="top-user-name">Usuario</span>
-            </div>
-            <div class="nav-item level-item" id="level-selector-btn">
-                <span class="flag-icon">🇲🇽 ➔ 🇺🇸</span>
+            </button>
+            <button class="nav-item level-item" id="level-selector-btn" type="button" aria-expanded="false">
+                <span class="level-flags">🇲🇽 → 🇺🇸</span>
                 <span class="level-badge" id="current-level-badge">A1</span>
-                <span class="level-arrow">▾</span>
-            </div>
-            <div class="nav-item streak-item"><span class="stat-icon">🔥</span><span class="stat-val" id="user-streak">1</span></div>
-            <div class="nav-item gems-item"><span class="stat-icon">💎</span><span class="stat-val" id="user-gems">50</span></div>
-            <div class="nav-item hearts-item" id="hearts-stat-container">
-                <span class="stat-icon heart-icon-anim" id="main-heart-icon">❤️</span>
-                <span class="stat-val" id="user-hearts">5</span>
-                <span class="floating-heart-loss" id="floating-heart-loss">-1 ❤️</span>
+            </button>
+            <div class="stats-row">
+                <div class="stat-pill streak-item" title="Racha diaria"><svg class="ico"><use href="#i-fire"/></svg><span id="user-streak">1</span></div>
+                <div class="stat-pill gems-item" title="Gemas"><svg class="ico"><use href="#i-gem"/></svg><span id="user-gems">50</span></div>
+                <div class="stat-pill hearts-item" id="hearts-stat-container" title="Vidas">
+                    <svg class="ico heart"><use href="#i-heart"/></svg>
+                    <span id="user-hearts">5</span>
+                    <span class="floating-heart-loss" id="floating-heart-loss">−1</span>
+                </div>
             </div>
         </header>
 
-        <!-- LEVEL DRAWER -->
-        <div class="level-drawer" id="level-drawer">
-            <div class="level-drawer-header">Selecciona el Modo de Aprendizaje</div>
+        <div class="level-drawer" id="level-drawer" role="dialog" aria-label="Elegir nivel">
+            <div class="level-drawer-header">
+                <strong>Tu camino</strong>
+                <span>Elige el modo. Puedes cambiar cuando quieras.</span>
+            </div>
             <div class="level-options">
-                <button class="level-opt" data-level="K0"><span class="opt-badge opt-kids">🧸 K0</span><div class="opt-info"><strong>Kids & Terapia de Lenguaje 🌈</strong><span>Pictogramas PECS, silabeo rítmico con palmas, sonidos guía y sin estrés de vidas</span></div></button>
-                <button class="level-opt active" data-level="A1"><span class="opt-badge">A1</span><div class="opt-info"><strong>Vocabulario Inicial (12 Unidades)</strong><span>Animales, colores, comida, cuerpo, familia, ropa, casa y transporte</span></div></button>
-                <button class="level-opt" data-level="A2"><span class="opt-badge">A2</span><div class="opt-info"><strong>Vocabulario Fundamental (10 Unidades)</strong><span>Verbos de acción, emociones, lugares, números, adjetivos y rutinas</span></div></button>
-                <button class="level-opt" data-level="B1"><span class="opt-badge">B1</span><div class="opt-info"><strong>Situaciones Reales (6 Unidades)</strong><span>Viajes, oficina, hotel, supermercado, salud y restaurantes</span></div></button>
-                <button class="level-opt" data-level="C1"><span class="opt-badge">C1</span><div class="opt-info"><strong>Fluidez & Modismos (4 Unidades)</strong><span>Idioms nativos, phrasal verbs clave y debates</span></div></button>
+                <button class="level-opt" data-level="K0" type="button"><span class="opt-badge opt-kids">K0</span><div class="opt-info"><strong>Niños y terapia</strong><span>10 unidades · pictogramas, palmas y vidas infinitas</span></div></button>
+                <button class="level-opt active" data-level="A1" type="button"><span class="opt-badge">A1</span><div class="opt-info"><strong>Vocabulario inicial</strong><span>12 unidades · palabras esenciales con audio</span></div></button>
+                <button class="level-opt" data-level="A2" type="button"><span class="opt-badge">A2</span><div class="opt-info"><strong>Vida cotidiana</strong><span>12 unidades · rutinas, ciudad, viajes y salud</span></div></button>
+                <button class="level-opt" data-level="B1" type="button"><span class="opt-badge">B1</span><div class="opt-info"><strong>Situaciones reales</strong><span>12 unidades · trabajo, opiniones y conversación</span></div></button>
+                <button class="level-opt" data-level="C1" type="button"><span class="opt-badge">C1</span><div class="opt-info"><strong>Fluidez e ideas</strong><span>12 unidades · modismos, debate y pensamiento</span></div></button>
             </div>
         </div>
 
         <div class="views-wrapper">
-            <!-- PATH VIEW -->
             <main class="view path-view active" id="path-view">
                 <div class="path-user-banner" id="path-user-banner">
                     <div class="banner-avatar-wrap">
-                        <span class="banner-avatar" id="banner-user-avatar">🦁</span>
-                        <span class="banner-status-dot"></span>
+                        <img class="banner-mascot" src="assets/mascot.jpg" alt="Mascota Lingua" width="56" height="56">
+                        <span class="banner-avatar hidden" id="banner-user-avatar">🦁</span>
                     </div>
                     <div class="banner-info">
-                        <div class="banner-greeting">¡Hola, <strong id="banner-user-name">Usuario</strong>! 👋</div>
-                        <div class="banner-sub" id="banner-user-sub">Nivel A1 • 0 XP acumulados</div>
+                        <div class="banner-greeting">Hola, <strong id="banner-user-name">Usuario</strong></div>
+                        <div class="banner-sub" id="banner-user-sub">Nivel A1 · 0 XP</div>
                     </div>
-                    <button class="banner-profile-link" id="banner-profile-link">Mi Perfil 👤</button>
+                    <button class="banner-profile-link" id="banner-profile-link" type="button">Perfil</button>
                 </div>
                 <div class="section-banner" id="section-banner">
                     <div class="banner-content">
                         <span class="unit-badge" id="banner-unit">Nivel A1</span>
-                        <h2 id="banner-title">Vocabulario Esencial</h2>
-                        <p id="banner-desc">Repetición espaciada con imágenes, pronunciación en español y frases de contexto</p>
+                        <h2 id="banner-title">Vocabulario esencial</h2>
+                        <p id="banner-desc">Mira, escucha y usa cada palabra en una frase.</p>
                     </div>
+                </div>
+                <div class="how-it-works">
+                    <div class="how-step"><span>1</span>Mira la imagen</div>
+                    <div class="how-step"><span>2</span>Escucha cómo suena</div>
+                    <div class="how-step"><span>3</span>Úsala en una frase</div>
                 </div>
                 <div class="path-tree" id="path-tree"></div>
             </main>
 
-            <!-- AAC COMMUNICATOR VIEW (TABLERO PECS PARA DÉFICIT DE LENGUAJE) -->
             <main class="view aac-view" id="aac-view">
                 <div class="view-header">
-                    <h2>🧩 Tablero Visual de Comunicación (CAA)</h2>
-                    <p>Toca los pictogramas para armar frases y escuchar la voz en inglés y español</p>
+                    <h2>Tablero para hablar</h2>
+                    <p>Toca pictogramas, arma tu frase y pulsa Hablar. Se oye en inglés.</p>
                 </div>
-
-                <!-- SENTENCE STRIP -->
                 <div class="aac-strip-container">
                     <div class="aac-strip" id="aac-strip">
-                        <span class="aac-placeholder" id="aac-placeholder">Toca los pictogramas para hablar...</span>
+                        <span class="aac-placeholder" id="aac-placeholder">Toca abajo para armar una frase</span>
                     </div>
                     <div class="aac-actions">
-                        <button class="aac-speak-btn" id="aac-speak-btn">🔊 HABLAR</button>
-                        <button class="aac-clear-btn" id="aac-clear-btn">🗑️</button>
+                        <button class="aac-speak-btn" id="aac-speak-btn" type="button"><svg class="ico"><use href="#i-speak"/></svg> Hablar</button>
+                        <button class="aac-clear-btn" id="aac-clear-btn" type="button" aria-label="Borrar frase">⌫</button>
                     </div>
                 </div>
-
-                <!-- CATEGORY TABS -->
                 <div class="aac-category-tabs" id="aac-category-tabs">
-                    <button class="aac-cat-btn active" data-cat="needs">🥤 Necesidades</button>
-                    <button class="aac-cat-btn" data-cat="feelings">😊 Emociones</button>
-                    <button class="aac-cat-btn" data-cat="actions">🏃 Acciones</button>
-                    <button class="aac-cat-btn" data-cat="food">🍎 Comidas</button>
-                    <button class="aac-cat-btn" data-cat="places">🏠 Lugares</button>
-                    <button class="aac-cat-btn" data-cat="social">👋 Social</button>
+                    <button class="aac-cat-btn active" data-cat="needs" type="button">Necesito</button>
+                    <button class="aac-cat-btn" data-cat="feelings" type="button">Siento</button>
+                    <button class="aac-cat-btn" data-cat="actions" type="button">Hago</button>
+                    <button class="aac-cat-btn" data-cat="food" type="button">Como</button>
+                    <button class="aac-cat-btn" data-cat="places" type="button">Voy</button>
+                    <button class="aac-cat-btn" data-cat="social" type="button">Digo</button>
                 </div>
-
-                <!-- PECS GRID -->
-                <div class="aac-cards-grid" id="aac-cards-grid">
-                    <!-- Rendered dynamically by JS -->
-                </div>
+                <div class="aac-cards-grid" id="aac-cards-grid"></div>
             </main>
 
-            <!-- DICTIONARY VIEW -->
             <main class="view dictionary-view" id="dictionary-view">
                 <div class="view-header">
-                    <h2>📖 Diccionario Visual & Silabeo</h2>
-                    <p>Repasa cómo suena cada palabra con su pronunciación, silabeo y ejemplos prácticos</p>
+                    <h2>Diccionario del nivel</h2>
+                    <p>Todas las palabras de tu camino, con sonido y silabeo.</p>
                 </div>
-                <div class="dictionary-categories" id="dictionary-categories">
-                    <!-- Dynamic categories rendered by JS -->
-                </div>
+                <div class="dictionary-categories" id="dictionary-categories"></div>
             </main>
 
-            <!-- REVIEW VIEW -->
             <main class="view review-view" id="review-view">
-                <div class="view-header"><h2>🔄 Tarjetas de Repaso SRS</h2><p>Memoria activa con imágenes, audio y contexto</p></div>
+                <div class="view-header">
+                    <h2>Repaso inteligente</h2>
+                    <p id="srs-status">Las palabras que fallas vuelven aquí, un poco más tarde.</p>
+                </div>
                 <div class="review-card-container">
+                    <div class="srs-empty hidden" id="srs-empty">
+                        <img src="assets/mascot.jpg" alt="" width="88" height="88">
+                        <h3>Nada pendiente</h3>
+                        <p>Completa una lección. Lo que se te trabe aparecerá aquí para repasarlo.</p>
+                    </div>
                     <div class="srs-card" id="srs-card">
                         <div class="srs-emoji" id="srs-emoji">🍎</div>
                         <div class="srs-word" id="srs-word">Apple</div>
-                        <div class="srs-sounds-like" id="srs-sounds-like">🗣️ Suena: "áp-ol"</div>
+                        <div class="srs-sounds-like" id="srs-sounds-like">Suena: “áp-ol”</div>
                         <div class="srs-phonetic" id="srs-phonetic">/ˈæp.əl/</div>
-                        <div class="srs-context-line" id="srs-context-line">📌 "A sweet red apple" (Una manzana roja dulce)</div>
-                        <button class="audio-btn srs-audio" id="srs-tts-btn">🔊 Escuchar Pronunciación</button>
-                        <div class="srs-translation hidden" id="srs-translation">Manzana 🍎</div>
-                        <button class="action-btn reveal-btn" id="reveal-srs-btn">MOSTRAR SIGNIFICADO</button>
+                        <div class="srs-context-line" id="srs-context-line">A sweet red apple</div>
+                        <button class="audio-btn srs-audio" id="srs-tts-btn" type="button"><svg class="ico"><use href="#i-speak"/></svg> Escuchar</button>
+                        <div class="srs-translation hidden" id="srs-translation">Manzana</div>
+                        <button class="action-btn reveal-btn" id="reveal-srs-btn" type="button">Mostrar significado</button>
+                        <div class="srs-grade hidden" id="srs-grade">
+                            <button type="button" data-grade="again">Otra vez</button>
+                            <button type="button" data-grade="good">Bien</button>
+                            <button type="button" data-grade="easy">Fácil</button>
+                        </div>
                     </div>
                 </div>
             </main>
 
-            <!-- SHOP VIEW -->
             <main class="view shop-view" id="shop-view">
-                <div class="view-header"><h2>🏪 Tienda</h2><p>Gasta tus gemas</p></div>
+                <div class="view-header">
+                    <h2>Tienda</h2>
+                    <p>Usa gemas para seguir practicando sin parar.</p>
+                </div>
                 <div class="shop-items-grid">
-                    <div class="shop-card"><div class="shop-icon">❤️</div><div class="shop-info"><h3>Recargar Vidas</h3><p>5 vidas completas</p></div><button class="buy-btn" id="buy-hearts-btn">50 💎</button></div>
-                    <div class="shop-card"><div class="shop-icon">🛡️</div><div class="shop-info"><h3>Escudo de Racha</h3><p>Protege tu racha 1 día</p></div><button class="buy-btn" id="buy-freeze-btn">100 💎</button></div>
+                    <div class="shop-card">
+                        <div class="shop-icon"><svg class="ico heart"><use href="#i-heart"/></svg></div>
+                        <div class="shop-info"><h3>Recargar vidas</h3><p>Vuelves a 5 vidas. Se guardan entre lecciones.</p></div>
+                        <button class="buy-btn" id="buy-hearts-btn" type="button">50</button>
+                    </div>
+                    <div class="shop-card">
+                        <div class="shop-icon"><svg class="ico"><use href="#i-shield"/></svg></div>
+                        <div class="shop-info"><h3>Escudo de racha</h3><p>Si un día no entras, tu racha no se rompe.</p></div>
+                        <button class="buy-btn" id="buy-freeze-btn" type="button">100</button>
+                    </div>
                 </div>
             </main>
 
-            <!-- PROFILE VIEW -->
             <main class="view profile-view" id="profile-view">
                 <div class="profile-card">
+                    <img class="profile-mascot" src="assets/mascot.jpg" alt="" width="84" height="84">
                     <div class="avatar-circle" id="profile-avatar-display">🦁</div>
                     <h2 class="user-name" id="profile-name-display">Usuario</h2>
-                    <span class="user-rank" id="profile-rank-display">Nivel A1 💎</span>
+                    <span class="user-rank" id="profile-rank-display">Nivel A1</span>
                 </div>
                 <div class="profile-stats-grid">
                     <div class="prof-stat"><span class="prof-icon">🔥</span><span class="prof-val" id="prof-streak">1</span><span class="prof-lbl">Racha</span></div>
                     <div class="prof-stat"><span class="prof-icon">⚡</span><span class="prof-val" id="prof-xp">0 XP</span><span class="prof-lbl">Experiencia</span></div>
                     <div class="prof-stat"><span class="prof-icon">💎</span><span class="prof-val" id="prof-gems">50</span><span class="prof-lbl">Gemas</span></div>
                 </div>
-
                 <div class="profiles-section">
                     <div class="section-title-row">
-                        <h3>👥 Perfiles de Usuario</h3>
-                        <button class="add-profile-btn" id="add-profile-btn">+ Nuevo Perfil</button>
+                        <h3>Quién aprende</h3>
+                        <button class="add-profile-btn" id="add-profile-btn" type="button">+ Perfil</button>
                     </div>
                     <div class="profiles-list" id="profiles-list"></div>
                 </div>
-
                 <div class="profile-actions-row">
-                    <button class="profile-action-btn edit-btn" id="edit-profile-btn">✏️ Editar Mi Nombre</button>
-                    <button class="profile-action-btn delete-btn" id="delete-profile-btn">🗑️ Eliminar Perfil</button>
+                    <button class="profile-action-btn edit-btn" id="edit-profile-btn" type="button">Editar nombre</button>
+                    <button class="profile-action-btn delete-btn" id="delete-profile-btn" type="button">Eliminar perfil</button>
                 </div>
             </main>
 
-            <!-- LESSON VIEW -->
             <main class="view lesson-view" id="lesson-view">
                 <header class="lesson-header">
-                    <button class="close-btn" id="close-lesson-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-                    <div class="progress-container"><div class="progress-bar"><div class="progress-fill" id="lesson-progress-fill"><div class="progress-shimmer"></div></div></div></div>
-                    <div class="lesson-hearts-display"><span id="lesson-heart-icon">❤️</span><span id="lesson-hearts-count">5</span></div>
+                    <button class="close-btn" id="close-lesson-btn" type="button" aria-label="Cerrar lección"><svg class="ico"><use href="#i-close"/></svg></button>
+                    <div class="progress-container"><div class="progress-bar"><div class="progress-fill" id="lesson-progress-fill"></div></div></div>
+                    <div class="lesson-hearts-display"><svg class="ico heart"><use href="#i-heart"/></svg><span id="lesson-hearts-count">5</span></div>
                 </header>
 
-                <div class="combo-counter hidden" id="combo-counter"><span class="combo-flame">🔥</span><span class="combo-number" id="combo-number">2</span><span class="combo-label">COMBO</span></div>
+                <div class="lesson-intro" id="lesson-intro">
+                    <img src="assets/mascot.jpg" alt="" width="72" height="72">
+                    <p class="intro-kicker" id="intro-kicker">Lección</p>
+                    <h2 id="intro-title">Animales</h2>
+                    <p id="intro-goal">Hoy vas a ver, oír y usar palabras nuevas.</p>
+                    <div class="intro-words" id="intro-words"></div>
+                    <button class="action-btn continue-action" id="intro-start-btn" type="button">Empezar</button>
+                </div>
+
+                <div class="combo-counter hidden" id="combo-counter"><span>🔥</span><span id="combo-number">2</span><span>combo</span></div>
                 <div class="question-badge" id="question-badge"><span id="q-current">1</span> / <span id="q-total">8</span></div>
+                <div class="type-pill" id="type-pill">Mira y elige</div>
                 <div class="encouragement-toast hidden" id="encouragement-toast"><span id="encouragement-text">¡Genial!</span></div>
 
                 <div class="exercise-area" id="exercise-area">
@@ -186,80 +236,93 @@
                         <div class="mascot-container"><div class="mascot-avatar-circle" id="mascot-avatar">🦁</div></div>
                         <div class="speech-bubble">
                             <div class="audio-controls-group">
-                                <button class="audio-btn normal-speed" id="tts-normal-btn" title="Velocidad normal"><span>🐇</span></button>
-                                <button class="audio-btn slow-speed" id="tts-slow-btn" title="Velocidad lenta"><span>🐢</span></button>
-                                <button class="audio-btn echo-speed" id="tts-echo-btn" title="Repetir con eco"><span>🔁</span></button>
+                                <button class="audio-btn normal-speed" id="tts-normal-btn" type="button" title="Normal"><svg class="ico"><use href="#i-rabbit"/></svg></button>
+                                <button class="audio-btn slow-speed" id="tts-slow-btn" type="button" title="Despacio"><svg class="ico"><use href="#i-turtle"/></svg></button>
+                                <button class="audio-btn echo-speed" id="tts-echo-btn" type="button" title="Eco"><svg class="ico"><use href="#i-echo"/></svg></button>
                             </div>
                             <span class="prompt-text" id="prompt-text">Hello!</span>
                         </div>
                     </div>
 
-                    <!-- EXERCISE 1: IMAGE SELECT (Emoji -> Select English word) -->
                     <div class="exercise-module hidden" id="mod-image-select">
                         <div class="word-presentation-card">
                             <div class="big-emoji" id="big-emoji">🐱</div>
-                            <div class="sounds-like-pill" id="sounds-like-pill">🗣️ Suena: "kat"</div>
+                            <div class="sounds-like-pill" id="sounds-like-pill">Suena: “kat”</div>
                             <div class="syllables-clap-row" id="syllables-clap-row">👏 <span id="syllables-text">KAT</span></div>
                             <div class="mouth-guide-pill hidden" id="mouth-guide-box">👄 <span>Junta los labios</span></div>
                             <div class="word-phonetic-badge" id="phonetic-badge">/kæt/</div>
-                            <div class="word-context-box" id="word-context-box">📌 "The cat is sleeping"</div>
+                            <div class="word-context-box" id="word-context-box">The cat is sleeping</div>
                         </div>
                         <div class="image-options" id="image-options"></div>
                     </div>
 
-                    <!-- EXERCISE 2: EMOJI MATCH (English word -> Select Emoji) -->
                     <div class="exercise-module hidden" id="mod-emoji-match">
                         <div class="word-presentation-card">
                             <div class="big-word" id="big-word">Cat</div>
-                            <div class="sounds-like-pill" id="big-word-sounds-like">🗣️ Suena: "kat"</div>
+                            <div class="sounds-like-pill" id="big-word-sounds-like">Suena: “kat”</div>
                             <div class="syllables-clap-row" id="big-syllables-clap-row">👏 <span id="big-syllables-text">KAT</span></div>
                             <div class="mouth-guide-pill hidden" id="big-mouth-guide-box">👄 <span>Articulación</span></div>
                             <div class="word-phonetic-badge" id="big-word-phonetic">/kæt/</div>
-                            <div class="word-context-box" id="big-word-context-box">📌 "A small cat"</div>
+                            <div class="word-context-box" id="big-word-context-box">A small cat</div>
                         </div>
                         <div class="emoji-options" id="emoji-options"></div>
                     </div>
 
-                    <!-- EXERCISE 3: LISTEN & SELECT (Escucha audio -> Selecciona la imagen o palabra) -->
                     <div class="exercise-module hidden" id="mod-listen-select">
                         <div class="listen-prompt-card">
-                            <button class="big-listen-btn" id="listen-big-btn">
-                                <span class="listen-speaker-icon">🔊</span>
+                            <button class="big-listen-btn" id="listen-big-btn" type="button">
+                                <svg class="ico xl"><use href="#i-speak"/></svg>
                                 <span class="listen-hint-lbl">Toca para escuchar</span>
                             </button>
                             <div class="audio-controls-group listen-speeds">
-                                <button class="audio-btn normal-speed" id="listen-normal-btn"><span>🐇 1x</span></button>
-                                <button class="audio-btn slow-speed" id="listen-slow-btn"><span>🐢 0.5x</span></button>
-                                <button class="audio-btn echo-speed" id="listen-echo-btn"><span>🔁 Eco</span></button>
+                                <button class="audio-btn normal-speed" id="listen-normal-btn" type="button">Normal</button>
+                                <button class="audio-btn slow-speed" id="listen-slow-btn" type="button">Despacio</button>
+                                <button class="audio-btn echo-speed" id="listen-echo-btn" type="button">Eco</button>
                             </div>
                         </div>
                         <div class="listen-options" id="listen-options"></div>
                     </div>
 
-                    <!-- EXERCISE 4: TRANSLATE (Word/Sentence Builder) -->
                     <div class="exercise-module hidden" id="mod-translate">
                         <div class="answer-construction-zone">
-                            <div class="answer-slot-line" id="answer-slot-line"><span class="placeholder-hint" id="placeholder-hint">Toca las palabras</span></div>
+                            <div class="answer-slot-line" id="answer-slot-line"><span class="placeholder-hint" id="placeholder-hint">Toca las palabras en orden</span></div>
                         </div>
                         <div class="word-pool-zone"><div class="word-pool" id="word-pool"></div></div>
                     </div>
 
-                    <!-- EXERCISE 5: PAIR MATCHING (Emparejar palabras) -->
                     <div class="exercise-module hidden" id="mod-matching">
-                        <p class="sub-instruction">Toca los pares que significan lo mismo:</p>
+                        <p class="sub-instruction">Une cada palabra inglesa con su significado</p>
                         <div class="matching-grid" id="matching-grid"></div>
                     </div>
 
-                    <!-- EXERCISE 6: MULTIPLE CHOICE -->
                     <div class="exercise-module hidden" id="mod-choice">
                         <div class="choices-grid" id="choices-grid"></div>
+                    </div>
+
+                    <div class="exercise-module hidden" id="mod-fill-blank">
+                        <div class="blank-card">
+                            <p class="blank-sentence" id="blank-sentence">The ___ is sleeping.</p>
+                            <p class="blank-es" id="blank-es"></p>
+                        </div>
+                        <div class="image-options" id="blank-options"></div>
+                    </div>
+
+                    <div class="exercise-module hidden" id="mod-clap">
+                        <div class="word-presentation-card">
+                            <div class="big-emoji" id="clap-emoji">🍌</div>
+                            <div class="big-word" id="clap-word">Banana</div>
+                            <div class="syllables-clap-row" id="clap-syllables">BA · NÁ · NA</div>
+                        </div>
+                        <button class="clap-pad" id="clap-pad" type="button">👏 Toca al ritmo</button>
+                        <p class="clap-live" id="clap-live">Palmas: 0</p>
+                        <div class="clap-options" id="clap-options"></div>
                     </div>
                 </div>
 
                 <footer class="lesson-footer">
                     <div class="footer-actions-row">
-                        <button class="hint-btn" id="hint-btn"><span>💡</span><span class="hint-label">Pista</span></button>
-                        <button class="action-btn check-action" id="check-btn" disabled>COMPROBAR</button>
+                        <button class="hint-btn" id="hint-btn" type="button"><svg class="ico"><use href="#i-hint"/></svg><span class="hint-label">Pista</span></button>
+                        <button class="action-btn check-action" id="check-btn" type="button" disabled>Comprobar</button>
                     </div>
                 </footer>
 
@@ -272,94 +335,91 @@
                                 <p class="status-subtitle" id="feedback-subtitle"></p>
                             </div>
                         </div>
-                        <button class="action-btn continue-action" id="continue-btn">CONTINUAR</button>
+                        <button class="action-btn continue-action" id="continue-btn" type="button">Continuar</button>
                     </div>
                 </div>
             </main>
         </div>
 
-        <!-- BOTTOM NAV BAR -->
         <nav class="bottom-nav-bar" id="bottom-nav-bar">
-            <button class="nav-tab active" data-target="path-view"><span class="tab-icon">🗺️</span><span class="tab-label">Aprender</span></button>
-            <button class="nav-tab" data-target="aac-view"><span class="tab-icon">🧩</span><span class="tab-label">Comunicador</span></button>
-            <button class="nav-tab" data-target="dictionary-view"><span class="tab-icon">📖</span><span class="tab-label">Diccionario</span></button>
-            <button class="nav-tab" data-target="review-view"><span class="tab-icon">🔄</span><span class="tab-label">Repaso</span></button>
-            <button class="nav-tab" data-target="shop-view"><span class="tab-icon">🏪</span><span class="tab-label">Tienda</span></button>
-            <button class="nav-tab" data-target="profile-view"><span class="tab-icon">👤</span><span class="tab-label">Perfil</span></button>
+            <button class="nav-tab active" data-target="path-view" type="button"><svg class="ico"><use href="#i-learn"/></svg><span class="tab-label">Aprender</span></button>
+            <button class="nav-tab" data-target="aac-view" type="button"><svg class="ico"><use href="#i-aac"/></svg><span class="tab-label">Hablar</span></button>
+            <button class="nav-tab" data-target="dictionary-view" type="button"><svg class="ico"><use href="#i-book"/></svg><span class="tab-label">Palabras</span></button>
+            <button class="nav-tab" data-target="review-view" type="button"><svg class="ico"><use href="#i-review"/></svg><span class="tab-label">Repaso</span><span class="tab-dot hidden" id="review-dot"></span></button>
+            <button class="nav-tab" data-target="shop-view" type="button"><svg class="ico"><use href="#i-shop"/></svg><span class="tab-label">Tienda</span></button>
+            <button class="nav-tab" data-target="profile-view" type="button"><svg class="ico"><use href="#i-user"/></svg><span class="tab-label">Tú</span></button>
         </nav>
 
-        <!-- TUTORIAL OVERLAY -->
         <div class="tutorial-overlay hidden" id="tutorial-overlay">
             <div class="tutorial-card" id="tutorial-card">
-                <button class="tutorial-close-btn" id="tutorial-close-btn" aria-label="Cerrar">✕</button>
-                <div class="tutorial-mascot">🤖</div>
+                <button class="tutorial-close-btn" id="tutorial-close-btn" type="button" aria-label="Cerrar">✕</button>
+                <img class="tutorial-mascot-img" src="assets/mascot.jpg" alt="">
                 <p class="tutorial-text" id="tutorial-text">¡Hola!</p>
                 <div class="tutorial-step-dots" id="tutorial-dots"></div>
-                <button class="action-btn continue-action tutorial-next-btn" id="tutorial-next-btn">SIGUIENTE →</button>
+                <button class="action-btn continue-action tutorial-next-btn" id="tutorial-next-btn" type="button">Siguiente</button>
             </div>
         </div>
 
-        <!-- USER ONBOARDING & PROFILE CREATION MODAL -->
         <div class="modal-overlay" id="onboarding-modal">
             <div class="onboarding-card">
                 <div class="onboarding-header">
-                    <span class="onboarding-badge">🌟 ¡BIENVENIDO!</span>
-                    <h2 id="onboarding-title">Crea tu Perfil</h2>
-                    <p id="onboarding-subtitle">Tus avances, nivel y puntos se guardarán de forma 100% individual.</p>
+                    <img src="assets/mascot.jpg" alt="" width="72" height="72">
+                    <span class="onboarding-badge">Bienvenido</span>
+                    <h2 id="onboarding-title">Crea tu perfil</h2>
+                    <p id="onboarding-subtitle">Tu avance se guarda en este dispositivo, solo para ti.</p>
                 </div>
-
                 <div class="onboarding-form">
                     <label class="form-label" for="onboarding-name-input">¿Cómo te llamas?</label>
-                    <input type="text" class="onboarding-input" id="onboarding-name-input" placeholder="Escribe tu nombre..." maxlength="20" autocomplete="off">
-
-                    <label class="form-label">Elige tu Avatar o Mascota:</label>
+                    <input type="text" class="onboarding-input" id="onboarding-name-input" placeholder="Escribe tu nombre" maxlength="20" autocomplete="off">
+                    <label class="form-label">Elige un avatar</label>
                     <div class="avatar-options-grid" id="avatar-options-grid">
-                        <button class="avatar-opt-btn selected" data-avatar="🦁">🦁</button>
-                        <button class="avatar-opt-btn" data-avatar="🤖">🤖</button>
-                        <button class="avatar-opt-btn" data-avatar="🐼">🐼</button>
-                        <button class="avatar-opt-btn" data-avatar="🦊">🦊</button>
-                        <button class="avatar-opt-btn" data-avatar="🦄">🦄</button>
-                        <button class="avatar-opt-btn" data-avatar="🚀">🚀</button>
-                        <button class="avatar-opt-btn" data-avatar="👑">👑</button>
-                        <button class="avatar-opt-btn" data-avatar="⭐">⭐</button>
+                        <button class="avatar-opt-btn selected" data-avatar="🦁" type="button">🦁</button>
+                        <button class="avatar-opt-btn" data-avatar="🐼" type="button">🐼</button>
+                        <button class="avatar-opt-btn" data-avatar="🦊" type="button">🦊</button>
+                        <button class="avatar-opt-btn" data-avatar="🦄" type="button">🦄</button>
+                        <button class="avatar-opt-btn" data-avatar="🦉" type="button">🦉</button>
+                        <button class="avatar-opt-btn" data-avatar="🐸" type="button">🐸</button>
+                        <button class="avatar-opt-btn" data-avatar="🐬" type="button">🐬</button>
+                        <button class="avatar-opt-btn" data-avatar="⭐" type="button">⭐</button>
                     </div>
-
-                    <label class="form-label">¿Por qué nivel deseas comenzar?</label>
+                    <label class="form-label">¿Por dónde empiezas?</label>
                     <div class="level-choice-row" id="onboarding-level-row">
-                        <button class="level-choice-btn" data-level="K0">
-                            <span class="lvl-ico">🧸</span>
-                            <div class="lvl-txt"><strong>K0: Niños & Terapia</strong><span>Estimulación, fonación y vidas infinitas</span></div>
-                        </button>
-                        <button class="level-choice-btn active" data-level="A1">
-                            <span class="lvl-ico">🌱</span>
-                            <div class="lvl-txt"><strong>A1: Principiante</strong><span>Vocabulario esencial y frases base</span></div>
-                        </button>
-                        <button class="level-choice-btn" data-level="A2">
-                            <span class="lvl-ico">🏙️</span>
-                            <div class="lvl-txt"><strong>A2: Elemental</strong><span>Vida cotidiana, viajes y compras</span></div>
-                        </button>
+                        <button class="level-choice-btn" data-level="K0" type="button"><span class="lvl-ico">🧸</span><div class="lvl-txt"><strong>K0 Niños</strong><span>Pictogramas y palmas</span></div></button>
+                        <button class="level-choice-btn active" data-level="A1" type="button"><span class="lvl-ico">🌱</span><div class="lvl-txt"><strong>A1 Base</strong><span>Primeras palabras</span></div></button>
+                        <button class="level-choice-btn" data-level="A2" type="button"><span class="lvl-ico">🏙️</span><div class="lvl-txt"><strong>A2 Diario</strong><span>Frases de la vida</span></div></button>
+                        <button class="level-choice-btn" data-level="B1" type="button"><span class="lvl-ico">💬</span><div class="lvl-txt"><strong>B1 Real</strong><span>Conversación</span></div></button>
+                        <button class="level-choice-btn" data-level="C1" type="button"><span class="lvl-ico">🎓</span><div class="lvl-txt"><strong>C1 Fluidez</strong><span>Ideas complejas</span></div></button>
                     </div>
-
-                    <button class="action-btn continue-action onboarding-submit-btn" id="onboarding-submit-btn">¡COMENZAR APRENDIZAJE! 🚀</button>
+                    <button class="action-btn continue-action onboarding-submit-btn" id="onboarding-submit-btn" type="button">Empezar a aprender</button>
                 </div>
             </div>
         </div>
 
-        <!-- LESSON COMPLETE MODAL -->
+        <div class="modal-overlay" id="hearts-modal">
+            <div class="completion-card">
+                <div class="celebration-icon">💔</div>
+                <h2>Sin vidas</h2>
+                <p>Puedes recargarlas en la tienda o practicar el nivel K0, que no usa vidas.</p>
+                <button class="action-btn continue-action" id="hearts-shop-btn" type="button">Ir a la tienda</button>
+            </div>
+        </div>
+
         <div class="modal-overlay" id="completion-modal">
             <div class="completion-card">
-                <div class="celebration-icon">🎉</div>
-                <h2>¡Lección Completada!</h2>
+                <img class="complete-mascot" src="assets/mascot.jpg" alt="" width="80" height="80">
+                <h2 id="complete-title">¡Lección completada!</h2>
                 <p class="completion-encourage" id="completion-encourage">¡Increíble!</p>
                 <div class="rewards-grid">
                     <div class="reward-box"><span class="reward-label">XP</span><span class="reward-value xp-val" id="xp-reward-val">+20</span></div>
-                    <div class="reward-box"><span class="reward-label">PRECISIÓN</span><span class="reward-value acc-val" id="accuracy-val">100%</span></div>
-                    <div class="reward-box"><span class="reward-label">COMBO</span><span class="reward-value combo-max-val" id="combo-max-val">🔥 0</span></div>
+                    <div class="reward-box"><span class="reward-label">Precisión</span><span class="reward-value acc-val" id="accuracy-val">100%</span></div>
+                    <div class="reward-box"><span class="reward-label">Combo</span><span class="reward-value combo-max-val" id="combo-max-val">🔥 0</span></div>
                 </div>
-                <button class="action-btn continue-action" id="finish-lesson-btn">CONTINUAR</button>
+                <p class="pass-note" id="pass-note"></p>
+                <button class="action-btn continue-action" id="finish-lesson-btn" type="button">Continuar</button>
             </div>
         </div>
     </div>
-    <script src="app.js?v=15.0"></script>
+    <script src="curriculum.js?v=16.0"></script>
+    <script src="app.js?v=16.0"></script>
 </body>
 </html>
