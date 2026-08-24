@@ -1013,10 +1013,9 @@ document.addEventListener('DOMContentLoaded', () => {
         onboardingNameInput.value = isNew ? '' : state.name;
         selectedOnboardingAvatar = isNew ? '🦁' : state.avatar;
         selectedOnboardingLevel = isNew ? 'A1' : state.currentLevel;
-        $('onboarding-submit-btn').textContent = isNew ? 'Empezar a aprender' : 'Guardar';
+        if ($('onboarding-submit-btn')) $('onboarding-submit-btn').textContent = isNew ? 'Empezar' : 'Guardar';
         document.querySelectorAll('.avatar-opt-btn').forEach((b) => b.classList.toggle('selected', b.dataset.avatar === selectedOnboardingAvatar));
         document.querySelectorAll('.level-choice-btn').forEach((b) => b.classList.toggle('active', b.dataset.level === selectedOnboardingLevel));
-        setTimeout(() => onboardingNameInput.focus(), 120);
     }
 
     function handleOnboardingSubmit() {
@@ -1038,14 +1037,16 @@ document.addEventListener('DOMContentLoaded', () => {
             activeUser = profile;
             syncStateFromActiveUser();
             saveProgress();
-            triggerConfetti();
+            state.tutorialSeen = true;
+            localStorage.setItem('lp_tut', '1');
         }
         playSuccess();
-        onboardingModal.classList.remove('active');
+        if (onboardingNameInput) onboardingNameInput.blur();
+        if (onboardingModal) onboardingModal.classList.remove('active');
         currentLevelBadge.textContent = state.currentLevel;
         levelOpts.forEach((o) => o.classList.toggle('active', o.dataset.level === state.currentLevel));
         renderPath(); renderDictionary(); renderAAC('needs'); updateStats();
-        if (!state.tutorialSeen) showTutorial();
+        if (!isEditingProfile && !state.tutorialSeen) showTutorial();
     }
     byId('onboarding-submit-btn', 'click', handleOnboardingSubmit);
     bind(onboardingNameInput, 'keydown', (e) => { if (e.key === 'Enter') handleOnboardingSubmit(); });

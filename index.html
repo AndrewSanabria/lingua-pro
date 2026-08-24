@@ -11,7 +11,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=16.1">
+    <link rel="icon" href="assets/mascot.jpg">
+    <link rel="stylesheet" href="styles.css?v=16.2">
 </head>
 <body>
     <svg xmlns="http://www.w3.org/2000/svg" class="svg-sprite" aria-hidden="true">
@@ -365,35 +366,38 @@
 
         <div class="modal-overlay" id="onboarding-modal">
             <div class="onboarding-card">
-                <div class="onboarding-header">
-                    <img src="assets/mascot.jpg" alt="" width="72" height="72">
-                    <span class="onboarding-badge">Bienvenido</span>
-                    <h2 id="onboarding-title">Crea tu perfil</h2>
-                    <p id="onboarding-subtitle">Tu avance se guarda en este dispositivo, solo para ti.</p>
+                <div class="onboarding-scroll">
+                    <div class="onboarding-header">
+                        <img src="assets/mascot.jpg" alt="" width="52" height="52">
+                        <h2 id="onboarding-title">Crea tu perfil</h2>
+                        <p id="onboarding-subtitle">Tu avance se guarda en este teléfono.</p>
+                    </div>
+                    <div class="onboarding-form">
+                        <label class="form-label" for="onboarding-name-input">¿Cómo te llamas?</label>
+                        <input type="text" class="onboarding-input" id="onboarding-name-input" placeholder="Tu nombre" maxlength="20" autocomplete="off" enterkeyhint="done">
+                        <label class="form-label">Avatar</label>
+                        <div class="avatar-options-grid" id="avatar-options-grid">
+                            <button class="avatar-opt-btn selected" data-avatar="🦁" type="button">🦁</button>
+                            <button class="avatar-opt-btn" data-avatar="🐼" type="button">🐼</button>
+                            <button class="avatar-opt-btn" data-avatar="🦊" type="button">🦊</button>
+                            <button class="avatar-opt-btn" data-avatar="🦄" type="button">🦄</button>
+                            <button class="avatar-opt-btn" data-avatar="🦉" type="button">🦉</button>
+                            <button class="avatar-opt-btn" data-avatar="🐸" type="button">🐸</button>
+                            <button class="avatar-opt-btn" data-avatar="🐬" type="button">🐬</button>
+                            <button class="avatar-opt-btn" data-avatar="⭐" type="button">⭐</button>
+                        </div>
+                        <label class="form-label">Nivel</label>
+                        <div class="level-choice-row" id="onboarding-level-row">
+                            <button class="level-choice-btn" data-level="K0" type="button">🧸 K0</button>
+                            <button class="level-choice-btn active" data-level="A1" type="button">🌱 A1</button>
+                            <button class="level-choice-btn" data-level="A2" type="button">🏙️ A2</button>
+                            <button class="level-choice-btn" data-level="B1" type="button">💬 B1</button>
+                            <button class="level-choice-btn" data-level="C1" type="button">🎓 C1</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="onboarding-form">
-                    <label class="form-label" for="onboarding-name-input">¿Cómo te llamas?</label>
-                    <input type="text" class="onboarding-input" id="onboarding-name-input" placeholder="Escribe tu nombre" maxlength="20" autocomplete="off">
-                    <label class="form-label">Elige un avatar</label>
-                    <div class="avatar-options-grid" id="avatar-options-grid">
-                        <button class="avatar-opt-btn selected" data-avatar="🦁" type="button">🦁</button>
-                        <button class="avatar-opt-btn" data-avatar="🐼" type="button">🐼</button>
-                        <button class="avatar-opt-btn" data-avatar="🦊" type="button">🦊</button>
-                        <button class="avatar-opt-btn" data-avatar="🦄" type="button">🦄</button>
-                        <button class="avatar-opt-btn" data-avatar="🦉" type="button">🦉</button>
-                        <button class="avatar-opt-btn" data-avatar="🐸" type="button">🐸</button>
-                        <button class="avatar-opt-btn" data-avatar="🐬" type="button">🐬</button>
-                        <button class="avatar-opt-btn" data-avatar="⭐" type="button">⭐</button>
-                    </div>
-                    <label class="form-label">¿Por dónde empiezas?</label>
-                    <div class="level-choice-row" id="onboarding-level-row">
-                        <button class="level-choice-btn" data-level="K0" type="button"><span class="lvl-ico">🧸</span><div class="lvl-txt"><strong>K0 Niños</strong><span>Pictogramas y palmas</span></div></button>
-                        <button class="level-choice-btn active" data-level="A1" type="button"><span class="lvl-ico">🌱</span><div class="lvl-txt"><strong>A1 Base</strong><span>Primeras palabras</span></div></button>
-                        <button class="level-choice-btn" data-level="A2" type="button"><span class="lvl-ico">🏙️</span><div class="lvl-txt"><strong>A2 Diario</strong><span>Frases de la vida</span></div></button>
-                        <button class="level-choice-btn" data-level="B1" type="button"><span class="lvl-ico">💬</span><div class="lvl-txt"><strong>B1 Real</strong><span>Conversación</span></div></button>
-                        <button class="level-choice-btn" data-level="C1" type="button"><span class="lvl-ico">🎓</span><div class="lvl-txt"><strong>C1 Fluidez</strong><span>Ideas complejas</span></div></button>
-                    </div>
-                    <button class="action-btn continue-action onboarding-submit-btn" id="onboarding-submit-btn" type="button">Empezar a aprender</button>
+                <div class="onboarding-cta">
+                    <button class="action-btn continue-action onboarding-submit-btn" id="onboarding-submit-btn" type="button">Empezar</button>
                 </div>
             </div>
         </div>
@@ -422,7 +426,7 @@
             </div>
         </div>
     </div>
-    <script src="curriculum.js?v=16.1"></script>
-    <script src="app.js?v=16.1"></script>
+    <script src="curriculum.js?v=16.2"></script>
+    <script src="app.js?v=16.2"></script>
 </body>
 </html>

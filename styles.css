@@ -501,10 +501,8 @@ input, textarea { font-size: 16px; touch-action: auto; -webkit-user-select: text
     z-index: 80;
     align-items: flex-end;
     justify-content: center;
-    padding: 12px;
-    padding-bottom: max(12px, env(safe-area-inset-bottom));
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    padding: 0;
+    overflow: hidden;
     pointer-events: none;
 }
 .modal-overlay.active, .tutorial-overlay:not(.hidden) {
@@ -512,20 +510,47 @@ input, textarea { font-size: 16px; touch-action: auto; -webkit-user-select: text
     pointer-events: auto;
 }
 .onboarding-card, .completion-card, .tutorial-card {
-    width: 100%; background: var(--paper); color: var(--ink); border-radius: 24px;
-    padding: 18px 16px 16px; display: flex; flex-direction: column; gap: 10px;
-    max-height: none;
+    width: 100%; background: var(--paper); color: var(--ink);
+    border-radius: 24px 24px 0 0;
+    padding: 14px 16px 0;
+    display: flex; flex-direction: column; gap: 8px;
+    max-height: min(92dvh, 720px);
     margin-top: auto;
+}
+.completion-card, .tutorial-card {
+    padding: 18px 16px calc(16px + env(safe-area-inset-bottom));
+    max-width: 430px;
+    border-radius: 24px;
+    margin: 12px;
+}
+.onboarding-scroll {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    min-height: 0;
+    padding-bottom: 8px;
+}
+.onboarding-cta {
+    flex: 0 0 auto;
+    padding: 10px 0 calc(36px + env(safe-area-inset-bottom));
+    background: var(--paper);
 }
 .onboarding-header, .completion-card { text-align: center; align-items: center; }
 .onboarding-badge { background: var(--gold); color: #3b2a00; font-weight: 900; border-radius: 999px; padding: 4px 10px; font-size: .75rem; }
 .form-label { display: block; font-weight: 800; margin: 8px 0 6px; text-align: left; }
 .onboarding-input { width: 100%; border: 3px solid #eadcc6; border-radius: 14px; padding: 14px; font-weight: 800; font-size: 16px; min-height: 48px; }
-.avatar-options-grid, .level-choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.avatar-options-grid { grid-template-columns: repeat(4, 1fr); }
+.avatar-options-grid, .level-choice-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.avatar-options-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .avatar-opt-btn { background: white; border: 3px solid #eadcc6; border-radius: 14px; font-size: 1.5rem; padding: 8px; min-height: 48px; }
 .avatar-opt-btn.selected { border-color: var(--coral); background: #fff1eb; }
-.level-choice-btn { display: flex; gap: 8px; text-align: left; background: white; border: 3px solid #eadcc6; border-radius: 14px; padding: 10px 8px; min-height: 52px; }
+.level-choice-btn {
+    flex: 1 1 28%;
+    min-height: 48px;
+    background: white;
+    border: 3px solid #eadcc6;
+    border-radius: 14px;
+    padding: 10px 8px;
+    font-weight: 900;
+}
 .level-choice-btn.active { border-color: var(--mint); background: #e9fff8; }
 .lvl-txt { display: flex; flex-direction: column; font-size: .78rem; font-weight: 800; }
 .rewards-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; width: 100%; }
@@ -542,12 +567,7 @@ input, textarea { font-size: 16px; touch-action: auto; -webkit-user-select: text
 .lesson-view.k0-mode .big-emoji { font-size: 5.2rem; }
 .lesson-view.k0-mode .image-option, .lesson-view.k0-mode .emoji-option { min-height: 72px; font-size: 1.1rem; }
 
-.onboarding-submit-btn {
-    position: sticky;
-    bottom: 0;
-    margin-top: 8px;
-    box-shadow: 0 -10px 20px rgba(255, 248, 239, .95);
-}
+.onboarding-submit-btn { width: 100%; margin: 0; }
 
 .aac-card { min-height: 96px; }
 .buy-btn { min-height: 44px; }
