@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const $ = (id) => document.getElementById(id);
+    const bind = (node, ev, fn) => { if (node) node.addEventListener(ev, fn); };
+    const byId = (id, ev, fn) => bind($(id), ev, fn);
     const todayStr = () => new Date().toISOString().slice(0, 10);
     const yesterdayStr = () => {
         const d = new Date();
@@ -202,7 +204,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
     function triggerConfetti() {
-        if (!ctx) return;
+        if (!ctx || !confettiCanvas) return;
+        confettiCanvas.classList.add('is-on');
+        resizeCanvas();
         const ps = [];
         const colors = ['#FF6A4A', '#2EC4B6', '#F5C14A', '#4C7DFF', '#FF7EB6'];
         for (let i = 0; i < 90; i++) {
@@ -230,7 +234,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             if (alive) requestAnimationFrame(draw);
-            else ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            else {
+                ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+                confettiCanvas.classList.remove('is-on');
+            }
         })();
     }
 
@@ -319,13 +326,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (id === 'review-view') renderSrs();
     }
 
-    document.querySelectorAll('.nav-tab').forEach((t) => t.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach((t) => t.addEventListener('click', (e) => {
+        e.preventDefault();
         playClick();
         switchTab(t.dataset.target);
     }));
 
-    levelSelectorBtn.addEventListener('click', () => {
+    bind(levelSelectorBtn, 'click', () => {
         playClick();
+        if (!levelDrawer) return;
         levelDrawer.classList.toggle('active');
         levelSelectorBtn.setAttribute('aria-expanded', levelDrawer.classList.contains('active'));
     });
@@ -428,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
             b.appendChild(el('div', 'node-icon', isUnlocked ? l.icon : '🔒'));
             if (isUnlocked) {
                 if (isCurrent) w.appendChild(el('div', 'node-tooltip', 'Empezar'));
-                b.addEventListener('click', () => startLesson(l));
+                w.addEventListener('click', () => startLesson(l));
             }
             w.append(b, el('div', 'node-label', l.name));
             pathTree.appendChild(w);
@@ -542,11 +551,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showLessonChrome(on) {
-        $('lesson-intro').classList.toggle('show', !on);
-        $('exercise-area').style.display = on ? 'flex' : 'none';
-        document.querySelector('.lesson-footer').style.display = on ? 'block' : 'none';
-        $('question-badge').style.display = on ? 'block' : 'none';
-        $('type-pill').style.display = on ? 'block' : 'none';
+        const intro = $('lesson-intro');
+        const area = $('exercise-area');
+        const footer = document.querySelector('.lesson-footer');
+        if (intro) intro.classList.toggle('show', !on);
+        if (area) area.style.display = on ? 'flex' : 'none';
+        if (footer) footer.style.display = on ? 'block' : 'none';
+        if ($('question-badge')) $('question-badge').style.display = on ? 'block' : 'none';
+        if ($('type-pill')) $('type-pill').style.display = on ? 'block' : 'none';
     }
 
     function startLesson(l) {
@@ -583,23 +595,23 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStats();
     }
 
-    $('intro-start-btn').addEventListener('click', () => {
+    byId('intro-start-btn', 'click', () => {
         playClick();
         showLessonChrome(true);
         loadQ();
     });
 
-    $('close-lesson-btn').addEventListener('click', () => {
+    byId('close-lesson-btn', 'click', () => {
         if (!window.confirm || window.confirm('¿Salir? Esta lección no se guardará.')) {
             lessonView.classList.remove('active');
-            $('path-view').classList.add('active');
+            if ($('path-view')) $('path-view').classList.add('active');
             if ($('bottom-nav-bar')) $('bottom-nav-bar').style.display = 'flex';
         }
     });
 
-    $('tts-normal-btn').addEventListener('click', () => speak($('prompt-text').textContent, 0.85));
-    $('tts-slow-btn').addEventListener('click', () => speak($('prompt-text').textContent, 0.5));
-    $('tts-echo-btn').addEventListener('click', () => speakEcho($('prompt-text').textContent));
+    byId('tts-normal-btn', 'click', () => speak($('prompt-text') ? $('prompt-text').textContent : '', 0.85));
+    byId('tts-slow-btn', 'click', () => speak($('prompt-text') ? $('prompt-text').textContent : '', 0.5));
+    byId('tts-echo-btn', 'click', () => speakEcho($('prompt-text') ? $('prompt-text').textContent : ''));
 
     function setSupport(soundsEl, phonEl, ctxEl, sylRow, sylText, mouthBox, q) {
         if (soundsEl) soundsEl.textContent = q.soundsLike ? `Suena: “${q.soundsLike}”` : '';
@@ -833,7 +845,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    checkBtn.addEventListener('click', () => {
+    bind(checkBtn, 'click', () => {
         const q = state.activeLesson.questions[state.currentQuestionIdx];
         let ok = false;
         if (q.type === 'translate') ok = JSON.stringify(state.selectedChips.map((c) => c.text)) === JSON.stringify(q.answer);
@@ -868,7 +880,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    $('continue-btn').addEventListener('click', () => {
+    byId('continue-btn', 'click', () => {
         feedbackSheet.classList.remove('show');
         const more = state.currentQuestionIdx + 1 < state.activeLesson.questions.length;
         const alive = isKids() || state.hearts > 0;
@@ -924,7 +936,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playSuccess();
     }
 
-    $('finish-lesson-btn').addEventListener('click', () => {
+    byId('finish-lesson-btn', 'click', () => {
         $('completion-modal').classList.remove('active');
         lessonView.classList.remove('active');
         $('path-view').classList.add('active');
@@ -941,7 +953,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStats();
     });
 
-    $('buy-hearts-btn').addEventListener('click', () => {
+    byId('buy-hearts-btn', 'click', () => {
         if (state.gems >= 50) {
             state.gems -= 50;
             state.hearts = 5;
@@ -951,7 +963,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast('5 vidas listas');
         } else showToast('Necesitas 50 gemas');
     });
-    $('buy-freeze-btn').addEventListener('click', () => {
+    byId('buy-freeze-btn', 'click', () => {
         if (state.gems >= 100) {
             state.gems -= 100;
             state.streakFreeze = true;
@@ -1035,8 +1047,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderPath(); renderDictionary(); renderAAC('needs'); updateStats();
         if (!state.tutorialSeen) showTutorial();
     }
-    $('onboarding-submit-btn').addEventListener('click', handleOnboardingSubmit);
-    onboardingNameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleOnboardingSubmit(); });
+    byId('onboarding-submit-btn', 'click', handleOnboardingSubmit);
+    bind(onboardingNameInput, 'keydown', (e) => { if (e.key === 'Enter') handleOnboardingSubmit(); });
 
     function switchUserProfile(id) {
         const target = profiles.find((p) => p.id === id);
@@ -1067,9 +1079,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    $('add-profile-btn').addEventListener('click', () => { playClick(); showOnboardingModal(true); });
-    $('edit-profile-btn').addEventListener('click', () => { playClick(); showOnboardingModal(false); });
-    $('delete-profile-btn').addEventListener('click', () => {
+    byId('add-profile-btn', 'click', () => { playClick(); showOnboardingModal(true); });
+    byId('edit-profile-btn', 'click', () => { playClick(); showOnboardingModal(false); });
+    byId('delete-profile-btn', 'click', () => {
         if (profiles.length <= 1) { showToast('Crea otro perfil antes de borrar este'); return; }
         if (!window.confirm || window.confirm(`¿Eliminar el perfil de "${state.name}"?`)) {
             profiles = profiles.filter((p) => p.id !== activeUser.id);
@@ -1108,22 +1120,26 @@ document.addEventListener('DOMContentLoaded', () => {
         state.tutorialSeen = true;
         localStorage.setItem('lp_tut', '1');
     }
-    $('tutorial-next-btn').addEventListener('click', () => {
+    byId('tutorial-next-btn', 'click', () => {
         playClick();
         tutStep++;
         if (tutStep >= tutSteps.length) dismissTutorial();
         else renderTutStep();
     });
-    $('tutorial-close-btn').addEventListener('click', () => { playClick(); dismissTutorial(); });
-    $('tutorial-overlay').addEventListener('click', (e) => { if (e.target.id === 'tutorial-overlay') dismissTutorial(); });
+    byId('tutorial-close-btn', 'click', () => { playClick(); dismissTutorial(); });
+    byId('tutorial-overlay', 'click', (e) => { if (e.target.id === 'tutorial-overlay') dismissTutorial(); });
 
     if ($('top-user-avatar-btn')) $('top-user-avatar-btn').addEventListener('click', () => { playClick(); switchTab('profile-view'); });
     if ($('banner-profile-link')) $('banner-profile-link').addEventListener('click', () => { playClick(); switchTab('profile-view'); });
 
-    renderPath();
-    renderDictionary();
-    renderAAC('needs');
-    updateStats();
-    if (!activeUser || !profiles.length) showOnboardingModal(true);
-    else if (!state.tutorialSeen) showTutorial();
+    try {
+        renderPath();
+        renderDictionary();
+        renderAAC('needs');
+        updateStats();
+        if (!activeUser || !profiles.length) showOnboardingModal(true);
+        else if (!state.tutorialSeen) showTutorial();
+    } catch (err) {
+        console.error('Lingua Pro init', err);
+    }
 });
